@@ -1,16 +1,15 @@
 import { apiSlice } from "../../../api/apiSlice";
 
-
 const updateProfile = apiSlice.injectEndpoints({
-    endpoints: (builder) => ({
-        updateProfile: builder.mutation({
-            query : (data) => ({
-                url: `/common/self`,
-                method: "PUT",
-                body: data
-            })
-        })
+  endpoints: (builder) => ({
+    updateProfile: builder.mutation({
+      query: (data) => ({
+        url: `/profile/info/update`, // Make sure this matches the correct route in your backend
+        method: "PATCH", // Change to PATCH
+        body: data // Send the formData or data as the body
+      })
     })
-})
+  })
+});
 
-export const {useUpdateProfileMutation} = updateProfile;
+export const { useUpdateProfileMutation } = updateProfile;

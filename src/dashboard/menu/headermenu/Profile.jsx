@@ -2,12 +2,27 @@ import { Image, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import user from '../../../../public/image/randomuser.jpg';
+import { useGetProfileQuery } from "../../../redux/features/auth/profile/getProfile";
+import url from "../../../redux/api/baseUrl";
  
 
 const Profile = () => {
   const navigate = useNavigate();
+
+  const {
+    data: responseData,
+    isLoading,
+    isError,
+    isFetching,
+    isSuccess,
+    error
+  } = useGetProfileQuery();
+  
+
+  console.log(responseData?.data?.attributes)
  
   // console.log(profile);
+  console.log(`${url}${responseData?.data?.attributes?.image}`)
   
 
   return (
@@ -27,13 +42,13 @@ const Profile = () => {
         <div className="lg:w-1/3 flex flex-col border border-dotted p-4 justify-center items-center gap-8">
         <div className="rounded-full  overflow-hidden h-[180px] w-[180px] mx-auto">
               {/* <Image src={url + profile?.data?.attributes?.image} /> */}
-              <Image src={"https://randomuser.me/api/portraits/men/57.jpg"} />
+              <Image className="w-full h-full" src={`${url}${responseData?.data?.attributes?.image}`} />
             </div>
            
           <div className="flex flex-col justify-center items-center text-center">
             {/* <p className="text-lg md:text-xl">{profile?.data?.attributes?.role}</p> */}
             <p className="text-lg md:text-xl">{"admin"}</p>
-            <h1 className="text-2xl md:text-3xl font-medium">{"absayed"}</h1>
+            <h1 className="text-2xl md:text-3xl font-medium">{responseData?.data?.attributes?.fullName}</h1>
           </div>
         </div>
 
@@ -47,7 +62,7 @@ const Profile = () => {
                 <Input
                   placeholder="First name"
                   // value={profile?.data?.attributes?.name}
-                  value={"absayed"}
+                  value={responseData?.data?.attributes?.fullName}
                   className="p-4 cursor-pointer text-lg md:text-xl bg-[#ebf5f5] text-black rounded w-full mt-3 outline-none focus:bg-[#69C0BE] hover:bg-[#e1f1f1]"
                   type="text"
                   readOnly
@@ -61,7 +76,7 @@ const Profile = () => {
               </label>
               <Input
                 placeholder="Email"
-                value={"ab@gmail.com"}
+                value={responseData?.data?.attributes?.email}
                 className="p-4 text-lg md:text-xl bg-[#ebf5f5] rounded w-full mt-3 outline-none focus:bg-[#69C0BE] hover:bg-[#69C0BE]"
                 type="text"
                 readOnly
@@ -74,7 +89,7 @@ const Profile = () => {
               </label>
               <Input
                 placeholder="Phone"
-                value={"454565465"}
+                value={responseData?.data?.attributes?.phoneNumber}
                 className="p-4 text-lg md:text-xl bg-[#ebf5f5] rounded w-full mt-3 outline-none focus:bg-[#69C0BE] hover:bg-[#69C0BE]"
                 type="text"
                 readOnly

@@ -6,41 +6,43 @@ import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import { LuImagePlus } from "react-icons/lu";
 import "react-phone-number-input/style.css";
 import defaultUserImage from "../../../../public/image/randomuser.jpg";
- 
- 
- 
+import { useUpdateProfileMutation } from "../../../redux/features/auth/profile/editProfile";
+import toast, { Toaster } from "react-hot-toast";
+import { useGetProfileQuery } from "../../../redux/features/auth/profile/getProfile";
 
 const EditProfiel = () => {
   const navigate = useNavigate();
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [fileList, setFileList] = useState([]);
-  
-  
- 
+
+  const [updateProfile, { isLoading }] = useUpdateProfileMutation();
+
+  const { data, isError, isFetching } = useGetProfileQuery();
+
+  // console.log(data?.data?.attributes?.email);
+
   const [imageUrl, setImageUrl] = useState();
- 
-//  console.log(profile?.data?.attributes);
- 
-//  const initialValues = {
-//   name: profile?.data?.attributes?.name ||'',
-//   email: profile?.data?.attributes?.email ||'',
-//   phoneNumber: profile?.data?.attributes?.phoneNumber ||'',
-// };
 
-// useEffect(() => {
-//   if (profile?.data?.attributes) {
-//     setPhoneNumber(profile.data.attributes.phoneNumber || '');
-//     const existingImageUrl = url + profile?.data?.attributes?.image;
-//     if (existingImageUrl) {
-//       setImageUrl(existingImageUrl);
-//     }
-//     initialValues.fullName = profile.data.attributes.fullName || '';
-//     initialValues.email = profile.data.attributes.email || '';
-//   }
-// }, [profile]);
+  // eslint-disable-next-line no-undef
+  //  console.log(data?.data?.attributes);
 
+  // const initialValues = {
+  //   name: data?.data?.attributes?.name || "",
+  //   email: data?.data?.attributes?.email || "",
+  //   phoneNumber: data?.data?.attributes?.phoneNumber || ""
+  // };
 
-
+  // useEffect(() => {
+  //   if (data?.data?.attributes) {
+  //     setPhoneNumber(data.data.attributes.phoneNumber || "");
+  //     const existingImageUrl = url + data?.data?.attributes?.image;
+  //     if (existingImageUrl) {
+  //       setImageUrl(existingImageUrl);
+  //     }
+  //     initialValues.fullName = data.data.attributes.fullName || "";
+  //     initialValues.email = data.data.attributes.email || "";
+  //   }
+  // }, [data]);
 
   const handleUploadChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
@@ -50,41 +52,38 @@ const EditProfiel = () => {
       reader.onload = () => setImageUrl(reader.result);
     }
   };
-//  console.log("fileeeeeeeeeeeeeeeeeeeee", imageUrl);
-//  console.log(fileList, phoneNumber);
- 
- 
+
+  //  console.log("fileeeeeeeeeeeeeeeeeeeee", imageUrl);
+  //  console.log(fileList, phoneNumber);
+
   const handleUpdateProfile = async (values) => {
-    console.log(values); 
-    
-    
-    // const formData = new FormData();
-    // formData.append("name", values?.name); 
-    // formData.append("phoneNumber", phoneNumber);
-    // if (fileList[0]?.originFileObj) {
-    //   formData.append("image", fileList[0].originFileObj);
-    //   // formData.append("image", imageUrl);
-    // }
-    // try{
-    //   const res = await updateProfile(formData).unwrap();
-    //   console.log(res);
-    //   if(res?.code === 200){
-    //     toast.success(res?.message)
-    //   }
-    //   setTimeout(() => {
-    //     navigate('/dashboard/profile')
-    //   }, 1000);
-      
-    // }catch(error){
-    //   console.log(error?.data);
-       
-    // }
-     
+    console.log(values);
+
+    const formData = new FormData();
+    formData.append("fullName", values?.fullName);
+    formData.append("phoneNumber", phoneNumber); 
+
+    if (fileList[0]?.originFileObj) {
+      formData.append("image", fileList[0].originFileObj);
+      formData.append("image", imageUrl);
+    }
+    try {
+      const res = await updateProfile(formData).unwrap();
+      console.log(res);
+      if (res?.code === 200) {
+        toast.success(res?.message);
+      }
+      setTimeout(() => {
+        navigate("/dashboard/profile");
+      }, 1000);
+    } catch (error) {
+      console.log(error?.data);
+    }
   };
 
   return (
     <div className="">
-      {/* <Toaster /> */}
+      <Toaster />
       <div
         onClick={() => navigate("/dashboard/profile")}
         className="flex items-center cursor-pointer ml-6 mt-10 mb-16"
@@ -105,10 +104,8 @@ const EditProfiel = () => {
               <div className="relative w-56 h-56 rounded-full flex justify-center items-center mt-5 bg-gray-50 border">
                 <Upload
                   name="avatar"
-
                   showUploadList={false}
                   onChange={handleUploadChange}
-                 
                 >
                   <img
                     className="w-44 h-44 rounded-full"
@@ -123,13 +120,13 @@ const EditProfiel = () => {
                     Change Picture
                   </Button>
                 </Upload>
-
               </div>
 
-
               <div className="text-center mt-6">
-                <p className="text-lg">{'admin'}</p>
-                <h1 className="text-2xl font-medium">{"absayed"}</h1>
+                <p className="text-lg">{"admin"}</p>
+                <h1 className="text-2xl font-medium">
+                  {data?.data?.attributes?.fullName}
+                </h1>
               </div>
             </div>
 
@@ -137,12 +134,14 @@ const EditProfiel = () => {
               <div className="flex flex-col gap-6">
                 <Form.Item
                   label={<span className="text-lg font-medium">Name</span>}
-                  name="name"
-                  rules={[{ required: true, message: "Please input your name!" }]}
+                  name="fullName"
+                  rules={[
+                    { required: true, message: "Please input your name!" }
+                  ]}
                   // initialValue={"absayed"}
                 >
                   <Input
-                    placeholder="Name"
+                    placeholder="fullName"
                     className="p-4 rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                   />
                 </Form.Item>
@@ -150,20 +149,24 @@ const EditProfiel = () => {
                 <Form.Item
                   label={<span className="text-lg font-medium">Email</span>}
                   name="email"
-                  
-                  rules={[{ required: true, message: "Please input your email!" }]}
-                  // initialValue={"ab@gamil.com"}
+                  rules={[
+                    { required: true, message: "Please input your email!" }
+                  ]}
+                  initialValue={data?.data?.attributes?.email}
+                  readOnly
                 >
                   <Input
                     placeholder="Email"
+                    value={data?.data?.attributes?.email}
                     readOnly
                     className="p-4 rounded-lg border-gray-300 bg-gray-100"
-                   
                   />
                 </Form.Item>
 
                 <div className="flex flex-col">
-                  <label className="text-lg font-medium mb-2">Phone Number</label>
+                  <label className="text-lg font-medium mb-2">
+                    Phone Number
+                  </label>
                   <PhoneInput
                     placeholder="Enter phone number"
                     international
@@ -171,7 +174,7 @@ const EditProfiel = () => {
                     value={phoneNumber}
                     onChange={setPhoneNumber}
                     className="p-2 rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                    style={{ height: '50px',  }}
+                    style={{ height: "50px" }}
                   />
                 </div>
               </div>

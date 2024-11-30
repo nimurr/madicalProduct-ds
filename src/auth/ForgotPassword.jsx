@@ -7,31 +7,36 @@ import { useState } from "react";
 import { BiArrowFromLeft } from "react-icons/bi";
 import { MdOutlineArrowBackIos } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { useForgotPasswordMutation } from "../redux/features/auth/forgotPassword";
+import toast from "react-hot-toast";
  
 
 const ForgotPassword = () => {
  const navigate = useNavigate()
   const [error, setError] = useState('')
+
+  const [forgotpassword] = useForgotPasswordMutation();
  
   const handleForgotPassword = async(values) => {
     console.log("Received values:", values);
-    navigate(`/verifyotp`);
-    // try{
-    //   const res = await forgotpassword(values).unwrap()
-    //   // console.log(res);
+    // navigate(`/verifyotp`);
+
+    try{
+      const res = await forgotpassword(values).unwrap()
+      // console.log(res);
       
-    //   if(res?.code ==200){
-    //     toast.success(res?.message)
-    //     setTimeout(() => {
-    //       navigate(`/verifyotp?email=${values?.email}`);
-    //     }, 1000);
-    //   }
+      if(res?.code ==200){
+        toast.success(res?.message)
+        setTimeout(() => {
+          navigate(`/verifyotp?email=${values?.email}`);
+        }, 1000);
+      }
      
-    // }catch(error){
-    //  console.log(error);
-    //  setError(error?.data?.message)
+    }catch(error){
+     console.log(error);
+     setError(error?.data?.message)
       
-    // }
+    }
 
     // Handle form submission here
    
