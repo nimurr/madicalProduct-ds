@@ -46,9 +46,11 @@ const Category = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
  
   const {data } = useGetCategoriesQuery()
+
+
   const categories = data?.data?.attributes?.results ;
   
-  console.log(categories)
+  // console.log(categories)
 
 
 
