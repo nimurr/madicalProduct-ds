@@ -1,77 +1,53 @@
 import { useState } from "react";
 import { Button, Form, Input, Modal, Upload } from "antd";
-import {
-  PlusOutlined,
-  EditOutlined,
-  DeleteOutlined,
-  CloseOutlined
-} from "@ant-design/icons";
-import { TbCameraPlus } from "react-icons/tb";     
+import { PlusOutlined, EditOutlined, DeleteOutlined, CloseOutlined } from "@ant-design/icons";
+import { TbCameraPlus } from "react-icons/tb";
 import { useGetCategoriesQuery } from "../../../redux/features/auth/profile/getCategories";
-// import { useGetProfileQuery } from "../../../redux/features/auth/profile/getProfile";
-// import category1 from './../../../../public/image/category1.png'
-// import category2 from './../../../../public/image/category2.png'
-// import category3 from './../../../../public/image/category3.png'
-
-// const categories = [
-//   {
-//     id: 1,
-//     name: "Category Name",
-//     image:
-//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6WF_YS6V_XSRU_f-a5dzEwTffIK7NFmV-Gw&s"
-//   },
-//   {
-//     id: 2,
-//     name: "Category Name",
-//     image:
-//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqw8muly6Bp4CHdfDpadPwLmAgun90ANzYng5zfFjsbsQaLTm04iKXvb_P_5C4ekU79As&usqp=CAU"
-//   },
-//   {
-//     id: 3,
-//     name: "Category Name",
-//     image:
-//       "https://akm-img-a-in.tosshub.com/businesstoday/images/story/202210/64e01bf1f7dbd9099e249e9c3247fdbb9a46b4b1-1280x720-sixteen_nine.jpg?size=948:533"
-//   },
-//   {
-//     id: 4,
-//     name: "Category Name",
-//     image:
-//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTW0mlewfpyL1NE2tKxp25aexWDiI9zp_GMYxZcj-6Ud94atnOBWj5A6GwfSshkh2-3gY0&usqp=CAU"
-//   }
-// ];
+import { useDeleteCategoriesMutation } from "../../../redux/features/auth/heashboard/deleteCategory";
+import { useCreatePostMutation } from "../../../redux/features/auth/heashboard/postCategory";
 
 const Category = () => {
   const [imageUrl, setImageUrl] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
- 
-  const {data } = useGetCategoriesQuery()
 
+  const { data } = useGetCategoriesQuery();
 
-  const categories = data?.data?.attributes?.results ;
+  const [deleteCategory, { isLoading: isDeleting }] = useDeleteCategoriesMutation();
   
-  // console.log(categories)
+  const [postCategory, { isLoading: isPostLoading }] = useCreatePostMutation();
 
+  
 
+  const categories = data?.data?.attributes?.results;
 
   const openModal = () => {
     setIsModalOpen(true);
   };
 
   const onFinish = async (value) => {
-    console.log("Description:", value.name);
-    console.log("Image URL:", imageUrl);
-    console.log("file:", imageFile);
+    console.log("Category Name:", value.name);  // Category name from form
+    console.log("Image URL:", imageUrl);        // Image preview URL
+    console.log("File:", imageFile);            // Image file object
 
+    // Prepare the form data
     const formData = new FormData();
-
-    // Append the description and image file to the FormData object
-    formData.append("description", value.description);
+    formData.append("categoryName", value.categoryName);
     if (imageFile) {
-      formData.append("file", imageFile);
+      formData.append("image", imageFile);
     }
-    console.log(formData);
+
+    try {
+      // Send formData to the backend using the createPost mutation
+      const response = await postCategory(formData).unwrap();
+      console.log("Category created successfully:", response);
+      setIsModalOpen(false); // Close modal after successful post
+    } catch (err) {
+      console.error("Failed to create category:", err);
+    }
   };
+
+
 
   const normFile = (e) => {
     if (Array.isArray(e)) {
@@ -96,8 +72,18 @@ const Category = () => {
     }
   };
 
+  const handleDelete = async (categoryId) => {
+    try {
+      await deleteCategory(categoryId).unwrap(); // Trigger the delete mutation
+      // Optionally handle successful deletion, like showing a success message
+    } catch (err) {
+      // Optionally handle errors, e.g., show an error message
+      console.error("Failed to delete category:", err);
+    }
+  };
+
   return (
-    <div className=" mt-12 p-6">
+    <div className="mt-12 p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-header">Category</h2>
@@ -137,8 +123,10 @@ const Category = () => {
                   icon={<DeleteOutlined />}
                   danger
                   className="!bg-[#E8EBF0] text-white"
+                  onClick={() => handleDelete(category.id)} // Attach the delete handler
+                  loading={isDeleting} // Show loading state when deleting
                 >
-                  Delete
+                  {isDeleting ? "Deleting..." : "Delete"}
                 </Button>
               </div>
             </div>
@@ -221,7 +209,7 @@ const Category = () => {
               </Form.Item>
 
               {/* TextArea */}
-              <Form.Item name="name" label="category name">
+              <Form.Item name="categoryName" label="category name">
                 <Input
                   placeholder="category name"
                   style={{ maxWidth: "1000px", padding: "10px" }}
@@ -236,7 +224,7 @@ const Category = () => {
                     height: "56px"
                   }}
                   htmlType="submit"
-                  className="  h-[36px] py-4 mt-2 text-white hover:border-none border-none rounded-2xl"
+                  className="h-[36px] py-4 mt-2 text-white hover:border-none border-none rounded-2xl"
                 >
                   Category added
                 </Button>

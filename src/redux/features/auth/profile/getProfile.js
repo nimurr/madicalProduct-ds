@@ -4,8 +4,10 @@ const getProfile = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProfile: builder.query({
       query: () => `/profile/info`,
-      method: "GET"
+      method: "GET",
+     
     })
+  
   })
 });
 

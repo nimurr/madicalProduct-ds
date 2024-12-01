@@ -17,7 +17,7 @@ const About = () => {
 
   const { data: about } = useGetAboutUsQuery();
 
-  console.log(about?.data?.attributes[0]?.content)
+  // console.log(about?.data?.attributes[0]?.content)
 
   //   useEffect(() => {
   //     if (aboutus?.data?.attributes?.docs?.length) {
