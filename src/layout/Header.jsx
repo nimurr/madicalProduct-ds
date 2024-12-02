@@ -21,7 +21,7 @@ import Swal from "sweetalert2";
 import { useState } from "react";
 import { useGetProfileQuery } from "../redux/features/auth/profile/getProfile";
 import { useChangePasswordMutation } from "../redux/features/auth/changePassword";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const Header = () => {
   const {
@@ -33,10 +33,7 @@ const Header = () => {
     error
   } = useGetProfileQuery();
 
-
-  const [passwordChange ] = useChangePasswordMutation();
- 
-
+  const [passwordChange] = useChangePasswordMutation();
 
   // console.log("please get the user ", responseData?.data?.attributes?.fullName);
 
@@ -103,6 +100,7 @@ const Header = () => {
         menuVisible ? "custom-dropdown-menu-visible" : "custom-dropdown-menu"
       }`}
     >
+      <Toaster />
       <Menu.Item className="hover:!bg-[#193664]" key="1">
         <Link
           to="/dashboard/profile"
@@ -134,7 +132,9 @@ const Header = () => {
     <div className="flex justify-between items-center shadow-xl mb-[24px] p-[16px] rounded-md !bg-[#E8EBF0]">
       <div className="text-white">
         <p className="text-header text-[#000000] font-medium">Welcome!</p>
-        <h1 className="text-[#000000]">{responseData?.data?.attributes?.fullName}</h1>
+        <h1 className="text-[#000000]">
+          {responseData?.data?.attributes?.fullName}
+        </h1>
       </div>
 
       <div className="flex gap-5">
@@ -169,7 +169,8 @@ const Header = () => {
                 src={"https://randomuser.me/api/portraits/men/57.jpg"}
                 className="mr-2 h-[52px] w-[52px]"
               />
-              {responseData?.data?.attributes?.fullName} <DownOutlined className="ml-1" />
+              {responseData?.data?.attributes?.fullName}{" "}
+              <DownOutlined className="ml-1" />
             </a>
           </Dropdown>
         </div>
@@ -252,7 +253,9 @@ const Header = () => {
                         return Promise.resolve();
                       }
                       return Promise.reject(
-                        new Error("The two passwords that you entered do not match!")
+                        new Error(
+                          "The two passwords that you entered do not match!"
+                        )
                       );
                     }
                   })
