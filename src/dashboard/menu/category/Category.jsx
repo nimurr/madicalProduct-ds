@@ -156,8 +156,8 @@ const Category = () => {
       <Modal
         title="Add Category"
         open={isModalOpen}
-        onOk={handleOk}
         onCancel={handleCancel}
+        footer={null}
       >
         <Form
           className="ant-upload"

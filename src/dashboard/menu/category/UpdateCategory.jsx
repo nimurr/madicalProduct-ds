@@ -1,7 +1,9 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react"; 
 import url from "../../../redux/api/baseUrl";
 import { useCreateUpdateCategoryMutation } from "../../../redux/features/auth/heashboard/updateCategory";
+import { FaArrowLeft } from "react-icons/fa6";
+
 
 export default function UpdateCategory() {
   const { id } = useParams(); // Get category ID from URL
@@ -79,7 +81,8 @@ export default function UpdateCategory() {
   };
 
   return (
-    <div className="mt-10">
+    <div className="mt-20">
+      <Link className="bg-primaryBg text-[#fff] py-2 px-8 rounded flex justify-center items-center gap-2 w-48" to={`/dashboard/category`}><FaArrowLeft /> Category </Link>
       <form onSubmit={handleUpdate} className="max-w-lg mx-auto p-4 bg-white shadow-lg rounded-lg">
         <div className="mb-6">
           {/* Show image preview */}
@@ -97,6 +100,7 @@ export default function UpdateCategory() {
                 src={URL.createObjectURL(categoryData.image)}
                 alt="Category Preview"
                 className="w-32 h-32 object-cover rounded mx-auto"
+
               />
             )
           ) : (
@@ -109,6 +113,7 @@ export default function UpdateCategory() {
           <input
             type="file"
             name="image"
+            required
             onChange={handleFileChange}
             className="block w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:ring-primaryBg focus:border-primaryBg"
           />
@@ -120,6 +125,7 @@ export default function UpdateCategory() {
             type="text"
             name="categoryName"
             placeholder="Category Name"
+            required
             value={categoryData.categoryName}
             onChange={(e) =>
               setCategoryData((prevData) => ({

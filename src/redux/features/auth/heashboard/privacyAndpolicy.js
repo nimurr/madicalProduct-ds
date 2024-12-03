@@ -5,7 +5,8 @@ const getPrivacyAndPolicy = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getPrivacyAndPolicy: builder.query({
       query: () => "/info/privacy-policy",  
-      method: "GET"
+      method: "GET",
+      providesTags: ["Privacy"]
     })
   })
 });

@@ -1,107 +1,94 @@
-import React, { useState, useRef, useMemo, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import JoditEditor from "jodit-react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaCircleArrowLeft } from "react-icons/fa6";
- 
-import { Button, Form, notification } from "antd";
-import '../../../index.css'
- 
-// import toast, { Toaster } from "react-hot-toast";
- 
-// const decodeHtml = (html) => {
-//   const txt = document.createElement("textarea");
-//   txt.innerHTML = html;
-//   return txt.value;
-// };
+import { Button, Form } from "antd";
+import "../../../index.css";
+import { useCreateTermsPostMutation } from "../../../redux/features/auth/heashboard/updateTeramCondition";
+import toast from "react-hot-toast";
+import { useGetTermsAndServiceQuery } from "../../../redux/features/auth/heashboard/termsAndservices";
 
-const EditPrivacy = () => {
-//  const {id} = useParams()
- 
- 
-//  const [updatePrivacy, {isLoading}] = useUpdatePrivacyMutation(id)
-//   const {data: privacy} = usePrivacyPolicyQuery()
-//   // console.log(privacy)
+// Function to decode HTML entities
+const decodeHtml = (html) => {
+  const txt = document.createElement("textarea");
+  txt.innerHTML = html;
+  return txt.value;
+};
+
+const EditTermCondition = () => {
+  const { data: termcondition } = useGetTermsAndServiceQuery();
+  const [updateTC, { isLoading }] = useCreateTermsPostMutation();
   const editor = useRef(null);
-  const navigate = useNavigate() 
- 
-  
- 
-const [content, setContent] = useState("");
- 
-// useEffect(() => {
-//   if (privacy?.data?.attributes?.docs?.length) {
-//     // Decode the HTML content before setting it
-//     const decodedContent = decodeHtml(privacy.data.attributes.docs[0].content);
-//     setContent(decodedContent);
-//   }
-// }, [privacy]);
- 
-//   const dataContent  = {
-//     content:content 
-//   }
-// console.log(content);
+  const navigate = useNavigate();
 
+  // State for holding content
+  const [content, setContent] = useState("");
+  const [isInitialized, setIsInitialized] = useState(false); // Prevent unnecessary re-renders
 
-  const handlePostPrivacy = async (values) => {
-  
-    // console.log(content);
-    
-    
-    navigate("/dashboard/settings/privacypolicy")
- 
-    // try{
-     
-    //   const res = await updatePrivacy({id, content}).unwrap();
-    //   console.log(res.message);
-      
-    //    if(res?.code ==200){
-    //     toast.success(res?.message)
-    //    }
-    //    setTimeout(() => {
-        
-    //      navigate("/dashboard/settings/privacypolicy")
-    //    },1000);
-    // }catch(error){
-    //   console.log(error);
-      
-    // } 
-  }
-  
+  // Effect to load the terms and conditions data
+  useEffect(() => {
+    if (termcondition?.data?.attributes?.docs?.length && !isInitialized) {
+      const decodedContent = decodeHtml(
+        termcondition.data.attributes.docs[0].content
+      );
+      setContent(decodedContent); // Set decoded content to editor
+      setIsInitialized(true); // Set flag to prevent re-initialization
+    }
+  }, [termcondition, isInitialized]);
+
+  // Function to handle form submission
+  const handlePostTerms = async () => {
+    try {
+      // Update terms and conditions with the content
+      const res = await updateTC({ content }).unwrap();
+
+      navigate("/dashboard/settings/termcondition"); // Redirect after success
+
+      if (res?.code === 200) {
+        toast.success(res?.message); // Show success notification
+        setTimeout(() => {}, 1000);
+      }
+    } catch (error) {
+      toast.error("Failed to update terms and conditions"); // Show error notification
+      console.error("Error:", error);
+    }
+  };
 
   return (
     <div className="mt-8 mx-6">
-  
-        <Link to ='/dashboard/settings/privacypolicy' className="flex items-center gap-2">
-      <FaCircleArrowLeft className=" text-primaryBg w-8 h-8" />
-        <p className=" font-semibold text-[30px]">Edit Privacy Policy</p>
+      <Link
+        to="/dashboard/settings/termcondition"
+        className="flex items-center gap-2"
+      >
+        <FaCircleArrowLeft className="text-primaryBg w-8 h-8" />
+        <p className="font-semibold text-[30px]">Edit Term & Condition</p>
       </Link>
+
       <Form
-     labelCol={{ span: 22 }}
-     wrapperCol={{ span: 40 }}
-     layout="vertical"
-     initialValues={{
-       remember: true,
-       
-     }}
-     onFinish = {handlePostPrivacy}
-      > 
-      <div className="mt-6">
-        <JoditEditor 
-          ref={editor}
-          value ={content}
-         
-          onChange={(newContent) => {
-            setContent(newContent)
-          }}
-        />
-      </div>
-      <div className="text-right mt-6">
+        labelCol={{ span: 22 }}
+        wrapperCol={{ span: 40 }}
+        layout="vertical"
+        onFinish={handlePostTerms}
+      >
+        <div className="mt-6">
+          <JoditEditor
+            ref={editor}
+            value={content} // Controlled by state content
+            onChange={(newContent) => setContent(newContent)} // Update content on change
+            config={{
+              readonly: isLoading // Disable editing while loading
+            }}
+          />
+        </div>
+
+        <div className="text-right mt-6">
           <Form.Item>
-            <Button 
+            <Button
               htmlType="submit"
-              className=" h-[44px] w-[260px] !text-white !bg-primaryBg rounded-[8px]"
+              className="h-[44px] w-[260px] !text-white !bg-primaryBg rounded-[8px]"
+              loading={isLoading} // Add loading state to button
             >
-              Update Privacy
+              Update Term & Condition
             </Button>
           </Form.Item>
         </div>
@@ -110,4 +97,4 @@ const [content, setContent] = useState("");
   );
 };
 
-export default EditPrivacy;
+export default EditTermCondition;

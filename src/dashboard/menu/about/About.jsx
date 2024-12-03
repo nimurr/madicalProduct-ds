@@ -1,31 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { FaCircleArrowLeft } from "react-icons/fa6";
-import { Link, useNavigate, useParams } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "antd";
 import { useGetAboutUsQuery } from "../../../redux/features/auth/heashboard/aboutUs";
 
-// const decodeHtml = (html) => {
-//   const txt = document.createElement("textarea");
-//   txt.innerHTML = html;
-//   return txt.value;
-// };
-
 const About = () => {
   const navigate = useNavigate();
-  const [content, setContent] = useState("");
-
   const { data: about } = useGetAboutUsQuery();
-
-  // console.log(about?.data?.attributes[0]?.content)
-
-  //   useEffect(() => {
-  //     if (aboutus?.data?.attributes?.docs?.length) {
-  //       const decodedContent = decodeHtml(aboutus.data.attributes.docs[0].content);
-  //       setContent(decodedContent);
-  //     }
-  //   }, [aboutus]);
-
+  
   return (
     <div className=" mt-8 mx-6">
       <Link to="/dashboard/settings" className="flex items-center gap-2">
@@ -33,9 +15,10 @@ const About = () => {
         <p className=" font-semibold text-[30px]">About Us</p>
       </Link>
       <div className="mt-4">
-        {/* <p dangerouslySetInnerHTML={{ __html: content }}> 
-        </p> */}
-        <p>{about?.data?.attributes[0]?.content}</p>
+        {/* Render the HTML content using dangerouslySetInnerHTML */}
+        <div 
+          dangerouslySetInnerHTML={{ __html: about?.data?.attributes[0]?.content }}
+        />
       </div>
       <div className=" text-right mt-16">
         <Button

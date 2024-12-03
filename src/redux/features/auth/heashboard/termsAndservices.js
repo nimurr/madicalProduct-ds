@@ -5,7 +5,8 @@ const getTermsAndService = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getTermsAndService: builder.query({
       query: () => "/info/terms-services",  
-      method: "GET"
+      method: "GET",
+      providesTags: ["Terms"]
     })
   })
 });

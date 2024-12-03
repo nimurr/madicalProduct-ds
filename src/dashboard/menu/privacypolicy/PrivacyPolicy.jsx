@@ -3,33 +3,17 @@ import { FaCircleArrowLeft } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import { useGetPrivacyAndPolicyQuery } from "../../../redux/features/auth/heashboard/privacyAndpolicy";
 
-// Function to decode HTML entities
-// const decodeHtml = (html) => {
-//   const txt = document.createElement("textarea");
-//   txt.innerHTML = html;
-//   return txt.value;
-// };
-
 const PrivacyPolicy = () => {
-  // const [content, setContent] = useState("");
-
   const navigate = useNavigate();
 
-
+  // Fetch the privacy data
   const { data } = useGetPrivacyAndPolicyQuery();
-  console.log(data?.data.attributes );
 
+  console.log(data?.data.attributes[0].content);
 
-
-
-
-  //   useEffect(() => {
-  //     if (privacy?.data?.attributes?.docs?.length) {
-  //       // Decode the HTML content before setting it
-  //       const decodedContent = decodeHtml(privacy.data.attributes.docs[0].content);
-  //       setContent(decodedContent);
-  //     }
-  //   }, [privacy]);
+  // Ensure you're accessing the content correctly.
+  // It seems you're expecting content to be in `data.data.attributes.content`.
+  const content = data?.data?.attributes[0].content;
 
   return (
     <div className="h-[575px]">
@@ -39,9 +23,14 @@ const PrivacyPolicy = () => {
           <p className="font-semibold text-[30px]">Privacy Policy</p>
         </Link>
         <div className="mt-4">
-          {/* Render the decoded content as HTML */}
-          {/* <div dangerouslySetInnerHTML={{ __html: content }} /> */}
-          <p>{data?.data.attributes[0]?.content}</p>
+          {/* Render the HTML content */}
+          {content && (
+            <div
+              dangerouslySetInnerHTML={{
+                __html: content, // Render the content with HTML tags
+              }}
+            />
+          )}
         </div>
         <div className="text-right mt-16">
           <button

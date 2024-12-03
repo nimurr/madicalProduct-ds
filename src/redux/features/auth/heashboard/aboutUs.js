@@ -5,7 +5,8 @@ const getAboutUs = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAboutUs: builder.query({
       query: () => "/info/about-us",  
-      method: "GET"
+      method: "GET",
+      providesTags: ["About"]
     })
   })
 });
