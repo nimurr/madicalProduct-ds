@@ -10,36 +10,34 @@ const { Search } = Input;
 const dataSource = [
   {
     key: "1",
-
     customerName: "Bashar Islam",
     email: "abc@email.com",
     address: "Dhaka Bangladesh",
-    date: "16 Apr 2024",
+    date: "2024-04-16",
     phone: "4536656"
   },
   {
     key: "2",
-    applicationId: "12345678",
-    customerName: "Bashar Islam",
-    email: "abc@email.com",
-    address: "Dhaka Bangladesh",
-    date: "16 Apr 2024",
-    phone: "4536656"
+    customerName: "Ali Akbar",
+    email: "ali@email.com",
+    address: "Chittagong, Bangladesh",
+    date: "2024-05-16",
+    phone: "4536677"
   },
   {
     key: "3",
-    applicationId: "12345678",
-    customerName: "Bashar Islam",
-    email: "abc@email.com",
-    address: "Dhaka Bangladesh",
-    date: "16 Apr 2024",
-    phone: "4536656"
+    customerName: "Rina Begum",
+    email: "rina@email.com",
+    address: "Sylhet, Bangladesh",
+    date: "2024-06-16",
+    phone: "4536699"
   }
 ];
+
 const BidHistory = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  const [selectedRecord, setSelectedRecord] = useState(null);
+  const [filteredData, setFilteredData] = useState(dataSource);
 
   const columns = [
     {
@@ -50,12 +48,9 @@ const BidHistory = () => {
     },
     {
       title: "User Name",
-      dataIndex: "User Name",
-      key: "User Name",
-      render: (_, record) => (
-        // <p>{(record?.email) ?  record?.email : "00"}$</p>
-        <p>absayed</p>
-      )
+      dataIndex: "customerName",
+      key: "customerName",
+      render: (_, record) => <p>{record?.customerName}</p>
     },
     {
       title: "Business-Name",
@@ -71,52 +66,30 @@ const BidHistory = () => {
             />
           </div>
           <div>
-            {/* <p className="font-medium">{record?.customerName}</p> */}
-            <p className="font-medium">Business Name</p>
-            <p className="text-xs">abu@yaho.com</p>
+            <p className="font-medium">{record?.customerName}</p>
+            <p className="text-xs">{record?.email}</p>
           </div>
         </div>
       )
     },
-
     {
       title: "BidStatus",
       dataIndex: "BidStatus",
       key: "BidStatus",
-      render: (_, record) => (
-        // <p>{(record?.email) ?  record?.email : "00"}$</p>
-        <p>win</p>
-      )
+      render: (_, record) => <p>win</p>
     },
     {
       title: "LastPrice",
       dataIndex: "LastPrice",
       key: "LastPrice",
-      render: (_, record) => (
-        // <p>{(record?.email) ?  record?.email : "00"}$</p>
-        <p>$35</p>
-      )
+      render: (_, record) => <p>$35</p>
     },
-
     {
       title: "Date",
       key: "date",
       dataIndex: "date",
-      render: (_, record) => (
-        // <p>{record?.createdAt?.split("T")[0] ? record?.createdAt?.split("T")[0] : "N/A"}</p>
-        <p>34/04/24</p>
-      )
+      render: (_, record) => <p>{record.date}</p>
     },
-    // {
-    //   title: "Feedback",
-    //   dataIndex: "Feedback",
-    //   key: "Feedback",
-    //   render: (_, record) => (
-    //     // <p>{(record?.email) ?  record?.email : "00"}$</p>
-    //     <p className="text-[#1E66CA]">Send Feedback</p>
-    //   )
-    // },
-
     {
       title: "Action",
       key: "action",
@@ -127,30 +100,29 @@ const BidHistory = () => {
             size={18}
             className="text-primaryBg cursor-pointer"
           />
-
-          {/* <a><RxCross2 size={18} className='text-[red]'/></a> */}
         </Space>
       )
     }
   ];
 
-  const handleView = () => {
-    // setUser(value);
-    // console.log(value)
+  const handleView = (record) => {
+    setSelectedRecord(record);
     setIsModalOpen(true);
   };
-  //   const onChange = (date, dateString) => {
-  //     console.log(date, dateString);
-  //   };
-  //   console.log(user);
-  //   const handleChangePage = (page) => {
-  //     setCurrentPage(page);
-  //     console.log(page);
-  //   };
-  const onSearch = (value, _e, info) => console.log(info?.source, value);
+
+  const onSearch = (value) => {
+    const filtered = dataSource.filter(
+      (record) =>
+        record.customerName.toLowerCase().includes(value.toLowerCase()) ||
+        record.email.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredData(filtered);
+  };
+
   const onChange = (date, dateString) => {
     console.log(date, dateString);
   };
+
   return (
     <div className="">
       <div className="rounded-t-lg mt-[24px]">
@@ -167,7 +139,7 @@ const BidHistory = () => {
                 width: "200px",
                 marginLeft: "4px"
               }}
-              placeholder="input search text"
+              placeholder="Search by name or email"
               onSearch={onSearch}
               enterButton
             />
@@ -175,20 +147,24 @@ const BidHistory = () => {
         </div>
         <Table
           pagination={{
-            total: dataSource.length,
+            total: filteredData.length,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} items`,
-            defaultPageSize: 1,
-            showSizeChanger: false,
+            defaultPageSize: 5,
+            showSizeChanger: true,
             itemRender: (current, type, originalElement) => {
               if (type === "prev") {
                 return (
-                  <Button className={styles.paginationButton}>Back</Button>
+                  <Button className="border border-blue-500 text-blue-500 bg-transparent hover:bg-blue-500 hover:text-white transition-colors duration-300">
+                    Back
+                  </Button>
                 );
               }
               if (type === "next") {
                 return (
-                  <Button className={styles.paginationButton}>Next</Button>
+                  <Button className="border border-blue-500 text-blue-500 bg-transparent hover:bg-blue-500 hover:text-white transition-colors duration-300">
+                    Next
+                  </Button>
                 );
               }
               return originalElement;
@@ -196,9 +172,10 @@ const BidHistory = () => {
             className: styles.paginationCenter
           }}
           columns={columns}
-          dataSource={dataSource}
+          dataSource={filteredData}
         />
       </div>
+
       <Modal
         open={isModalOpen}
         onOk={() => setIsModalOpen(false)}
@@ -207,10 +184,10 @@ const BidHistory = () => {
         closeIcon={
           <CloseOutlined
             style={{
-              color: "white", // Icon color
-              backgroundColor: "#de0a26", // Background color of the close icon
-              borderRadius: "10%", // Rounded background
-              padding: "10px" // Padding inside the background
+              color: "white",
+              backgroundColor: "#de0a26",
+              borderRadius: "10%",
+              padding: "10px"
             }}
           />
         }
@@ -222,38 +199,25 @@ const BidHistory = () => {
           <div className="p-[20px]">
             <div className="flex justify-between border-b py-[16px]">
               <p>Full Name:</p>
-              <p>
-                {/* {user?.name ? user?.name : "N/A"} */}
-                absayed
-              </p>
+              <p>{selectedRecord?.customerName || "N/A"}</p>
             </div>
 
-            <div className="flex justify-between border-b py-[16px] ">
+            <div className="flex justify-between border-b py-[16px]">
               <p>Email:</p>
-              <p>
-                {/* {user?.email ? user?.email : "N/A"} */}
-                ab@gmail.com
-              </p>
+              <p>{selectedRecord?.email || "N/A"}</p>
             </div>
             <div className="flex justify-between border-b py-[16px]">
               <p>Phone:</p>
-              <p>
-                {/* {user?.phone ? user?.phone : "N/A"} */}
-                +45269875
-              </p>
+              <p>{selectedRecord?.phone || "N/A"}</p>
             </div>
             <div className="flex justify-between border-b py-[16px]">
               <p>Date:</p>
-              <p>
-                {/* {user?.createdAt  ? user?.createdAt?.split("T")[0] : "N/A"} */}
-                23-11-24
-              </p>
+              <p>{"N/A"}</p>
             </div>
             <div className="flex justify-between items-center pt-[16px]">
-              <p>address:</p>
+              <p>Address:</p>
               <p className="px-[15px] py-[10px] rounded-lg">
-                {/* Regular P550 */}
-                UK
+                {selectedRecord?.address || "N/A"}
               </p>
             </div>
           </div>

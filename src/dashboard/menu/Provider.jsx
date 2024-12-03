@@ -13,14 +13,14 @@ const columns = [
     key: "fullName",
     render: (text, record) => (
       <div className="flex items-center gap-2">
-         
         <img
           src={`${url}/${record.image}`}
           alt={text}
           style={{ width: 40, height: 40, borderRadius: "50%" }}
         />
         <div>
-          <span className="font-semibold text-[18px] capitalize">{text}</span> <br />
+          <span className="font-semibold text-[18px] capitalize">{text}</span>{" "}
+          <br />
           <span>{record.email}</span>
         </div>
       </div>
@@ -106,7 +106,12 @@ const Provider = () => {
   const { data: allProviderData, isLoading, error } = useGetAllProviderQuery();
 
   // Check if data is available
-  if (isLoading) return <div className="text-[30px] text-[#fd3131] text-center mt-10">Providers Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="text-[30px] text-[#fd3131] text-center mt-10">
+        Providers Loading...
+      </div>
+    );
 
   if (error) {
     return <div>Error fetching provider data</div>;
@@ -132,6 +137,9 @@ const Provider = () => {
 
   return (
     <div className="mt-10">
+      <div>
+        <p className="text-header my-5">Providers</p>
+      </div>
       <Table
         columns={columns}
         dataSource={pagedData} // Use sliced provider data for the current page
