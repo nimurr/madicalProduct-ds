@@ -27,6 +27,9 @@ import Category from "../dashboard/menu/category/Category";
 import MarketingFees from "../dashboard/menu/MerketingFees";
 import SubCategory from './../dashboard/menu/category/SubCategory';
 import UpdateCategory from "../dashboard/menu/category/UpdateCategory";
+import AllProviderCategory from "../dashboard/menu/AllProviderCategory";
+import ProviderCategory from "../dashboard/menu/ProviderCategory";
+import ProviderSubCategory from "../dashboard/menu/ProviderSubCategory";
 
 
 export const router = createBrowserRouter([
@@ -80,6 +83,18 @@ export const router = createBrowserRouter([
             {
                 path: "provider",
                 element: <Provider />
+            },
+            {
+                path: "provider/:all-category",
+                element: <AllProviderCategory />
+            },
+            {
+                path: "provider/category/:id",
+                element: <ProviderCategory />
+            },
+            {
+                path: "provider/sub-category/:id",
+                element: <ProviderSubCategory />
             },
             {
                 path: "bidhistory",

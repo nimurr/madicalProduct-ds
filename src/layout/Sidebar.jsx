@@ -6,7 +6,7 @@ import logo from '../../public/image/logo.png'
 import { FaDollarSign, FaPersonRunning, FaSackDollar, FaUser, FaUsers, FaUsersLine } from "react-icons/fa6";
 import { MdCategory, MdOutlineMedicalServices, MdSubscriptions } from "react-icons/md";
 import { BiMenu, BiSolidDashboard } from "react-icons/bi";
-import { HiLogout, HiOutlineOfficeBuilding } from "react-icons/hi";
+import {  HiLogout, HiOutlineOfficeBuilding } from "react-icons/hi";
 import { AiOutlineSafetyCertificate } from "react-icons/ai";
 import { PiGitPullRequestDuotone } from "react-icons/pi";
 import { RiSecurePaymentFill } from "react-icons/ri";
@@ -14,8 +14,10 @@ import { CiSettings } from "react-icons/ci";
 import Swal from "sweetalert2";
 import { SiMagento } from "react-icons/si";
 import { BsExclude } from "react-icons/bs";
-import { FaUserAlt } from "react-icons/fa";
+import { FaUserAlt, FaUserFriends } from "react-icons/fa";
 import { TbCategory } from "react-icons/tb";
+import { HiCash } from "react-icons/hi";
+
 
 const Sidebar = () => {
 
@@ -69,18 +71,6 @@ const Sidebar = () => {
             </NavLink>
 
             <NavLink
-              to="users"
-              className={({ isActive }) =>
-                isActive
-                  ? "flex p-[10px] m-[6px] cursor-pointer items-center font-medium bg-[#FFFFFF] text-[#193664] rounded-lg"
-                  : "flex text-[white] p-[10px] m-[6px] cursor-pointer items-center font-medium  rounded-lg"
-              }
-            >
-              <FaUsers className="h-7 w-7 lg:h-5 lg:w-5" />
-              <span className="hidden ml-2 sm:block">Users</span>
-            </NavLink>
-
-            <NavLink
               to="earning"
               className={({ isActive }) =>
                 isActive
@@ -88,10 +78,24 @@ const Sidebar = () => {
                   : "flex text-[white] cursor-pointer items-center text-[18px] font-medium p-[10px]  m-[6px] rounded-lg"
               }
             >
-              <FaSackDollar className="h-7 w-7 lg:h-5 lg:w-5"/>
+              <HiCash className="h-7 w-7 lg:h-5 lg:w-5"/>
               <span className="hidden ml-2 sm:block">Earning</span>
             </NavLink> 
 
+
+            <NavLink
+              to="users"
+              className={({ isActive }) =>
+                isActive
+                  ? "flex p-[10px] m-[6px] cursor-pointer items-center font-medium bg-[#FFFFFF] text-[#193664] rounded-lg"
+                  : "flex text-[white] p-[10px] m-[6px] cursor-pointer items-center font-medium  rounded-lg"
+              }
+            >
+              <FaUserFriends className="h-7 w-7 lg:h-5 lg:w-5" />
+              <span className="hidden ml-2 sm:block">Users</span>
+            </NavLink>
+
+           
             
             <NavLink
               to="provider"
@@ -101,7 +105,7 @@ const Sidebar = () => {
                   : "flex text-[white] cursor-pointer items-center text-[18px] font-medium p-[10px]   m-[6px] rounded-lg"
               }
             >
-              <SiMagento className="h-7 w-7 lg:h-5 lg:w-5" />
+              <FaUserFriends className="h-7 w-7 lg:h-5 lg:w-5" />
               <span className="hidden ml-2 sm:block">Provider</span>
             </NavLink>
 
