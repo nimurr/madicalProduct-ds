@@ -145,7 +145,7 @@ const Sidebar = () => {
             </NavLink>
 
             <NavLink
-              to="marketing"
+              to="/dashboard/home"
               className={({ isActive }) =>
                 isActive
                   ? "flex p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium bg-[#FFFFFF] text-[#193664] rounded-lg"
