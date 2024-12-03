@@ -1,26 +1,25 @@
- 
-
 import { NavLink, useNavigate } from "react-router-dom";
-import logo from '../../public/image/logo.png'
+import logo from "../../public/image/logo.png";
+
+import {
+  FaDollarSign,
+
+} from "react-icons/fa6";
  
-import { FaDollarSign, FaPersonRunning, FaSackDollar, FaUser, FaUsers, FaUsersLine } from "react-icons/fa6";
-import { MdCategory, MdOutlineMedicalServices, MdSubscriptions } from "react-icons/md";
-import { BiMenu, BiSolidDashboard } from "react-icons/bi";
-import {  HiLogout, HiOutlineOfficeBuilding } from "react-icons/hi";
-import { AiOutlineSafetyCertificate } from "react-icons/ai";
-import { PiGitPullRequestDuotone } from "react-icons/pi";
-import { RiSecurePaymentFill } from "react-icons/ri";
+import {  BiSolidDashboard } from "react-icons/bi";
+
 import { CiSettings } from "react-icons/ci";
 import Swal from "sweetalert2";
-import { SiMagento } from "react-icons/si";
-import { BsExclude } from "react-icons/bs";
-import { FaUserAlt, FaUserFriends } from "react-icons/fa";
-import { TbCategory } from "react-icons/tb";
+import {  FaUserFriends } from "react-icons/fa";
+ 
 import { HiCash } from "react-icons/hi";
+import { CiCalendar } from "react-icons/ci"; 
+import { IoMenuOutline } from "react-icons/io5";
+import { RiMoneyDollarCircleLine } from "react-icons/ri";
+
 
 
 const Sidebar = () => {
-
   const navigate = useNavigate();
 
   const handleLogOut = () => {
@@ -34,8 +33,8 @@ const Sidebar = () => {
       confirmButtonText: "Yes, log out!"
     }).then((result) => {
       if (result.isConfirmed) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
 
         Swal.fire({
           title: "Logged Out!",
@@ -43,7 +42,7 @@ const Sidebar = () => {
           icon: "success",
           timer: 2000
         });
-        navigate('/');
+        navigate("/");
       }
     });
   };
@@ -52,8 +51,12 @@ const Sidebar = () => {
     <div className="lg:w-[250px] xl:w-[300px] md:w-[200px] sm:w-[120px] w-[120px] flex flex-col justify-between bg-primaryBg h-full min-h-screen rounded-md">
       <div>
         <div className="p-[10px] grid justify-items-stretch  sm:p-[16px]">
-          <img className="h-16 rounded-lg justify-self-center" src={logo} alt="Logo" />
-         
+          <img
+            className="h-16 rounded-lg justify-self-center"
+            src={logo}
+            alt="Logo"
+          />
+
           {/* <hr className="w-full mt-4 text-[#54D496] hidden sm:block" /> */}
         </div>
         <div className="ml-5 mt-8">
@@ -66,7 +69,7 @@ const Sidebar = () => {
                   : "flex text-[white] cursor-pointer items-center text-[18px] font-medium p-[10px] m-[6px] rounded-lg"
               }
             >
-              <BiSolidDashboard className="h-7 w-7 lg:h-5 lg:w-5"/>
+              <BiSolidDashboard className="h-7 w-7 lg:h-5 lg:w-5" />
               <span className="hidden ml-2 sm:block">Dashboard</span>
             </NavLink>
 
@@ -78,10 +81,9 @@ const Sidebar = () => {
                   : "flex text-[white] cursor-pointer items-center text-[18px] font-medium p-[10px]  m-[6px] rounded-lg"
               }
             >
-              <HiCash className="h-7 w-7 lg:h-5 lg:w-5"/>
+              <HiCash className="h-7 w-7 lg:h-5 lg:w-5" />
               <span className="hidden ml-2 sm:block">Earning</span>
-            </NavLink> 
-
+            </NavLink>
 
             <NavLink
               to="users"
@@ -95,8 +97,6 @@ const Sidebar = () => {
               <span className="hidden ml-2 sm:block">Users</span>
             </NavLink>
 
-           
-            
             <NavLink
               to="provider"
               className={({ isActive }) =>
@@ -109,7 +109,6 @@ const Sidebar = () => {
               <span className="hidden ml-2 sm:block">Provider</span>
             </NavLink>
 
-            
             <NavLink
               to="bidhistory"
               className={({ isActive }) =>
@@ -118,7 +117,7 @@ const Sidebar = () => {
                   : "flex text-[white] p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium   rounded-lg"
               }
             >
-              <BsExclude className="h-7 w-7 lg:h-5 lg:w-5"/>
+              <CiCalendar className="h-7 w-7 lg:h-5 lg:w-5" />
               <span className="hidden ml-2 sm:block">Bid History</span>
             </NavLink>
             <NavLink
@@ -129,7 +128,7 @@ const Sidebar = () => {
                   : "flex text-[white] p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium   rounded-lg"
               }
             >
-           <TbCategory className="h-7 w-7 lg:h-5 lg:w-5"/>
+              <IoMenuOutline className="h-7 w-7 lg:h-5 lg:w-5" />
               <span className="hidden ml-2 sm:block">Category</span>
             </NavLink>
 
@@ -141,8 +140,20 @@ const Sidebar = () => {
                   : "flex text-[white] p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium   rounded-lg"
               }
             >
-              <FaDollarSign className="h-7 w-7 lg:h-5 lg:w-5"/>
+              <HiCash className="h-7 w-7 lg:h-5 lg:w-5" />
               <span className="hidden ml-2 sm:block">Marketing fees</span>
+            </NavLink>
+
+            <NavLink
+              to="marketing"
+              className={({ isActive }) =>
+                isActive
+                  ? "flex p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium bg-[#FFFFFF] text-[#193664] rounded-lg"
+                  : "flex text-[white] p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium   rounded-lg"
+              }
+            >
+              <RiMoneyDollarCircleLine className="h-7 w-7 lg:h-5 lg:w-5" />
+              <span className="hidden ml-2 sm:block">Withdrawal Request</span>
             </NavLink>
 
             <NavLink

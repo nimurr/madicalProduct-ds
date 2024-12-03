@@ -15,11 +15,13 @@ const Users = () => {
   // Fetching the data
   const { data, isLoading, error } = useGetAllUserQuery();
 
+  console.log(data)
+
   // Check if the data is available
   const users = data?.data?.attributes?.results || [];
 
   // Handle loading and error states
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div className="text-[30px] text-[#fd3131] text-center mt-10">User Loading...</div>;
   if (error) return <div>Error fetching data: {error.message}</div>;
 
   const columns = [
@@ -64,7 +66,7 @@ const Users = () => {
           <BsInfoCircle
             onClick={() => handleView(record)}
             size={18}
-            className="text-[red] cursor-pointer"
+            className="text-primaryBg font-bold cursor-pointer"
           />
         </Space>
       )

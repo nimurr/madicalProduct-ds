@@ -1,8 +1,11 @@
 import { FaStar } from "react-icons/fa6";
 import brandLogoImage from "../../../public/image/handsome-man.png";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export default function ProviderSubCategory() {
+  const { id } = useParams();
+  console.log(id);
+
   return (
     <div>
       <div className=" bg-[#e8ebf0] rounded-md pb-20 mt-10">

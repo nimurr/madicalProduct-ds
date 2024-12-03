@@ -85,7 +85,7 @@ export const router = createBrowserRouter([
                 element: <Provider />
             },
             {
-                path: "provider/:all-category",
+                path: "provider/:id",
                 element: <AllProviderCategory />
             },
             {

@@ -1,9 +1,15 @@
 import { CiStar } from "react-icons/ci";
 import { FaStar } from "react-icons/fa6";
 import brandLogoImage from "../../../public/image/handsome-man.png";
-import { Link } from "react-router-dom";
+import {useParams, Link,  } from "react-router-dom";
 
 export default function ProviderCategory() {
+
+    
+    const {id} = useParams();
+    console.log(id)
+
+
   return (
     <div className=" bg-[#e8ebf0] rounded-md pb-20 mt-10">
          
@@ -30,7 +36,7 @@ export default function ProviderCategory() {
       <div className="flex flex-wrap gap-5 my-10">
         {[...Array(5)].map((_, idx) => {
           return (
-            <Link to={'/dashboard/provider/sub-category/sdcategory'} key={idx} className="min-w-[200px]">
+            <Link to={'/dashboard/provider/sub-category/536sdf6565sdf36565sddf'} key={idx} className="min-w-[200px]">
               <img className="w-full" src={brandLogoImage} alt="Category" />
               <h3 className="text-2xl font-semibold">Sub Category Name</h3>
               <span className="flex items-center gap-2">

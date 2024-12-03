@@ -22,8 +22,10 @@ const Category = () => {
   };
 
   // Fetch Categories
-  const { data } = useGetCategoriesQuery();
+  const { data , isLoading } = useGetCategoriesQuery();
   console.log(data);
+
+
 
   // Mutation Hooks
   const [deleteCategory, { isLoading: isDeleting }] =
@@ -95,6 +97,9 @@ const Category = () => {
       console.error("Failed to delete category:", err);
     }
   };
+
+  if (isLoading) return <div className="text-[30px] text-[#fd3131] text-center mt-10">Category Loading...</div>;
+
 
   return (
     <div className="mt-12 p-6">

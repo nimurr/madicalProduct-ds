@@ -2,76 +2,25 @@
 import { useState } from "react";
 import { Table, Pagination } from "antd";
 import { Link } from "react-router-dom";
-
-// Sample data
-const data = [
-  {
-    key: "1",
-    name: "John Doe",
-    phone: "123-456-7890",
-    address: "123 Main St, City, Country",
-    feedback: "Great service!",
-    image: "../../../../public/image/cagetoriesUser.png", // Add an image URL
-    email: "john.doe@example.com",
-    rate: 4.5 // Add rate field
-  },
-  {
-    key: "2",
-    name: "Jane Smith",
-    phone: "987-654-3210",
-    address: "456 Elm St, Town, Country",
-    feedback: "Very satisfied!",
-    image: "../../../../public/image/cagetoriesUser.png", // Add an image URL
-    email: "jane.smith@example.com",
-    rate: 4.0 // Add rate field
-  },
-  {
-    key: "3",
-    name: "Michael Johnson",
-    phone: "555-123-4567",
-    address: "789 Oak St, Village, Country",
-    feedback: "Could be better.",
-    image: "../../../../public/image/cagetoriesUser.png", // Add an image URL
-    email: "michael.johnson@example.com",
-    rate: 3.5 // Add rate field
-  },
-  {
-    key: "4",
-    name: "Emily Clark",
-    phone: "111-222-3333",
-    address: "321 Pine St, Suburb, Country",
-    feedback: "Excellent quality.",
-    image: "../../../../public/image/cagetoriesUser.png", // Add an image URL
-    email: "emily.clark@example.com",
-    rate: 5.0 // Add rate field
-  },
-  {
-    key: "5",
-    name: "David Lee",
-    phone: "444-555-6666",
-    address: "654 Maple St, City, Country",
-    feedback: "Could improve.",
-    image: "../../../../public/image/cagetoriesUser.png", // Add an image URL
-    email: "david.lee@example.com",
-    rate: 4.2 // Add rate field
-  }
-];
+import { useGetAllProviderQuery } from "../../redux/features/auth/heashboard/providerGet";
+import url from "../../redux/api/baseUrl";
 
 // Define the columns for the table
 const columns = [
   {
     title: "Name",
-    dataIndex: "name",
-    key: "name",
+    dataIndex: "fullName",
+    key: "fullName",
     render: (text, record) => (
       <div className="flex items-center gap-2">
+         
         <img
-          src={record.image}
+          src={`${url}/${record.image}`}
           alt={text}
           style={{ width: 40, height: 40, borderRadius: "50%" }}
         />
         <div>
-          <span>{text}</span> <br />
+          <span className="font-semibold text-[18px] capitalize">{text}</span> <br />
           <span>{record.email}</span>
         </div>
       </div>
@@ -83,7 +32,7 @@ const columns = [
     key: "rate",
     render: (text) => (
       <div>
-        <span>{text}⭐</span> {/* Display the rating */}
+        <span>Demo</span> {/* Display the rating */}
       </div>
     )
   },
@@ -92,7 +41,6 @@ const columns = [
     dataIndex: "address",
     key: "address"
   },
-
   {
     title: "Action",
     key: "action",
@@ -128,7 +76,7 @@ const columns = [
     key: "action",
     render: (_, record) => (
       <Link
-        to={`/dashboard/provider/all-category`}
+        to={`/dashboard/provider/${record.id}`}
         type="primary"
         className=" text-[#2168d3] font-semibold"
         onClick={() => handleAction(record.key)}
@@ -153,7 +101,23 @@ const Provider = () => {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(3); // Change page size to 3 for testing
-  const [totalItems] = useState(data.length); // Set total items count
+
+  // Fetch the provider data using the Redux query hook
+  const { data: allProviderData, isLoading, error } = useGetAllProviderQuery();
+
+  // Check if data is available
+  if (isLoading) return <div className="text-[30px] text-[#fd3131] text-center mt-10">Providers Loading...</div>;
+
+  if (error) {
+    return <div>Error fetching provider data</div>;
+  }
+
+  // Get the providers data from the API response
+  const provider = allProviderData?.data?.attributes?.results || [];
+  console.log(provider);
+
+  // Total items count
+  const totalItems = provider.length;
 
   // Handle page change
   const handlePageChange = (page, pageSize) => {
@@ -161,7 +125,7 @@ const Provider = () => {
   };
 
   // Slice the data based on pagination
-  const pagedData = data.slice(
+  const pagedData = provider.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
@@ -170,7 +134,7 @@ const Provider = () => {
     <div className="mt-10">
       <Table
         columns={columns}
-        dataSource={pagedData} // Use sliced data for the current page
+        dataSource={pagedData} // Use sliced provider data for the current page
         className="custom-ant-table"
         bordered
         pagination={false} // Disable internal pagination
