@@ -40,3 +40,17 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Remove borders from table header */
+.custom-ant-table .ant-table-thead > tr > th {
+  border: none !important; /* Remove border from header cells */
+}
+
+.custom-ant-table .ant-table-tbody > tr > td {
+  border: none !important; /* Remove border from body cells */
+}
+
+.custom-ant-table .ant-table-tbody > tr {
+  border-bottom: none !important; /* Remove border between rows */
+}
+
