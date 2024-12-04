@@ -7,7 +7,9 @@ const updateProfile = apiSlice.injectEndpoints({
         url: `/profile/info/update`, // Make sure this matches the correct route in your backend
         method: "PATCH", // Change to PATCH
         body: data // Send the formData or data as the body
-      })
+      }),
+      invalidatesTags: ["AdminProfile"]
+      // AdminProfile
     })
   })
 });

@@ -131,7 +131,7 @@ const Provider = () => {
     } catch (err) {
       console.error("Failed to create category:", err);
     }
-    console.log(id);
+    // console.log(id);
   };
 
   // Check if data is available

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+ 
 import { FaCircleArrowLeft } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import { useGetPrivacyAndPolicyQuery } from "../../../redux/features/auth/heashboard/privacyAndpolicy";
@@ -9,7 +9,7 @@ const PrivacyPolicy = () => {
   // Fetch the privacy data
   const { data } = useGetPrivacyAndPolicyQuery();
 
-  console.log(data?.data.attributes[0].content);
+  // console.log(data?.data.attributes[0].content);
 
   // Ensure you're accessing the content correctly.
   // It seems you're expecting content to be in `data.data.attributes.content`.
@@ -27,7 +27,7 @@ const PrivacyPolicy = () => {
           {content && (
             <div
               dangerouslySetInnerHTML={{
-                __html: content, // Render the content with HTML tags
+                __html: content // Render the content with HTML tags
               }}
             />
           )}
@@ -35,7 +35,7 @@ const PrivacyPolicy = () => {
         <div className="text-right mt-16">
           <button
             onClick={() => navigate(`/dashboard/settings/editprivacypolicy`)}
-            className="h-[44px] w-[260px] !text-white !bg-primaryBg rounded-[8px]"
+            className="h-[44px] w-[260px] !text-white !bg-primaryBg text-[#fff] rounded-[8px]"
           >
             Edit
           </button>

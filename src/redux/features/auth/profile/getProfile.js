@@ -5,12 +5,9 @@ const getProfile = apiSlice.injectEndpoints({
     getProfile: builder.query({
       query: () => `/profile/info`,
       method: "GET",
-     
+      providesTags: ["AdminProfile"]
     })
-  
   })
 });
 
 export const { useGetProfileQuery } = getProfile;
-
- 

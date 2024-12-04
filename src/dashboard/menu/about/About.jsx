@@ -23,7 +23,7 @@ const About = () => {
       <div className=" text-right mt-16">
         <Button
           onClick={() => navigate(`/dashboard/settings/editabout`)}
-          className=" h-[44px] w-[260px] !text-white !bg-primaryBg rounded-[8px]"
+          className=" h-[44px] w-[260px] !text-white !bg-primaryBg text-[#fff] rounded-[8px]"
         >
           Edit
         </Button>

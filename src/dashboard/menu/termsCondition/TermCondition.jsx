@@ -24,7 +24,7 @@ const TermCondition = () => {
       <div className="text-right mt-16">
         <button
           onClick={() => navigate(`/dashboard/settings/edittermcondition`)}
-          className="h-[44px] w-[260px] !text-white !bg-primaryBg rounded-[8px]"
+          className="h-[44px] w-[260px] !text-white !bg-primaryBg text-[#fff] rounded-[8px]"
         >
           Edit
         </button>

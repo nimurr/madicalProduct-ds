@@ -26,7 +26,7 @@ const dataSource = [
   },
   {
     key: "3",
-    customerName: "Rina Begum",
+    customerName: "Rena Begum",
     email: "rina@email.com",
     address: "Sylhet, Bangladesh",
     date: "2024-06-16",

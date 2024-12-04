@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import JoditEditor from "jodit-react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaCircleArrowLeft } from "react-icons/fa6";
@@ -74,7 +74,7 @@ const EditAbout = () => {
           <Form.Item>
             <Button
               htmlType="submit"
-              className="h-[44px] w-[260px] !text-white !bg-primaryBg rounded-[8px]"
+              className="h-[44px] w-[260px] !text-white !bg-primaryBg text-[#fff] rounded-[8px]"
               loading={isLoading} // Show loading spinner while updating
             >
               Update About Us

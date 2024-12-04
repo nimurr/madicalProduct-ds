@@ -71,7 +71,7 @@ const EditTermCondition = () => {
           <Form.Item>
             <Button
               htmlType="submit"
-              className="h-[44px] w-[260px] !text-white !bg-primaryBg rounded-[8px]"
+              className="h-[44px] w-[260px] !text-white !bg-primaryBg text-[#fff] rounded-[8px]"
               loading={isUpdating} // Show loading spinner when updating
             >
               Update Term Condition

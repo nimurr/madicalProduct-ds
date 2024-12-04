@@ -22,20 +22,14 @@ import { useState } from "react";
 import { useGetProfileQuery } from "../redux/features/auth/profile/getProfile";
 import { useChangePasswordMutation } from "../redux/features/auth/changePassword";
 import toast, { Toaster } from "react-hot-toast";
+import url from "../redux/api/baseUrl";
 
 const Header = () => {
-  const {
-    data: responseData,
-    isLoading,
-    isError,
-    isFetching,
-    isSuccess,
-    error
-  } = useGetProfileQuery();
+  const { data: responseData } = useGetProfileQuery();
 
   const [passwordChange] = useChangePasswordMutation();
 
-  // console.log("please get the user ", responseData?.data?.attributes?.fullName);
+  // console.log("please get the user ", responseData?.data?.attributes?.image);
 
   const navigate = useNavigate();
 
@@ -101,27 +95,18 @@ const Header = () => {
       }`}
     >
       <Toaster />
-      <Menu.Item className="hover:!bg-[#193664]" key="1">
-        <Link
-          to="/dashboard/profile"
-          className="hover:!bg-[#193664] hover:!text-white"
-        >
+      <Menu.Item className="hover:!bg-[#193664] hover:!text-[#fff]" key="1">
+        <Link to="/dashboard/profile" className=" ">
           Profile
         </Link>
       </Menu.Item>
-      <Menu.Item className="hover:!bg-[#193664]" key="2">
-        <p
-          onClick={openModal}
-          className="hover:!bg-[#193664] hover:!text-white"
-        >
+      <Menu.Item className="hover:!bg-[#193664] hover:!text-[#fff]" key="2">
+        <p onClick={openModal} className=" ">
           Change Password
         </p>
       </Menu.Item>
-      <Menu.Item className="hover:!bg-[#193664]" key="3">
-        <p
-          onClick={handleLogOut}
-          className="hover:!bg-[#193664] hover:!text-white"
-        >
+      <Menu.Item className="hover:!bg-[#193664] hover:!text-[#fff]" key="3">
+        <p onClick={handleLogOut} className="">
           Logout
         </p>
       </Menu.Item>
@@ -166,7 +151,7 @@ const Header = () => {
           >
             <a className="flex items-center text-white cursor-pointer text-[#000000]">
               <Avatar
-                src={"https://randomuser.me/api/portraits/men/57.jpg"}
+                src={url + "" + responseData?.data?.attributes?.image}
                 className="mr-2 h-[52px] w-[52px]"
               />
               {responseData?.data?.attributes?.fullName}{" "}
@@ -280,7 +265,7 @@ const Header = () => {
                 <Button
                   type="primary"
                   htmlType="submit"
-                  className="w-full h-10 py-3 !bg-[#69C0BE] !text-black text-[16px] rounded-md"
+                  className="w-full h-10 py-3 hover:text-[#fff] text-[16px] rounded-md"
                 >
                   Change Password
                 </Button>

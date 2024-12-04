@@ -3,10 +3,10 @@ import JoditEditor from "jodit-react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaCircleArrowLeft } from "react-icons/fa6";
 import { Button, Form } from "antd";
-import "../../../index.css";
-import { useCreateTermsPostMutation } from "../../../redux/features/auth/heashboard/updateTeramCondition";
-import toast from "react-hot-toast";
-import { useGetTermsAndServiceQuery } from "../../../redux/features/auth/heashboard/termsAndservices";
+import "../../../index.css"; 
+import toast from "react-hot-toast"; 
+import { useCreatePrivacyPostMutation } from "../../../redux/features/auth/heashboard/updatePrivacy";
+import { useGetPrivacyAndPolicyQuery } from "../../../redux/features/auth/heashboard/privacyAndpolicy";
 
 // Function to decode HTML entities
 const decodeHtml = (html) => {
@@ -16,10 +16,12 @@ const decodeHtml = (html) => {
 };
 
 const EditTermCondition = () => {
-  const { data: termcondition } = useGetTermsAndServiceQuery();
-  const [updateTC, { isLoading }] = useCreateTermsPostMutation();
+  const { data: privacyPolicy } = useGetPrivacyAndPolicyQuery();
+  const [updateTC, { isLoading }] = useCreatePrivacyPostMutation();
   const editor = useRef(null);
   const navigate = useNavigate();
+
+  // console.log(privacyPolicy.data.attributes[0]?.content);
 
   // State for holding content
   const [content, setContent] = useState("");
@@ -27,14 +29,14 @@ const EditTermCondition = () => {
 
   // Effect to load the terms and conditions data
   useEffect(() => {
-    if (termcondition?.data?.attributes?.docs?.length && !isInitialized) {
+    if (privacyPolicy?.data?.attributes?.docs?.length && !isInitialized) {
       const decodedContent = decodeHtml(
-        termcondition.data.attributes.docs[0].content
+        privacyPolicy.data.attributes.docs[0].content
       );
       setContent(decodedContent); // Set decoded content to editor
       setIsInitialized(true); // Set flag to prevent re-initialization
     }
-  }, [termcondition, isInitialized]);
+  }, [privacyPolicy, isInitialized]);
 
   // Function to handle form submission
   const handlePostTerms = async () => {
@@ -42,7 +44,7 @@ const EditTermCondition = () => {
       // Update terms and conditions with the content
       const res = await updateTC({ content }).unwrap();
 
-      navigate("/dashboard/settings/termcondition"); // Redirect after success
+      navigate("/dashboard/settings/privacypolicy"); // Redirect after success
 
       if (res?.code === 200) {
         toast.success(res?.message); // Show success notification
@@ -57,7 +59,7 @@ const EditTermCondition = () => {
   return (
     <div className="mt-8 mx-6">
       <Link
-        to="/dashboard/settings/termcondition"
+        to="/dashboard/settings/privacypolicy"
         className="flex items-center gap-2"
       >
         <FaCircleArrowLeft className="text-primaryBg w-8 h-8" />
@@ -73,11 +75,11 @@ const EditTermCondition = () => {
         <div className="mt-6">
           <JoditEditor
             ref={editor}
-            value={content} // Controlled by state content
+            value={privacyPolicy.data.attributes[0]?.content} // Controlled by state content
             onChange={(newContent) => setContent(newContent)} // Update content on change
-            config={{
-              readonly: isLoading // Disable editing while loading
-            }}
+            // config={{
+            //   readonly: isLoading // Disable editing while loading
+            // }}
           />
         </div>
 
@@ -85,7 +87,7 @@ const EditTermCondition = () => {
           <Form.Item>
             <Button
               htmlType="submit"
-              className="h-[44px] w-[260px] !text-white !bg-primaryBg rounded-[8px]"
+              className="h-[44px] w-[260px] !text-white !bg-primaryBg text-[#fff] rounded-[8px]"
               loading={isLoading} // Add loading state to button
             >
               Update Term & Condition

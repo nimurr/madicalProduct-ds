@@ -1,37 +1,29 @@
 import { Image, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
-import user from '../../../../public/image/randomuser.jpg';
+
 import { useGetProfileQuery } from "../../../redux/features/auth/profile/getProfile";
 import url from "../../../redux/api/baseUrl";
- 
 
 const Profile = () => {
   const navigate = useNavigate();
 
-  const {
-    data: responseData,
-    isLoading,
-    isError,
-    isFetching,
-    isSuccess,
-    error
-  } = useGetProfileQuery();
-  
+  const { data: responseData } = useGetProfileQuery();
 
-  console.log(responseData?.data?.attributes)
- 
+  console.log(responseData?.data?.attributes);
+
   // console.log(profile);
-  console.log(`${url}${responseData?.data?.attributes?.image}`)
-  
+  console.log(`${url}${responseData?.data?.attributes?.image}`);
 
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mt-10 mb-16">
-        <h1 className="text-2xl md:text-3xl font-medium">Profile Information</h1>
+        <h1 className="text-2xl md:text-3xl font-medium">
+          Profile Information
+        </h1>
         <div
           onClick={() => navigate(`/dashboard/editprofile`)}
-          className="flex gap-2 items-center py-3 px-6 rounded-lg cursor-pointer bg-[#193664] text-white"
+          className="flex gap-2 items-center py-3 px-6 rounded-lg cursor-pointer bg-[#193664] text-[#fff]"
         >
           <FaEdit size={17} />
           <p>Edit Profile</p>
@@ -40,15 +32,20 @@ const Profile = () => {
 
       <div className="lg:flex md:flex gap-4 shadow-md bg-white p-4 rounded-xl">
         <div className="lg:w-1/3 flex flex-col border border-dotted p-4 justify-center items-center gap-8">
-        <div className="rounded-full  overflow-hidden h-[180px] w-[180px] mx-auto">
-              {/* <Image src={url + profile?.data?.attributes?.image} /> */}
-              <Image className="w-full h-full" src={`${url}${responseData?.data?.attributes?.image}`} />
-            </div>
-           
+          <div className="rounded-full  overflow-hidden h-[180px] w-[180px] mx-auto">
+            {/* <Image src={url + profile?.data?.attributes?.image} /> */}
+            <Image
+              className=" "
+              src={`${url}/${responseData?.data?.attributes?.image}`}
+            />
+          </div>
+
           <div className="flex flex-col justify-center items-center text-center">
             {/* <p className="text-lg md:text-xl">{profile?.data?.attributes?.role}</p> */}
             <p className="text-lg md:text-xl">{"admin"}</p>
-            <h1 className="text-2xl md:text-3xl font-medium">{responseData?.data?.attributes?.fullName}</h1>
+            <h1 className="text-2xl md:text-3xl font-medium">
+              {responseData?.data?.attributes?.fullName}
+            </h1>
           </div>
         </div>
 
@@ -56,7 +53,10 @@ const Profile = () => {
           <div className="flex flex-col gap-6">
             <div className="flex flex-col md:flex-row gap-6">
               <div className="flex-1">
-                <label htmlFor="name" className="text-lg md:text-xl font-medium">
+                <label
+                  htmlFor="name"
+                  className="text-lg md:text-xl font-medium"
+                >
                   Name
                 </label>
                 <Input
@@ -89,7 +89,7 @@ const Profile = () => {
               </label>
               <Input
                 placeholder="Phone"
-                value={responseData?.data?.attributes?.phoneNumber}
+                value={"+" + responseData?.data?.attributes?.phoneNumber}
                 className="p-4 text-lg md:text-xl bg-[#ebf5f5] rounded w-full mt-3 outline-none focus:bg-[#69C0BE] hover:bg-[#69C0BE]"
                 type="text"
                 readOnly

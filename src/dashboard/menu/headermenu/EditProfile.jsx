@@ -1,5 +1,5 @@
 import { Button, Form, Input, Upload } from "antd";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PhoneInput from "react-phone-number-input";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
@@ -9,41 +9,27 @@ import defaultUserImage from "../../../../public/image/randomuser.jpg";
 import { useUpdateProfileMutation } from "../../../redux/features/auth/profile/editProfile";
 import toast, { Toaster } from "react-hot-toast";
 import { useGetProfileQuery } from "../../../redux/features/auth/profile/getProfile";
+import url from "../../../redux/api/baseUrl";
 
-const EditProfiel = () => {
+const EditProfile = () => {
   const navigate = useNavigate();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [fileList, setFileList] = useState([]);
+  const [imageUrl, setImageUrl] = useState("");
 
-  const [updateProfile, { isLoading }] = useUpdateProfileMutation();
+  const [updateProfile] = useUpdateProfileMutation();
+  const { data } = useGetProfileQuery();
 
-  const { data, isError, isFetching } = useGetProfileQuery();
+  useEffect(() => {
+    if (data?.data?.attributes) {
+      setPhoneNumber(data.data.attributes.phoneNumber || ""); // Set default phone number
+      // You can also set imageUrl if the profile has an image
+      const existingImageUrl = data.data.attributes.image ? `${url}${data.data.attributes.image}` : "";
+      setImageUrl(existingImageUrl);
+    }
+  }, [data]);
 
-  // console.log(data?.data?.attributes?.email);
-
-  const [imageUrl, setImageUrl] = useState();
-
-  // eslint-disable-next-line no-undef
-  //  console.log(data?.data?.attributes);
-
-  // const initialValues = {
-  //   name: data?.data?.attributes?.name || "",
-  //   email: data?.data?.attributes?.email || "",
-  //   phoneNumber: data?.data?.attributes?.phoneNumber || ""
-  // };
-
-  // useEffect(() => {
-  //   if (data?.data?.attributes) {
-  //     setPhoneNumber(data.data.attributes.phoneNumber || "");
-  //     const existingImageUrl = url + data?.data?.attributes?.image;
-  //     if (existingImageUrl) {
-  //       setImageUrl(existingImageUrl);
-  //     }
-  //     initialValues.fullName = data.data.attributes.fullName || "";
-  //     initialValues.email = data.data.attributes.email || "";
-  //   }
-  // }, [data]);
-
+  // Handle file upload changes
   const handleUploadChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
     if (newFileList[0]?.originFileObj) {
@@ -53,23 +39,19 @@ const EditProfiel = () => {
     }
   };
 
-  //  console.log("fileeeeeeeeeeeeeeeeeeeee", imageUrl);
-  //  console.log(fileList, phoneNumber);
-
+  // Handle profile update
   const handleUpdateProfile = async (values) => {
-    console.log(values);
-
     const formData = new FormData();
     formData.append("fullName", values?.fullName);
-    formData.append("phoneNumber", phoneNumber); 
+    formData.append("phoneNumber", phoneNumber);
 
+    // Append image if a file is selected
     if (fileList[0]?.originFileObj) {
       formData.append("image", fileList[0].originFileObj);
-      formData.append("image", imageUrl);
     }
+
     try {
       const res = await updateProfile(formData).unwrap();
-      console.log(res);
       if (res?.code === 200) {
         toast.success(res?.message);
       }
@@ -77,12 +59,13 @@ const EditProfiel = () => {
         navigate("/dashboard/profile");
       }, 1000);
     } catch (error) {
-      console.log(error?.data);
+      console.error("Error updating profile:", error?.data);
+      toast.error("Profile update failed!");
     }
   };
 
   return (
-    <div className="">
+    <div>
       <Toaster />
       <div
         onClick={() => navigate("/dashboard/profile")}
@@ -95,7 +78,6 @@ const EditProfiel = () => {
       <div className="mx-6 p-9 rounded-xl bg-white shadow-md">
         <Form
           layout="vertical"
-          // initialValues={initialValues}
           autoComplete="off"
           onFinish={handleUpdateProfile}
         >
@@ -109,8 +91,7 @@ const EditProfiel = () => {
                 >
                   <img
                     className="w-44 h-44 rounded-full"
-                    src={imageUrl}
-                    in
+                    src={imageUrl || defaultUserImage}
                     alt="Profile"
                   />
                   <Button
@@ -135,13 +116,11 @@ const EditProfiel = () => {
                 <Form.Item
                   label={<span className="text-lg font-medium">Name</span>}
                   name="fullName"
-                  rules={[
-                    { required: true, message: "Please input your name!" }
-                  ]}
-                  // initialValue={"absayed"}
+                  initialValue={data?.data?.attributes?.fullName}
+                  rules={[{ required: true, message: "Please input your name!" }]}
                 >
                   <Input
-                    placeholder="fullName"
+                    placeholder="Full Name"
                     className="p-4 rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                   />
                 </Form.Item>
@@ -149,9 +128,6 @@ const EditProfiel = () => {
                 <Form.Item
                   label={<span className="text-lg font-medium">Email</span>}
                   name="email"
-                  rules={[
-                    { required: true, message: "Please input your email!" }
-                  ]}
                   initialValue={data?.data?.attributes?.email}
                   readOnly
                 >
@@ -164,14 +140,12 @@ const EditProfiel = () => {
                 </Form.Item>
 
                 <div className="flex flex-col">
-                  <label className="text-lg font-medium mb-2">
-                    Phone Number
-                  </label>
+                  <label className="text-lg font-medium mb-2">Phone Number</label>
                   <PhoneInput
                     placeholder="Enter phone number"
                     international
-                    // defaultCountry="us"
-                    value={phoneNumber}
+                    defaultCountry="BD"
+                    value={'+'+phoneNumber.toString()}
                     onChange={setPhoneNumber}
                     className="p-2 rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                     style={{ height: "50px" }}
@@ -183,7 +157,7 @@ const EditProfiel = () => {
 
           <Button
             htmlType="submit"
-            className="w-full mt-12 h-14 !bg-[#193664] !text-white rounded-lg text-lg font-medium"
+            className="w-full mt-12 h-14 !bg-[#193664] text-[#fff] rounded-lg text-lg font-medium"
           >
             Update Profile
           </Button>
@@ -193,4 +167,4 @@ const EditProfiel = () => {
   );
 };
 
-export default EditProfiel;
+export default EditProfile;

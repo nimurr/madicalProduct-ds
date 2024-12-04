@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
-import { Modal, Button } from "antd";
+import { Modal, Button, message } from "antd"; // Import message component for validation feedback
 import marketingImage from "../../../public/image/marketingFeesImage.png";
 
 const MarketingFees = () => {
@@ -21,6 +21,10 @@ const MarketingFees = () => {
   };
 
   const handleProductSubmit = () => {
+    if (!productPrice) {
+      message.error("Please enter a price before submitting."); // Show error message if price is empty
+      return;
+    }
     // Handle the submit action, such as sending the price data to an API or updating the state
     console.log("Submitted Product Marketing Fee Price:", productPrice);
     setIsProductModalOpen(false); // Close modal after submitting
@@ -45,6 +49,10 @@ const MarketingFees = () => {
   };
 
   const handleMessagingSubmit = () => {
+    if (!messagingPrice) {
+      message.error("Please enter a price before submitting."); // Show error message if price is empty
+      return;
+    }
     // Handle the submit action, such as sending the price data to an API or updating the state
     console.log("Submitted Messaging Fee Price:", messagingPrice);
     setIsMessagingModalOpen(false); // Close modal after submitting
@@ -69,6 +77,10 @@ const MarketingFees = () => {
   };
 
   const handleBidSubmit = () => {
+    if (!bidPrice) {
+      message.error("Please enter a price before submitting."); // Show error message if price is empty
+      return;
+    }
     // Handle the submit action, such as sending the price data to an API or updating the state
     console.log("Submitted Bid Fee Price:", bidPrice);
     setIsBidModalOpen(false); // Close modal after submitting
@@ -110,6 +122,7 @@ const MarketingFees = () => {
             <label htmlFor="">
               <span className="block mb-1">Price</span>
               <input
+                required
                 className="w-full p-2 rounded-xl border-[2px] border-[#eee]"
                 type="number"
                 placeholder="Price ..."
@@ -119,13 +132,13 @@ const MarketingFees = () => {
             </label>
           </form>
           <div className="mt-4 flex justify-center">
-            <Button
+            <button
               type="primary"
               onClick={handleProductSubmit}
-              className="bg-[#2168d3] text-white rounded-xl py-2 px-8"
+              className="bg-[#2168d3] text-[#fff] font-semibold rounded-xl py-3 w-full mt-20"
             >
               Update
-            </Button>
+            </button>
           </div>
         </Modal>
 
@@ -159,6 +172,7 @@ const MarketingFees = () => {
             <label htmlFor="">
               <span className="block mb-1">Price</span>
               <input
+                required
                 className="w-full p-2 rounded-xl border-[2px] border-[#eee]"
                 type="number"
                 placeholder="Price ..."
@@ -168,13 +182,13 @@ const MarketingFees = () => {
             </label>
           </form>
           <div className="mt-4 flex justify-center">
-            <Button
+            <button 
               type="primary"
               onClick={handleMessagingSubmit}
-              className="bg-[#2168d3] text-white rounded-xl py-2 px-8"
+              className="bg-[#2168d3] text-[#fff] font-semibold rounded-xl py-3 w-full mt-20"
             >
               Update
-            </Button>
+            </button>
           </div>
         </Modal>
 
@@ -208,6 +222,7 @@ const MarketingFees = () => {
             <label htmlFor="">
               <span className="block mb-1">Price</span>
               <input
+                required
                 className="w-full p-2 rounded-xl border-[2px] border-[#eee]"
                 type="number"
                 placeholder="Price ..."
@@ -217,13 +232,13 @@ const MarketingFees = () => {
             </label>
           </form>
           <div className="mt-4 flex justify-center">
-            <Button
+            <button
               type="primary"
               onClick={handleBidSubmit}
-              className="bg-[#2168d3] text-white rounded-xl py-2 px-8"
+              className="bg-[#2168d3] text-[#fff] font-semibold rounded-xl py-3 w-full mt-20"
             >
               Update
-            </Button>
+            </button>
           </div>
         </Modal>
       </div>
