@@ -18,11 +18,9 @@ const Settings = () => {
   // };
 
   return (
-    <div className="mt-8 mx-6 ">
+    <div className="mt-8 md:mx-6 ">
       <h1 className="font-semibold text-[30px]">Settings</h1>
       <div>
-         
-
         {/* Privacy policy */}
         <div onClick={() => navigate("/dashboard/settings/privacypolicy")} className="mt-8 cursor-pointer flex justify-between bg-[#F7F7F7] rounded items-center w-full h-[75px]">
           <p className="text-[18px] ml-8 font-medium">Privacy Policy</p>

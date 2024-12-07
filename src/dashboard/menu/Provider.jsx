@@ -176,9 +176,9 @@ const Provider = () => {
         bordered // Remove internal borders
         pagination={false} // Disable internal pagination
         rowClassName="table-row"
-        style={{
-          backgroundColor: "#eee" // Optional background color for the table
-        }}
+        // style={{
+        //   backgroundColor: "#eee" // Optional background color for the table
+        // }}
       />
 
       {/* External Pagination */}

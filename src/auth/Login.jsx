@@ -1,20 +1,55 @@
 import { Button, Checkbox, Form, Input } from "antd";
 import signin from "../../public/image/Isometric.png";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { HiOutlineMailOpen } from "react-icons/hi";
 import { BiLock } from "react-icons/bi";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { useAdminLoginMutation } from "../redux/features/auth/login.js";
+
+import { getToken } from "firebase/messaging";
+import { messaging } from "../firebase.js";
 
 const Login = () => {
   const [adminLogin, { isLoading }] = useAdminLoginMutation();
   const [checkboxError, setCheckboxError] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const navigate = useNavigate();
-  // const fcmToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzQ2YzE5YmQ3MDNkYTRlN2YwYjE5NTgiLCJpYXQiOjE3MzI5NTI4ODAsImV4cCI6MTczNjQ4NTgzMzA2MSwidHlwZSI6ImFjY2VzcyJ9.A9vFStQ4lzFtbK7pH1jbeQP3Db7PsjNpYh09nBAxKWQ"; // Hardcoded demo FCM token
+  const [fcmToken, setFcmToken] = useState("");
 
-  const [fcmToken, setFcmtoken] = useState("");
+  // Check if user is already logged in (localStorage)
+  const user = localStorage.getItem("user");
+
+  // UseEffect hook to handle navigation when user is already logged in
+  useEffect(() => {
+    if (user && user.length > 1) {
+      return navigate("/dashboard/home");
+    }
+  }, [user, navigate]);
+
+  // Fire base Notification
+  async function requestPermission() {
+    const permission = await Notification.requestPermission();
+    if (permission === "granted") {
+      // Generate Token
+      const token = await getToken(messaging, {
+        vapidKey:
+          "BBootNIW54IBRESHBFkv5NRL2gFr3V068R3w_lDQup3_jcJ-qYhkG1VkewR9mUNEYMHMbR-6KxEhK1otgWiB96g"
+      });
+      setFcmToken(token);
+
+      // Send this token  to server ( db)
+    } else if (permission === "denied") {
+      alert("You denied for the notification");
+    }
+  }
+
+  useEffect(() => {
+    // Req user for notification permission
+    requestPermission();
+  }, []);
+
+  console.log(fcmToken);
 
   // Handle checkbox change
   const handleCheckboxChange = (e) => {
@@ -26,44 +61,32 @@ const Login = () => {
 
   // Handle form submission
   const onFinish = async (values) => {
-    const charset = "ABCDEFGHIJuvwxyz";
-    let token = "";
-    token =
-      Date.now() + charset + Date.now() + Math.floor(Math.random() * 1000);
-    setFcmtoken(token);
-
-    console.log({ fcmToken, ...values });
-
-    // // Check if the user agreed to the terms
-    // if (!isChecked) {
-    //     setCheckboxError('You must agree to the terms');
-    //     return;
-    // }
-
-    // // Log form data to console for debugging
-    // const formData = {
-    //     ...values,
-    //     fcmToken: generateRandomToken, // Add fcmToken to the form data
-    // };
-
+    const formData = { ...values };
+    // formData
     // console.log("Form Data: ", formData); // Log the data to see what is being sent
-    // try {
-    //     const res = await adminLogin(formData).unwrap(); // Call the adminLogin mutation
-    //     if (res?.code === 200) {
-    //         toast.success(res?.message);
-    //         localStorage.setItem('user', JSON.stringify(res?.data?.attributes));
-    //         localStorage.setItem('token', res?.data?.attributes?.tokens?.access?.token);
-    //         navigate('/dashboard/home');
-    //     }
-    // } catch (err) {
-    //     console.error("Error Response: ", err); // Log the entire error for debugging
-    //     const errorMessage = err?.data?.message || 'An unexpected error occurred';
-    //     toast.error(errorMessage); // Display the error message returned by the API
-    // }
+
+    try {
+      const res = await adminLogin(formData).unwrap(); // Call the adminLogin mutation
+      if (res?.code === 200) {
+        toast.success(res?.message);
+        localStorage.setItem("user", JSON.stringify(res?.data?.attributes));
+        localStorage.setItem(
+          "token",
+          res?.data?.attributes?.tokens?.access?.token
+        );
+        navigate("/dashboard/home");
+      }
+    } catch (err) {
+      console.error("Error Response: ", err); // Log the entire error for debugging
+      const errorMessage = err?.data?.message || "An unexpected error occurred";
+      toast.error(errorMessage);
+      // toast.error(errorMessage); // Display the error message returned by the API
+    }
   };
 
   return (
     <div className="mt-12 h-auto md:h-[680px] shadow-xl w-[80%] md:w-[1096px] mx-auto bg-white rounded-[8px]">
+      <Toaster />
       <div className="flex flex-col-reverse md:flex-row justify-around gap-4 px-6 md:px-10 mt-4 md:mt-8 py-4">
         <div className="h-[200px] hidden md:block md:h-[488px] mt-4 md:mt-[100px]">
           <img

@@ -57,10 +57,10 @@ const EditTermCondition = () => {
   };
 
   return (
-    <div className="mt-8 mx-6">
+    <div className="mt-8 md:mx-6">
       <Link
         to="/dashboard/settings/privacypolicy"
-        className="flex items-center gap-2"
+        className="flex items-center flex-wrap gap-2"
       >
         <FaCircleArrowLeft className="text-primaryBg w-8 h-8" />
         <p className="font-semibold text-[30px]">Edit Term & Condition</p>

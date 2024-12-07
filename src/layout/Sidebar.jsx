@@ -1,23 +1,18 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../../public/image/logo.png";
 
-import {
-  FaDollarSign,
-
-} from "react-icons/fa6";
- 
-import {  BiSolidDashboard } from "react-icons/bi";
+import { BiSolidDashboard } from "react-icons/bi";
 
 import { CiSettings } from "react-icons/ci";
 import Swal from "sweetalert2";
-import {  FaUserFriends } from "react-icons/fa";
- 
+import { FaUserFriends } from "react-icons/fa";
+
+import { HiLogout } from "react-icons/hi";
 import { HiCash } from "react-icons/hi";
-import { CiCalendar } from "react-icons/ci"; 
+import { CiCalendar } from "react-icons/ci";
 import { IoMenuOutline } from "react-icons/io5";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
-
-
+import { FaUserShield } from "react-icons/fa";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -48,7 +43,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="lg:w-[250px] xl:w-[300px] md:w-[200px] sm:w-[120px] w-[120px] flex flex-col justify-between bg-primaryBg h-full min-h-screen rounded-md">
+    <div className="lg:w-[250px] xl:w-[300px] md:w-[200px] sm:w-[120px] w-[60px] flex flex-col justify-between bg-primaryBg h-full min-h-screen rounded-md">
       <div>
         <div className="p-[10px] grid justify-items-stretch  sm:p-[16px]">
           <img
@@ -59,7 +54,7 @@ const Sidebar = () => {
 
           {/* <hr className="w-full mt-4 text-[#54D496] hidden sm:block" /> */}
         </div>
-        <div className="ml-5 mt-8">
+        <div className="sm:ml-5 mt-8">
           <ul>
             <NavLink
               to="home"
@@ -107,6 +102,18 @@ const Sidebar = () => {
             >
               <FaUserFriends className="h-7 w-7 lg:h-5 lg:w-5" />
               <span className="hidden ml-2 sm:block">Provider</span>
+            </NavLink>
+
+            <NavLink
+              to="agents"
+              className={({ isActive }) =>
+                isActive
+                  ? "flex cursor-pointer items-center text-[18px] font-medium p-[10px] bg-[#FFFFFF] text-[#193664] m-[6px] rounded-lg"
+                  : "flex text-[white] cursor-pointer items-center text-[18px] font-medium p-[10px]   m-[6px] rounded-lg"
+              }
+            >
+              <FaUserShield className="h-7 w-7 lg:h-5 lg:w-5" />
+              <span className="hidden ml-2 sm:block">Agents</span>
             </NavLink>
 
             <NavLink
@@ -170,15 +177,16 @@ const Sidebar = () => {
           </ul>
         </div>
       </div>
-      {/* <div className="mb-[60px] mt-2">
+
+      <div className="mb-[60px] mt-2">
         <div
           onClick={handleLogOut}
-          className="flex items-center ml-[18px] cursor-pointer gap-2 text-[#942020] font-medium"
+          className="flex items-center ml-3 sm:ml-[35px] cursor-pointer gap-2 text-[#f84141] font-medium"
         >
           <HiLogout className="h-8 w-8 lg:h-5 lg:w-5" />
           <span className="hidden sm:block text-[20px]">Log Out</span>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };

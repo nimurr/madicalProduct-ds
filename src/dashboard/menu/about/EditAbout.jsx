@@ -47,7 +47,7 @@ const EditAbout = () => {
   };
 
   return (
-    <div className="mt-8 mx-6">
+    <div className="mt-8 md:mx-6">
       <Link to="/dashboard/settings/about" className="flex items-center gap-2">
         <FaCircleArrowLeft className="!text-primaryBg w-8 h-8" />
         <p className="font-semibold text-[30px]">Edit About</p>

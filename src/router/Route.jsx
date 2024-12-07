@@ -25,137 +25,146 @@ import Provider from "../dashboard/menu/Provider";
 import BidHistory from "../dashboard/menu/BidHistory";
 import Category from "../dashboard/menu/category/Category";
 import MarketingFees from "../dashboard/menu/MerketingFees";
-import SubCategory from './../dashboard/menu/category/SubCategory';
+import SubCategory from "./../dashboard/menu/category/SubCategory";
 import UpdateCategory from "../dashboard/menu/category/UpdateCategory";
 import AllProviderCategory from "../dashboard/menu/AllProviderCategory";
 import ProviderCategory from "../dashboard/menu/ProviderCategory";
 import ProviderSubCategory from "../dashboard/menu/ProviderSubCategory";
-
+import Agents from "../dashboard/menu/Agents";
+import SocketIo from "../dashboard/menu/SocketIo";
 
 export const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <Home></Home>,
-        errorElement: <ErrorPage />
-    },
-    {
-        path: "forgotpassword",
-        element: <ForgotPassword></ForgotPassword>
-    },
-    {
-        path: "verifyotp",
-        element: <VerifyOtp></VerifyOtp>
-    },
-    {
-        path: "updatepassword",
-        element: <UpdatePassword />
-    },
+  {
+    path: "/",
+    element: <Home></Home>,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: "forgotpassword",
+    element: <ForgotPassword></ForgotPassword>
+  },
+  {
+    path: "verifyotp",
+    element: <VerifyOtp></VerifyOtp>
+  },
+  {
+    path: "updatepassword",
+    element: <UpdatePassword />
+  },
 
-    {
-        path: "dashboard",
-        element: <Main></Main>,
-        children: [
-            {
-                path: "home",
-                element: <DashboardHome />
-            },
-            {
-                path: "notification",
-                element: <Notification />
-            },
-            {
-                path: "profile",
-                element: <Profile />
-            },
-            {
-                path: "editprofile",
-                element: <EditProfiel />
-            },
-            {
-                path: "earning",
-                element: <Earning />
-            },
-            {
-                path:"users",
-                element: <Users />
-            },
-          
-            {
-                path: "provider",
-                element: <Provider />
-            },
-            {
-                path: "provider/:id",
-                element: <AllProviderCategory />
-            },
-            {
-                path: "provider/category/:id",
-                element: <ProviderCategory />
-            },
-            {
-                path: "provider/sub-category/:id",
-                element: <ProviderSubCategory />
-            },
-            {
-                path: "bidhistory",
-                element:<BidHistory />
-            },
-            {
-                path: "category",
-                element:<Category />
-            },
-            {
-                path: "category/update/:id",
-                element:<UpdateCategory />
-            },
-            {
-                path: "sub-category/:id",
-                element:<SubCategory />
-            },
-            {
-                path: "marketing",
-                element:<MarketingFees />
-            },
-            {
-                path: 'settings',
-                element:<Settings />
-            },
-            {
-                path:'settings/privacypolicy',
-                element:<PrivacyPolicy />
-            },
-            {
-                path:'settings/editprivacypolicy',
-                element: <EditPrivacy />
-            },
-            {
-                path:"settings/termcondition",
-                element:<TermCondition />
-            },
-            {
-                path: "settings/edittermcondition",
-                element: <EditTermCondition />
-            },
-            {
-                path:'settings/about',
-                element: <About />
-            },
-            {
-                path:'settings/editabout',
-                element:<EditAbout />
-            },
-            {
-                path:'subscription',
-                element: <Subscription />
-            },
-            {
-                path: 'subscription/addsubscription',
-                element: <Addsubscripton />
-            },
-            {
-                path: 'subscription/editsubscription',
-                element: <Editsubscription/>
-            }
-        ]
-    }
-])
+  {
+    path: "dashboard",
+    element: <Main></Main>,
+    children: [
+      {
+        path: "home",
+        element: <DashboardHome />
+      },
+      {
+        path: "notification",
+        element: <Notification />
+      },
+      {
+        path: "profile",
+        element: <Profile />
+      },
+      {
+        path: "editprofile",
+        element: <EditProfiel />
+      },
+      {
+        path: "earning",
+        element: <Earning />
+      },
+      {
+        path: "users",
+        element: <Users />
+      },
+
+      {
+        path: "provider",
+        element: <Provider />
+      },
+      {
+        path: "provider/:id",
+        element: <AllProviderCategory />
+      },
+      {
+        path: "provider/category/:id",
+        element: <ProviderCategory />
+      },
+      {
+        path: "provider/sub-category/:id",
+        element: <ProviderSubCategory />
+      },
+      {
+        path: "agents",
+        element: <Agents />
+      },
+      {
+        path: "bidhistory",
+        element: <BidHistory />
+      },
+      {
+        path: "category",
+        element: <Category />
+      },
+      {
+        path: "category/update/:id",
+        element: <UpdateCategory />
+      },
+      {
+        path: "sub-category/:id",
+        element: <SubCategory />
+      },
+      {
+        path: "marketing",
+        element: <MarketingFees />
+      },
+      {
+        path: "settings",
+        element: <Settings />
+      },
+      {
+        path: "settings/privacypolicy",
+        element: <PrivacyPolicy />
+      },
+      {
+        path: "settings/editprivacypolicy",
+        element: <EditPrivacy />
+      },
+      {
+        path: "settings/termcondition",
+        element: <TermCondition />
+      },
+      {
+        path: "settings/edittermcondition",
+        element: <EditTermCondition />
+      },
+      {
+        path: "settings/about",
+        element: <About />
+      },
+      {
+        path: "settings/editabout",
+        element: <EditAbout />
+      },
+      {
+        path: "subscription",
+        element: <Subscription />
+      },
+      {
+        path: "subscription/addsubscription",
+        element: <Addsubscripton />
+      },
+      {
+        path: "subscription/editsubscription",
+        element: <Editsubscription />
+      },
+      // {
+      //   path: "socketio",
+      //   element: <SocketIo />
+      // }
+    ]
+  }
+]);

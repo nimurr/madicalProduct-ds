@@ -15,7 +15,7 @@ const Users = () => {
   // Fetching the data
   const { data, isLoading, error } = useGetAllUserQuery();
 
-  console.log(data)
+  // console.log(data)
 
   // Check if the data is available
   const users = data?.data?.attributes?.results || [];
@@ -24,7 +24,7 @@ const Users = () => {
   if (isLoading) return <div className="text-[30px] text-[#fd3131] text-center mt-10">User Loading...</div>;
   if (error) return <div>Error fetching data: {error.message}</div>;
 
-  const columns = [
+const columns = [
     {
       title: "#SI",
       dataIndex: "si",
@@ -91,7 +91,7 @@ const Users = () => {
   return (
     <div>
       <div className="rounded-t-lg mt-[24px]">
-        <div className="flex py-[22px] justify-between items-center">
+        <div className="md:flex py-[22px] justify-between items-center">
           <div>
             <p className="text-header">Users</p>
           </div>
@@ -100,10 +100,7 @@ const Users = () => {
               <DatePicker onChange={onChange} />
             </Space>
             <Search
-              style={{
-                width: "200px",
-                marginLeft: "4px"
-              }}
+              className="md:ml-2"
               placeholder="input search text"
               onSearch={onSearch}
               enterButton
