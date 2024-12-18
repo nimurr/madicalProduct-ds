@@ -49,7 +49,7 @@ const Login = () => {
     requestPermission();
   }, []);
 
-  console.log(fcmToken);
+  // console.log(fcmToken);
 
   // Handle checkbox change
   const handleCheckboxChange = (e) => {
@@ -61,7 +61,10 @@ const Login = () => {
 
   // Handle form submission
   const onFinish = async (values) => {
-    const formData = { ...values };
+    // const formData = { ...values , fcmToken  };
+    const formData = { ...values, fcmToken };
+
+    console.log(formData);
     // formData
     // console.log("Form Data: ", formData); // Log the data to see what is being sent
 
@@ -77,7 +80,8 @@ const Login = () => {
         navigate("/dashboard/home");
       }
     } catch (err) {
-      console.error("Error Response: ", err); // Log the entire error for debugging
+      alert(err.message)
+      // console.error("Error Response: ", err); // Log the entire error for debugging
       const errorMessage = err?.data?.message || "An unexpected error occurred";
       toast.error(errorMessage);
       // toast.error(errorMessage); // Display the error message returned by the API
@@ -175,6 +179,7 @@ const Login = () => {
             <div className="flex justify-between items-center">
               <Form.Item>
                 <Checkbox
+                  required
                   className="text-black"
                   checked={isChecked}
                   onChange={handleCheckboxChange}
@@ -198,7 +203,7 @@ const Login = () => {
               {/* Show loading spinner when request is in progress */}
               <Button
                 htmlType="submit"
-                className="block w-full h-[52px] px-2 py-4 mt-2 !text-white !bg-primaryBg"
+                className="block w-full h-[52px] px-2 py-4 mt-2 !text-[#fff] font-semibold !bg-primaryBg"
                 loading={isLoading} // Loading spinner
               >
                 Log in

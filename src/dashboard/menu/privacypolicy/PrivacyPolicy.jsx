@@ -13,7 +13,7 @@ const PrivacyPolicy = () => {
 
   // Ensure you're accessing the content correctly.
   // It seems you're expecting content to be in `data.data.attributes.content`.
-  const content = data?.data?.attributes[0].content;
+  const content = data?.data?.attributes[0]?.content;
 
   return (
     <div className="h-[575px]">

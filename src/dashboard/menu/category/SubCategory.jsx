@@ -11,6 +11,7 @@ import { Link, useParams } from "react-router-dom";
 import { useCreatePostSubcategoryMutation } from "../../../redux/features/auth/heashboard/subCategory";
 import { useGetSubCategoriesQuery } from "../../../redux/features/auth/heashboard/getSubCategory";
 import { useDeleteCategoriesMutation } from "../../../redux/features/auth/heashboard/deleteCategory";
+import { FaArrowLeft } from "react-icons/fa";
 
 const SubCategory = () => {
   const { id } = useParams(); // Extract category ID from the URL params
@@ -108,7 +109,7 @@ const SubCategory = () => {
     <div className="mt-12 p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-header">Subcategory</h2>
+        <Link to={'/dashboard/category'} className="text-2xl font-bold text-header flex items-center gap-3"><FaArrowLeft />Subcategory</Link>
         <Button
           onClick={openModal}
           icon={<PlusOutlined />}

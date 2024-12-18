@@ -32,6 +32,12 @@ import ProviderCategory from "../dashboard/menu/ProviderCategory";
 import ProviderSubCategory from "../dashboard/menu/ProviderSubCategory";
 import Agents from "../dashboard/menu/Agents";
 import SocketIo from "../dashboard/menu/SocketIo";
+import Newsletter from "../dashboard/menu/Newsletter/Newsletter"; 
+import WithdrawRequest from "../dashboard/menu/WithdrawRequest/WithdrawRequest";
+import BannerAd from "../dashboard/menu/BannerAd/BannerAd";
+import BannerAdDetails from "../dashboard/menu/BannerAd/BannerAdDetails";
+import AddBannerAds from "../dashboard/menu/BannerAd/AddBannerAds";
+
 
 export const router = createBrowserRouter([
   {
@@ -54,7 +60,7 @@ export const router = createBrowserRouter([
 
   {
     path: "dashboard",
-    element: <Main></Main>,
+    element: <Main></Main> ,
     children: [
       {
         path: "home",
@@ -75,6 +81,10 @@ export const router = createBrowserRouter([
       {
         path: "earning",
         element: <Earning />
+      },
+      {
+        path: "newsletter",
+        element: <Newsletter />
       },
       {
         path: "users",
@@ -106,6 +116,22 @@ export const router = createBrowserRouter([
         element: <BidHistory />
       },
       {
+        path: "withdrawrequest",
+        element: <WithdrawRequest />
+      },
+      {
+        path: "bannerads",
+        element: <BannerAd />
+      },
+      {
+        path: "bannerads/:id",
+        element: <BannerAdDetails />
+      },
+      {
+        path: "bannerads/createads",
+        element: <AddBannerAds />
+      },
+      {
         path: "category",
         element: <Category />
       },
@@ -114,7 +140,7 @@ export const router = createBrowserRouter([
         element: <UpdateCategory />
       },
       {
-        path: "sub-category/:id",
+        path: "category/sub-category/:id",
         element: <SubCategory />
       },
       {

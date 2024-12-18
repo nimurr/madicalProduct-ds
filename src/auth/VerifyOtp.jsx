@@ -114,7 +114,7 @@ const VerifyOtp = () => {
 
           <Button
             onClick={sendOtp}
-            className="block w-full h-[52px] px-2 py-4 mt-2 !text-white !bg-primaryBg"
+            className="block w-full h-[52px] px-2 py-4 mt-2 !text-[#fff] font-semibold !bg-primaryBg"
           >
             Verify
           </Button>

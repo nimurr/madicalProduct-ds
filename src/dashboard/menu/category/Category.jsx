@@ -102,10 +102,10 @@ const Category = () => {
 
 
   return (
-    <div className="mt-12 p-6">
+    <div className="mt-10 pb-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-header">Category</h2>
+        <h2 className="text-2xl font-semibold text-header">Category</h2>
         <Button
           onClick={openModal}
           icon={<PlusOutlined />}
@@ -122,7 +122,7 @@ const Category = () => {
             key={category.id}
             className="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:scale-105"
           >
-            <Link to={`/dashboard/sub-category/${category.id}`}>
+            <Link to={`/dashboard/category/sub-category/${category.id}`}>
               <img
                 src={`http://192.168.10.169:6089${category?.image}`}
                 alt={category.name}

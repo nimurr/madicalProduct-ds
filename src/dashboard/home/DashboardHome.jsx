@@ -7,7 +7,7 @@ const DashboardHome = () => {
   return (
     <div>
       <Card> </Card>
-      <Barchart />
+      {/* <Barchart /> */}
       <Transaction />
     </div>
   );

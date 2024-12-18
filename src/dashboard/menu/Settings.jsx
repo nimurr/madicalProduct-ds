@@ -18,7 +18,7 @@ const Settings = () => {
   // };
 
   return (
-    <div className="mt-8 md:mx-6 ">
+    <div className="mt-10">
       <h1 className="font-semibold text-[30px]">Settings</h1>
       <div>
         {/* Privacy policy */}

@@ -16,7 +16,7 @@ const EditTermCondition = () => {
   // Set initial content when data is available
   useEffect(() => {
     if (termcondition?.data?.attributes?.length > 0) {
-      setContent(termcondition.data.attributes[0].content || "");
+      setContent(termcondition?.data?.attributes[0]?.content || "");
     }
   }, [termcondition]);
 

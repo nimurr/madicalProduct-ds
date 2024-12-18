@@ -1,4 +1,4 @@
-/* OrderTable.module.css */
+OrderTable.module.css
 .paginationCenter {
     display: flex !important;
     justify-content: center !important;
@@ -6,40 +6,45 @@
   }
   
   .paginationButton {
-    background-color: #003366; /* Dark blue background */
-    color: white; /* White text */
-    border: none;
+    /* background-color: #003366;  */
+    /* Dark blue background */
+    /* color: white;  */
+    /* White text */
+    /* border: none;
     border-radius: 4px;
     padding: 8px 16px;
     font-weight: bold;
     font-size: 14px;
-    margin: 0 4px;
+    margin: 0 4px; */
   }
   
   .paginationButton:hover {
-    background-color: #002244; /* Slightly darker blue on hover */
+    /* background-color: #002244;  */
+    /* Slightly darker blue on hover */
   }
   
   .paginationButtonActive {
-    background-color: #003366; /* Dark blue background */
-    color: white; /* White text */
-    border: none;
+    /* background-color: #003366;  */
+    /* Dark blue background */
+    /* color: white;  */
+    /* White text */
+    /* border: none;
     border-radius: 4px;
     padding: 8px 16px;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 14px; */
   }
   
   
   /* for new order */
   .packageItemContainer {
-    display: flex;
-    align-items: center;
+    /* display: flex;
+    align-items: center; */
    
   }
   
   .newLabel {
-    background-color: transparent;
+    /* background-color: transparent;
     color: red;
     font-weight: bold;
     padding: 1px 6px;
@@ -49,16 +54,16 @@
     border-radius: 10px;
     display: inline-flex;
     align-items: center;
-    font-size: 8px;
+    font-size: 8px; */
   }
   
   /* Order details page css */
   .customBtn {
-    background-color: transparent !important;
+    /* background-color: transparent !important;
     color: #193664 !important;
     border: 1px solid #193664 !important;
     border-radius: 16px;
-    padding: 8px 16px;
+    padding: 8px 16px; */
     /* font-weight: bold; */
     text-align: center;
   }

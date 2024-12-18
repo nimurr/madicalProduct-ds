@@ -65,7 +65,7 @@ const EditAbout = () => {
         <div className="mt-6">
           <JoditEditor
             ref={editor}
-            value={aboutUs.data.attributes[0].content} // Bind the editor value to the content state
+            value={aboutUs?.data?.attributes[0]?.content} // Bind the editor value to the content state
             onChange={(newContent) => setContent(newContent)} // Update content on change
           />
         </div>

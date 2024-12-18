@@ -114,17 +114,30 @@ const Earning = () => {
   };
   return (
     <div className="">
-      <div className="rounded-t-lg mt-[24px]">
+      <div className="rounded-t-lg mt-[50px]">
+
+        <div className="grid lg:grid-cols-4  gap-5">
+          <div className="p-6 rounded-lg bg-[#e8ebf0]">
+            <p className="text-[20px] font-semibold mb-2">Total Earnings</p>
+            <h2 className="text-header font-semibold text-primaryBg">$24.88 K</h2>
+          </div>
+          <div className="p-6 rounded-lg bg-[#e8ebf0]">
+            <p className="text-[20px] font-semibold mb-2">Total Earnings</p>
+            <h2 className="text-header font-semibold text-primaryBg">$24.88 K</h2>
+          </div>
+        </div>
+
+
         <div className="md:flex py-[22px] justify-between items-center">
           <div>
-            <p className="text-header">Earning</p>
+            <p className="text-header font-semibold">Earning</p>
           </div>
           <div>
             <Space direction="vertical">
               <DatePicker onChange={onChange} />
             </Space>
             <Search
-              className="md:ml-2"
+              className="md:ml-2 md:mt-0 mt-3"
               style={{
                 width: "200px"
               }}
@@ -135,32 +148,35 @@ const Earning = () => {
           </div>
         </div>
 
-        
-        <Table
-          pagination={{
-            total: dataSource.length,
-            showTotal: (total, range) =>
-              `${range[0]}-${range[1]} of ${total} items`,
-            defaultPageSize: 1,
-            showSizeChanger: false,
-            itemRender: (current, type, originalElement) => {
-              if (type === "prev") {
-                return (
-                  <Button className="bg-primaryBg text-[#fff]">Back</Button>
-                );
-              }
-              if (type === "next") {
-                return (
-                  <Button className="bg-primaryBg text-[#fff]">Next</Button>
-                );
-              }
-              return originalElement;
-            },
-            className: styles.paginationCenter
-          }}
-          columns={columns}
-          dataSource={dataSource}
-        />
+        <div className="overflow-x-scroll bg-[#e8ebf0]">
+          <Table
+            pagination={{
+              total: dataSource.length,
+              showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+              defaultPageSize: 1,
+              showSizeChanger: false,
+              itemRender: (current, type, originalElement) => {
+                if (type === 'prev') {
+                  return (
+                    <Button className="custom-pagination-button">
+                      Back
+                    </Button>
+                  );
+                }
+                if (type === 'next') {
+                  return (
+                    <Button className="custom-pagination-button">
+                      Next
+                    </Button>
+                  );
+                }
+                return originalElement;
+              },
+            }}
+            columns={columns}
+            dataSource={dataSource}
+          />
+        </div>
       </div>
       <Modal
         open={isModalOpen}
@@ -170,7 +186,7 @@ const Earning = () => {
         closeIcon={
           <CloseOutlined
             style={{
-              color: "white", // Icon color
+              color: "#fff", // Icon color
               backgroundColor: "#de0a26", // Background color of the close icon
               borderRadius: "10%", // Rounded background
               padding: "10px" // Padding inside the background
@@ -226,7 +242,7 @@ const Earning = () => {
             <button className="px-2 py-2 bg-slate-100 border-2 rounded-e-md w-[50%]">
               Downloard
             </button>
-            <button className="px-2 py-2 bg-[#193664] text-white rounded-s-md w-[50%]">
+            <button className="px-2 py-2 bg-[#193664] text-whiteText rounded-s-md w-[50%]">
               Print
             </button>
           </div>

@@ -96,73 +96,77 @@ const Transaction = () => {
   };
 
   return (
-    <div className="overflow-x-scroll">
+    <div className="">
       <h1 className="text-header font-medium my-2">Recent Transaction</h1>
-      <Table
-        dataSource={dataSource}
-        columns={columns}
-        pagination={false}
-        bordered
-      />
-      <Modal
-        open={isModalOpen}
-        onOk={() => setIsModalOpen(false)}
-        onCancel={() => setIsModalOpen(false)}
-        footer={[]}
-        closeIcon
-      >
-        <div>
-          <div
-            style={{ fontFamily: "Aldrich" }}
-            className="flex justify-center items-center gap-2 flex-col border-b border-b-gray-300"
-          >
-            <img
-              className="w-[140px] h-[140px] rounded-full my-4"
-              src={users}
-              alt=""
-            />
-            <p className="text-[16px] mb-[16px]">absayed</p>
-          </div>
-          <div style={{ fontFamily: "Aldrich" }} className="p-[20px]">
-            <div className="flex justify-between border-b py-[16px]">
-              <p>Full Name:</p>
-              <p>
-                {/* {user?.name ? user?.name : "N/A"} */}
-                absayed
-              </p>
+      <div className="overflow-x-scroll bg-[#e8ebf0]">
+        <Table
+        // className="bg-[#eee]"
+          dataSource={dataSource}
+          columns={columns}
+          pagination={false}
+          bordered
+        />
+        <Modal
+          open={isModalOpen}
+          onOk={() => setIsModalOpen(false)}
+          onCancel={() => setIsModalOpen(false)}
+          footer={[]}
+          closeIcon
+        >
+          <div>
+            <div
+              style={{ fontFamily: "Aldrich" }}
+              className="flex justify-center items-center gap-2 flex-col border-b border-b-gray-300"
+            >
+              <img
+                className="w-[140px] h-[140px] rounded-full my-4"
+                src={users}
+                alt=""
+              />
+              <p className="text-[16px] mb-[16px]">absayed</p>
             </div>
+            <div style={{ fontFamily: "Aldrich" }} className="p-[20px]">
+              <div className="flex justify-between border-b py-[16px]">
+                <p>Full Name:</p>
+                <p>
+                  {/* {user?.name ? user?.name : "N/A"} */}
+                  absayed
+                </p>
+              </div>
 
-            <div className="flex justify-between border-b py-[16px] ">
-              <p>Email:</p>
-              <p>
-                {/* {user?.email ? user?.email : "N/A"} */}
-                ab@gmail.com
-              </p>
-            </div>
-            <div className="flex justify-between border-b py-[16px]">
-              <p>Phone:</p>
-              <p>
-                {/* {user?.phone ? user?.phone : "N/A"} */}
-                +45269875
-              </p>
-            </div>
-            <div className="flex justify-between border-b py-[16px]">
-              <p>Date:</p>
-              <p>
-                {/* {user?.createdAt  ? user?.createdAt?.split("T")[0] : "N/A"} */}
-                23-11-24
-              </p>
-            </div>
-            <div className="flex justify-between items-center pt-[16px]">
-              <p>address:</p>
-              <p className="px-[15px] py-[10px] rounded-lg">
-                {/* Regular P550 */}
-                UK
-              </p>
+              <div className="flex justify-between border-b py-[16px] ">
+                <p>Email:</p>
+                <p>
+                  {/* {user?.email ? user?.email : "N/A"} */}
+                  ab@gmail.com
+                </p>
+              </div>
+              <div className="flex justify-between border-b py-[16px]">
+                <p>Phone:</p>
+                <p>
+                  {/* {user?.phone ? user?.phone : "N/A"} */}
+                  +45269875
+                </p>
+              </div>
+              <div className="flex justify-between border-b py-[16px]">
+                <p>Date:</p>
+                <p>
+                  {/* {user?.createdAt  ? user?.createdAt?.split("T")[0] : "N/A"} */}
+                  23-11-24
+                </p>
+              </div>
+              <div className="flex justify-between items-center pt-[16px]">
+                <p>address:</p>
+                <p className="px-[15px] py-[10px] rounded-lg">
+                  {/* Regular P550 */}
+                  UK
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      </Modal>
+        </Modal>
+      </div>
+
     </div>
   );
 };

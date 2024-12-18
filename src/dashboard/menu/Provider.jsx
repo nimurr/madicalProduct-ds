@@ -167,19 +167,21 @@ const Provider = () => {
   return (
     <div className="mt-10">
       <div>
-        <p className="text-header my-5">Providers</p>
+        <p className="text-header my-5 font-semibold">Providers</p>
       </div>
-      <Table
-        columns={columns}
-        dataSource={pagedData} // Use sliced provider data for the current page
-        className="custom-ant-table"
-        bordered // Remove internal borders
-        pagination={false} // Disable internal pagination
-        rowClassName="table-row"
+      <div className="overflow-x-scroll bg-[#e8ebf0]">
+        <Table
+          columns={columns}
+          dataSource={pagedData} // Use sliced provider data for the current page
+          className="custom-ant-table"
+          bordered // Remove internal borders
+          pagination={false} // Disable internal pagination
+          rowClassName="table-row"
         // style={{
         //   backgroundColor: "#eee" // Optional background color for the table
         // }}
-      />
+        />
+      </div>
 
       {/* External Pagination */}
       <div className="flex justify-center bg-[#e8ebf0] py-3">

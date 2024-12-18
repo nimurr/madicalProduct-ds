@@ -26,6 +26,7 @@ import url from "../redux/api/baseUrl";
 
 const Header = () => {
   const { data: responseData } = useGetProfileQuery();
+  // console.log("user : " ,responseData);
 
   const [passwordChange] = useChangePasswordMutation();
 
@@ -114,7 +115,7 @@ const Header = () => {
   );
 
   return (
-    <div className="flex justify-between items-center shadow-xl mb-[24px] p-[16px] rounded-md !bg-[#E8EBF0]">
+    <div className="flex justify-between items-center mb-[24px] p-[16px] rounded-md !bg-[#E8EBF0]">
       <div className="text-white">
         <p className="text-header text-[#000000] font-medium">Welcome!</p>
         <h1 className="text-[#000000]">
@@ -129,7 +130,7 @@ const Header = () => {
         >
           <Badge
             style={{
-              backgroundColor: "#ffbf00",
+              backgroundColor: "#193664",
               marginTop: "10px",
               marginRight: "5px"
             }}
@@ -137,7 +138,7 @@ const Header = () => {
           >
             <IoIosNotificationsOutline
               style={{ cursor: "pointer" }}
-              className={`bg-primary w-[52px] h-[52px] bg-primaryBg text-[#Ffffffff] border-2 border-[#193664] rounded-full p-2 `}
+              className={`bg-primary w-[52px] h-[52px] bg-[#ffffff] text-[#193664] rounded-full p-2 `}
             />
           </Badge>
         </div>

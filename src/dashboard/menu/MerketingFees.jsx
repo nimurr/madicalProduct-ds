@@ -2,6 +2,7 @@ import { useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 import { Modal, message } from "antd";
 import marketingImage from "../../../public/image/marketingFeesImage.png"; // replace with your image path
+import referralImage from "../../../public/image/persentage.png"; // replace with your image path
 import { useGetMarketingFeesQuery } from "../../redux/features/auth/heashboard/marketingFeesGet";
 import { useUpdateFeesMutation } from "../../redux/features/auth/heashboard/marketingFeesUpdate";
 import swal from "sweetalert";
@@ -96,8 +97,19 @@ const MarketingFees = () => {
 
   };
 
+
+  // Add this line to create state for referral modal
+  const [isReferralModalOpen, setIsReferralModalOpen] = useState(false);
+  // Update the referral modal handlers
+  const showReferralModal = () => setIsReferralModalOpen(true);
+  const handleReferralCancel = () => setIsReferralModalOpen(false);
+  const handleReferralFees = (e) => {
+    e.preventDefault();
+    console.log('sdsljdfkljsdflkjsdf shdflkh sd');
+  }
+
   return (
-    <div className="mt-8 md:mx-6">
+    <div className="mt-10 ">
       <h1 className="font-semibold text-header">Marketing</h1>
 
       {/* Product Marketing Fees */}
@@ -147,7 +159,7 @@ const MarketingFees = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="bg-[#2168d3] text-[#fff] font-semibold rounded-xl py-3 w-full mt-20"
+              className="bg-primaryBg  text-[#fff] font-semibold rounded-xl py-3 w-full mt-20"
             >
               {isLoading ? "Updating..." : "Update"}
             </button>
@@ -195,11 +207,10 @@ const MarketingFees = () => {
 
           <div className="mt-4 flex justify-center">
             <button
-              type="button"
               // eslint-disable-next-line react/jsx-no-duplicate-props
               type={"submit"}
               disabled={isLoading}
-              className="bg-[#2168d3] text-[#fff] font-semibold rounded-xl py-3 w-full mt-20"
+              className="bg-primaryBg  text-[#fff] font-semibold rounded-xl py-3 w-full mt-20"
             >
               {isLoading ? "Updating..." : "Update"}
             </button>
@@ -252,13 +263,71 @@ const MarketingFees = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="bg-[#2168d3] text-[#fff] font-semibold rounded-xl py-3 w-full mt-20"
+              className="bg-primaryBg  text-[#fff] font-semibold rounded-xl py-3 w-full mt-20"
             >
               {isLoading ? "Updating..." : "Update"}
             </button>
           </div>
         </form>
       </Modal>
+
+      {/* Referral Modal */}
+      <div
+        onClick={showReferralModal}
+        className="mt-8 cursor-pointer flex justify-between bg-[#F7F7F7] rounded items-center w-full h-[75px]"
+      >
+        <p className="text-[18px] ml-8 font-medium">Product Referral Percentage</p>
+        <div className="mr-8 text-[#193664] px-2 py-1 rounded cursor-pointer">
+          <IoIosArrowForward />
+        </div>
+      </div>
+      {/* Modal for Referral Percentage */}
+      <Modal
+        title="Referral Percentage"
+        open={isReferralModalOpen} // Updated to use referral modal state
+        onCancel={handleReferralCancel} // Updated to use referral modal state
+        footer={null}
+      >
+        <hr className="my-5" />
+        <div className="w-3/4 mx-auto my-5 flex items-center justify-center gap-8">
+          <img className="w-14" src={referralImage} alt="Referral Percentage" />
+          <div>
+            <h3 className="text-[20px]">Current referral percentage</h3>
+            <h2 className="font-semibold text-[25px]">2%</h2> {/* Placeholder for referral value */}
+          </div>
+        </div>
+        <form onSubmit={handleReferralFees}>
+          <label>
+            <span className="block mb-1">Price</span>
+            <input
+              required
+              className="w-full p-2 rounded-xl border-[2px] border-[#eee]"
+              type="number"
+              placeholder="Price ..."
+              value={bidPrice} // Use correct value for referral price if needed
+              name="referralPrice"
+              onChange={(e) => setBidPrice(e.target.value)} // Adjust to handle referral price input
+            />
+            {bidPriceError && (
+              <span className="text-red-500">Please enter a valid price</span>
+            )}
+          </label>
+
+          <div className="mt-4 flex justify-center">
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="bg-primaryBg text-[#fff] font-semibold rounded-xl py-3 w-full mt-20"
+            >
+              {isLoading ? "Updating..." : "Update"}
+            </button>
+          </div>
+        </form>
+      </Modal>
+
+
+
+
     </div>
   );
 };

@@ -60,7 +60,7 @@ const BidHistory = () => {
         <div className="flex gap-2 items-center">
           <div>
             <img
-              className="w-[34px] h-[34px] rounded-full"
+              className="min-w-[34px] h-[34px] rounded-full"
               src={users}
               alt=""
             />
@@ -126,9 +126,9 @@ const BidHistory = () => {
   return (
     <div className="">
       <div className="rounded-t-lg mt-[24px]">
-        <div className="flex py-[22px] justify-between items-center">
+        <div className="flex py-[22px] justify-between items-center flex-wrap">
           <div>
-            <p className="text-header">Bid History</p>
+            <p className="text-header font-semibold">Bid History</p>
           </div>
           <div>
             <Space direction="vertical">
@@ -145,35 +145,37 @@ const BidHistory = () => {
             />
           </div>
         </div>
-        <Table
-          pagination={{
-            total: filteredData.length,
-            showTotal: (total, range) =>
-              `${range[0]}-${range[1]} of ${total} items`,
-            defaultPageSize: 5,
-            showSizeChanger: true,
-            itemRender: (current, type, originalElement) => {
-              if (type === "prev") {
-                return (
-                  <Button className="border border-blue-500 text-blue-500 bg-transparent hover:bg-blue-500 hover:text-white transition-colors duration-300">
-                    Back
-                  </Button>
-                );
-              }
-              if (type === "next") {
-                return (
-                  <Button className="border border-blue-500 text-blue-500 bg-transparent hover:bg-blue-500 hover:text-white transition-colors duration-300">
-                    Next
-                  </Button>
-                );
-              }
-              return originalElement;
-            },
-            className: styles.paginationCenter
-          }}
-          columns={columns}
-          dataSource={filteredData}
-        />
+        <div className="overflow-x-scroll bg-[#e8ebf0]">
+          <Table
+            pagination={{
+              total: filteredData.length,
+              showTotal: (total, range) =>
+                `${range[0]}-${range[1]} of ${total} items`,
+              defaultPageSize: 5,
+              showSizeChanger: true,
+              itemRender: (current, type, originalElement) => {
+                if (type === "prev") {
+                  return (
+                    <Button className="border border-blue-500 text-blue-500 bg-transparent hover:bg-blue-500 hover:text-white transition-colors duration-300">
+                      Back
+                    </Button>
+                  );
+                }
+                if (type === "next") {
+                  return (
+                    <Button className="border border-blue-500 text-blue-500 bg-transparent hover:bg-blue-500 hover:text-white transition-colors duration-300">
+                      Next
+                    </Button>
+                  );
+                }
+                return originalElement;
+              },
+              className: styles.paginationCenter
+            }}
+            columns={columns}
+            dataSource={filteredData}
+          />
+        </div>
       </div>
 
       <Modal

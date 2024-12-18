@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import JoditEditor from "jodit-react";
-import { Link, useNavigate } from "react-router-dom";
 import { FaCircleArrowLeft } from "react-icons/fa6";
 import { Button, Form } from "antd";
 import "../../../index.css"; 
 import toast from "react-hot-toast"; 
 import { useCreatePrivacyPostMutation } from "../../../redux/features/auth/heashboard/updatePrivacy";
 import { useGetPrivacyAndPolicyQuery } from "../../../redux/features/auth/heashboard/privacyAndpolicy";
+import { Link, useNavigate } from "react-router-dom";
 
 // Function to decode HTML entities
 const decodeHtml = (html) => {
@@ -31,7 +31,7 @@ const EditTermCondition = () => {
   useEffect(() => {
     if (privacyPolicy?.data?.attributes?.docs?.length && !isInitialized) {
       const decodedContent = decodeHtml(
-        privacyPolicy.data.attributes.docs[0].content
+        privacyPolicy?.data?.attributes?.docs[0]?.content
       );
       setContent(decodedContent); // Set decoded content to editor
       setIsInitialized(true); // Set flag to prevent re-initialization
@@ -75,7 +75,7 @@ const EditTermCondition = () => {
         <div className="mt-6">
           <JoditEditor
             ref={editor}
-            value={privacyPolicy.data.attributes[0]?.content} // Controlled by state content
+            value={privacyPolicy?.data?.attributes[0]?.content} // Controlled by state content
             onChange={(newContent) => setContent(newContent)} // Update content on change
             // config={{
             //   readonly: isLoading // Disable editing while loading

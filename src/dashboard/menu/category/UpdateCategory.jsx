@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react"; 
 import url from "../../../redux/api/baseUrl";
 import { useCreateUpdateCategoryMutation } from "../../../redux/features/auth/heashboard/updateCategory";
@@ -6,6 +6,9 @@ import { FaArrowLeft } from "react-icons/fa6";
 
 
 export default function UpdateCategory() {
+
+  const navigate = useNavigate();
+
   const { id } = useParams(); // Get category ID from URL
   const [categoryData, setCategoryData] = useState({
     categoryName: "",
@@ -82,7 +85,12 @@ export default function UpdateCategory() {
 
   return (
     <div className="mt-20">
-      <Link className="bg-primaryBg text-[#fff] py-2 px-8 rounded flex justify-center items-center gap-2 w-48" to={`/dashboard/category`}><FaArrowLeft /> Category </Link>
+     <button
+      className="bg-primaryBg text-[#fff] py-2 px-5 rounded flex justify-center items-center gap-2 w-48 font-semibold"
+      onClick={() => navigate(-1)} // Go back to the previous page
+    >
+      <FaArrowLeft /> Back To Previus
+    </button>
       <form onSubmit={handleUpdate} className="max-w-lg mx-auto p-4 bg-white shadow-lg rounded-lg">
         <div className="mb-6">
           {/* Show image preview */}
@@ -140,7 +148,7 @@ export default function UpdateCategory() {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full py-3 bg-primaryBg text-white text-lg font-semibold rounded-lg shadow-md hover:bg-primaryBg/80 focus:outline-none focus:ring-2 focus:ring-primaryBg focus:ring-opacity-50"
+          className="w-full py-3 bg-primaryBg !text-[#fff] text-lg font-semibold rounded-lg shadow-md hover:bg-primaryBg/80 focus:outline-none focus:ring-2 focus:ring-primaryBg focus:ring-opacity-50"
           disabled={isLoading}
         >
           {isLoading ? 'Updating...' : 'Update'}
