@@ -15,8 +15,9 @@ const Card = () => {
       {/* <h1 className="font-medium text-xl">Overview</h1> */}
       <div className="grid md:grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-2 grid-cols-1 lg:gap-2 xl:gap-3 w-full">
         <div className=" rounded h-[180px] flex justify-between items-center card bg-[#e8ebf0]">
-          <div className="mx-6 h-16 w-16 rounded bg-primaryBg flex justify-center items-center">
-            <HiOutlineCurrencyDollar className=" text-whiteText w-12 h-12" />
+          <div className="mx-6 h-16 w-16 rounded  flex justify-center items-center">
+            {/* <HiOutlineCurrencyDollar className=" text-whiteText w-12 h-12" />*/}
+            <img src="../../../public/image/marketingFeesImage.png" alt="" />
           </div>
           <div className="mx-6 text-right">
             <p className="text-[18px] font-semibold text-[#193664] my-4">
@@ -26,8 +27,9 @@ const Card = () => {
           </div>
         </div>
         <div className=" rounded h-[180px] flex justify-between items-center card bg-[#e8ebf0]">
-          <div className="mx-6 h-16 w-16 rounded bg-primaryBg flex justify-center items-center">
-            <FaUsers className="text-whiteText w-12 h-12" />
+          <div className="mx-6 h-16 w-16 rounded  flex justify-center items-center">
+            {/* <HiOutlineCurrencyDollar className=" text-whiteText w-12 h-12" />*/}
+            <img className="w-full" src="../../../public/image/investment1.png" alt="" />
           </div>
           <div className="mx-6 text-right">
             <p className="text-[18px] font-semibold text-primaryBg my-4">
@@ -38,8 +40,9 @@ const Card = () => {
         </div>
 
         <div className="  rounded h-[180px] flex justify-between items-center card bg-[#e8ebf0]">
-          <div className="mx-6 h-16 w-16 rounded bg-primaryBg flex justify-center items-center">
-            <HiOutlineOfficeBuilding className="text-whiteText w-12 h-12" />
+          <div className="mx-6 h-16 w-16 rounded  flex justify-center items-center">
+            {/* <HiOutlineCurrencyDollar className=" text-whiteText w-12 h-12" />*/}
+            <img className="w-full" src="../../../public/image/Organization.png" alt="" />
           </div>
           <div className="mx-6 text-right">
             <p className="text-[18px] font-semibold text-[#193664] my-4">
@@ -50,8 +53,9 @@ const Card = () => {
         </div>
 
         <div className="  rounded h-[180px] flex justify-between items-center card bg-[#e8ebf0]">
-          <div className="mx-6 h-16 w-16 rounded bg-primaryBg flex justify-center items-center">
-            <HiOutlineOfficeBuilding className="text-whiteText w-12 h-12" />
+          <div className="mx-6 h-16 w-16 rounded  flex justify-center items-center">
+            {/* <HiOutlineCurrencyDollar className=" text-whiteText w-12 h-12" />*/}
+            <img className="w-full" src="../../../public/image/Organization.png" alt="" />
           </div>
           <div className="mx-6 text-right">
             <p className="text-[18px] font-semibold text-[#193664] my-4">

@@ -5,9 +5,18 @@ import { UploadOutlined, PlusOutlined, MinusCircleOutlined } from "@ant-design/i
 const { TextArea } = Input;
 
 const AddBannerAds = () => {
+
+
+
+
+
     const handleFormSubmit = (values) => {
         console.log("Form Submitted with values:", values);
     };
+
+
+
+
 
     return (
         <div className="p-6 bg-white border-2 border-[#eee] rounded-lg mt-14">
@@ -118,7 +127,7 @@ const AddBannerAds = () => {
                 <div className="flex justify-end">
                     <button
                         type="submit"
-                        className="bg-primaryBg hover:bg-primaryBg font-semibold text-white px-20 py-3 rounded-md"
+                        className="bg-primaryBg hover:bg-primaryBg font-semibold text-whiteText px-20 py-3 rounded-md"
                     >
                         Create Ad
                     </button>
