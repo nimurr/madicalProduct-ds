@@ -1,83 +1,70 @@
+import React, { useState } from "react";
 import { Input, Modal, DatePicker, Space, Table, Button } from "antd";
 import { BsInfoCircle } from "react-icons/bs";
-import { useState } from "react";
-import users from "../../../public/image/users.jpg";
 import { CloseOutlined } from "@ant-design/icons";
-import styles from "./style.module.css";
+import { useGetAllRecentTrangitionQuery } from "../../redux/features/auth/heashboard/recentTransaction";
+import { useGetDashboardStatusQuery } from "../../redux/features/auth/heashboard/dashboardStatus";
 
 const { Search } = Input;
 
-const dataSource = [
-  {
-    key: "1",
-    customerName: "Bashar Islam",
-    date: "16 Apr 2024",
-    Amount: "45",
-    Type: "player"
-  },
-  {
-    key: "2",
-    customerName: "Bashar Islam",
-    date: "16 Apr 2024",
-    Amount: "45",
-    Type: "player"
-  },
-  {
-    key: "3",
-    customerName: "Bashar Islam",
-    date: "16 Apr 2024",
-    Amount: "45",
-    Type: "player"
-  }
-];
 const Earning = () => {
+
+  const { data: transaction } = useGetAllRecentTrangitionQuery();
+    const { data: dashboardStatus } = useGetDashboardStatusQuery();
+
+    console.log(dashboardStatus?.data?.attributes?.totalEarnings);
+
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
 
-  // const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  const handleView = (record) => {
+    setSelectedTransaction(record);
+    setIsModalOpen(true);
+  };
 
+  // Columns for the table
   const columns = [
     {
       title: "#SI",
-      dataIndex: "si",
-      key: "si",
-      render: (text, _, index) => index + 1
+      dataIndex: "transactionId",
+      key: "transactionId",
+      render: (text, _, index) => index + 1,
     },
     {
       title: "User Name",
-      dataIndex: "customerName",
-      key: "name",
-      render: (_, record) => (
-        <div className="flex gap-2 items-center">
-          <img className="w-[34px] h-[34px] rounded-full" src={users} alt="" />
-          {/* <p className="font-medium">{record?.customerName}</p> */}
-          <p className="font-medium">AbSayed</p>
-        </div>
-      )
+      dataIndex: ["userDetails", "fullName"],
+      key: "userName",
+      render: (_, record) => record?.userDetails?.fullName || "N/A",
     },
-
     {
-      title: "Type",
-      dataIndex: "Type",
-      key: "type",
-      render: (_, record) => (
-        <p>{record?.Type ? record?.Type : "Apple Or Facebook User"}</p>
-      )
+      title: "Email",
+      dataIndex: ["userDetails", "email"],
+      key: "email",
+      render: (_, record) => record?.userDetails?.email || "N/A",
     },
     {
       title: "Amount",
-      dataIndex: "Amount",
-      key: "phone"
+      dataIndex: "amount",
+      key: "amount",
+      render: (amount) => `$${amount || "0.00"}`,
     },
     {
       title: "Date",
-      key: "date",
       dataIndex: "date",
-      render: (_, record) => (
-        // <p>{record?.createdAt?.split("T")[0] ? record?.createdAt?.split("T")[0] : "N/A"}</p>
-        <p>34/04/24</p>
-      )
-    },
+      key: "date",
+      render: (_, record) => {
+        const timestamp = record?.timestamp;
+        if (!timestamp) return "N/A";
 
+        const date = new Date(timestamp); // Convert timestamp to Date object
+        return date.toLocaleDateString("en-US", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }); // Format: DD MMM YYYY
+      },
+    },
     {
       title: "Action",
       key: "action",
@@ -88,45 +75,24 @@ const Earning = () => {
             size={18}
             className="text-[red] cursor-pointer"
           />
-
-          {/* <a><RxCross2 size={18} className='text-[red]'/></a> */}
         </Space>
-      )
-    }
+      ),
+    },
   ];
 
-  const handleView = () => {
-    // setUser(value);
-    // console.log(value)
-    setIsModalOpen(true);
-  };
-  //   const onChange = (date, dateString) => {
-  //     console.log(date, dateString);
-  //   };
-  //   console.log(user);
-  //   const handleChangePage = (page) => {
-  //     setCurrentPage(page);
-  //     console.log(page);
-  //   };
-  const onSearch = (value, _e, info) => console.log(info?.source, value);
-  const onChange = (date, dateString) => {
-    console.log(date, dateString);
-  };
   return (
-    <div className="">
-      <div className="rounded-t-lg mt-[50px]">
-
-        <div className="grid lg:grid-cols-4  gap-5">
+    <div className="mt-14">
+      <div className="rounded-t-lg mb-5">
+        <div className="grid lg:grid-cols-4 gap-5">
           <div className="p-6 rounded-lg bg-[#e8ebf0]">
             <p className="text-[20px] font-semibold mb-2">Total Earnings</p>
-            <h2 className="text-header font-semibold text-primaryBg">$24.88 K</h2>
+            <h2 className="text-header font-semibold text-primaryBg">${dashboardStatus?.data?.attributes?.totalEarnings} K</h2>
           </div>
           <div className="p-6 rounded-lg bg-[#e8ebf0]">
-            <p className="text-[20px] font-semibold mb-2">Total Earnings</p>
-            <h2 className="text-header font-semibold text-primaryBg">$24.88 K</h2>
+            <p className="text-[20px] font-semibold mb-2">Total Withdraw</p>
+            <h2 className="text-header font-semibold text-primaryBg">${dashboardStatus?.data?.attributes?.totalWithdraw} K</h2>
           </div>
         </div>
-
 
         <div className="md:flex py-[22px] justify-between items-center">
           <div>
@@ -134,15 +100,15 @@ const Earning = () => {
           </div>
           <div>
             <Space direction="vertical">
-              <DatePicker onChange={onChange} />
+              <DatePicker onChange={(date, dateString) => console.log(dateString)} />
             </Space>
             <Search
               className="md:ml-2 md:mt-0 mt-3"
               style={{
-                width: "200px"
+                width: "200px",
               }}
-              placeholder="input search text"
-              onSearch={onSearch}
+              placeholder="Search Email or User Name"
+              onSearch={(value) => console.log("Search:", value)}
               enterButton
             />
           </div>
@@ -150,104 +116,65 @@ const Earning = () => {
 
         <div className="overflow-x-scroll bg-[#e8ebf0]">
           <Table
-            pagination={{
-              total: dataSource.length,
-              showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
-              defaultPageSize: 1,
-              showSizeChanger: false,
-              itemRender: (current, type, originalElement) => {
-                if (type === 'prev') {
-                  return (
-                    <Button className="custom-pagination-button">
-                      Back
-                    </Button>
-                  );
-                }
-                if (type === 'next') {
-                  return (
-                    <Button className="custom-pagination-button">
-                      Next
-                    </Button>
-                  );
-                }
-                return originalElement;
-              },
-            }}
+            dataSource={transaction?.data || []}
             columns={columns}
-            dataSource={dataSource}
+            rowKey={(record) => record.transactionId}
+            // pagination={{
+            //   pageSize: 5,
+            //   showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+            // }}
+            pagination={true}
           />
+
         </div>
       </div>
-      <Modal
-        open={isModalOpen}
-        onOk={() => setIsModalOpen(false)}
-        onCancel={() => setIsModalOpen(false)}
-        footer={[]}
-        closeIcon={
-          <CloseOutlined
-            style={{
-              color: "#fff", // Icon color
-              backgroundColor: "#de0a26", // Background color of the close icon
-              borderRadius: "10%", // Rounded background
-              padding: "10px" // Padding inside the background
-            }}
-          />
-        }
-      >
-        <div>
-          <div className="flex justify-center items-center gap-2 flex-col border-b border-b-gray-300">
-            <p className="text-[26px] mb-[16px] font-medium">
-              Transaction Details
-            </p>
-          </div>
-          <div className="p-[20px]">
-            <div className="flex justify-between border-b py-[16px]">
-              <p>Full Name:</p>
-              <p>
-                {/* {user?.name ? user?.name : "N/A"} */}
-                absayed
-              </p>
-            </div>
 
-            <div className="flex justify-between border-b py-[16px] ">
-              <p>Email:</p>
-              <p>
-                {/* {user?.email ? user?.email : "N/A"} */}
-                ab@gmail.com
-              </p>
+      {selectedTransaction && (
+        <Modal
+          open={isModalOpen}
+          onOk={() => setIsModalOpen(false)}
+          onCancel={() => setIsModalOpen(false)}
+          footer={null}
+          closeIcon={
+            <CloseOutlined
+              style={{
+                color: "#fff",
+                backgroundColor: "#de0a26",
+                borderRadius: "10%",
+                padding: "10px",
+              }}
+            />
+          }
+        >
+          <div>
+            <div className="flex justify-center items-center gap-2 flex-col border-b border-[#ccc]">
+              <p className="text-[26px] mb-[16px] font-medium">Transaction Details</p>
             </div>
-            <div className="flex justify-between border-b py-[16px]">
-              <p>Phone:</p>
-              <p>
-                {/* {user?.phone ? user?.phone : "N/A"} */}
-                +45269875
-              </p>
-            </div>
-            <div className="flex justify-between border-b py-[16px]">
-              <p>Date:</p>
-              <p>
-                {/* {user?.createdAt  ? user?.createdAt?.split("T")[0] : "N/A"} */}
-                23-11-24
-              </p>
-            </div>
-            <div className="flex justify-between items-center pt-[16px]">
-              <p>address:</p>
-              <p className="px-[15px] py-[10px] rounded-lg">
-                {/* Regular P550 */}
-                UK
-              </p>
+            <div className="p-[20px]">
+              <div className="flex justify-between border-b border-[#ccc] py-[16px]">
+                <p>Full Name:</p>
+                <p>{selectedTransaction.userDetails?.fullName || "N/A"}</p>
+              </div>
+              <div className="flex justify-between border-b border-[#ccc] py-[16px]">
+                <p>Email:</p>
+                <p>{selectedTransaction.userDetails?.email || "N/A"}</p>
+              </div>
+              <div className="flex justify-between border-b border-[#ccc] py-[16px]">
+                <p>Transaction ID:</p>
+                <p>{selectedTransaction.transactionId || "N/A"}</p>
+              </div>
+              <div className="flex justify-between border-b border-[#ccc] py-[16px]">
+                <p>Amount:</p>
+                <p>${selectedTransaction.amount || "0.00"}</p>
+              </div>
+              <div className="flex justify-between border-b border-[#ccc] py-[16px]">
+                <p>Date:</p>
+                <p>{selectedTransaction.date || "N/A"}</p>
+              </div>
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <button className="px-2 py-2 bg-slate-100 border-2 rounded-e-md w-[50%]">
-              Downloard
-            </button>
-            <button className="px-2 py-2 bg-[#193664] text-whiteText rounded-s-md w-[50%]">
-              Print
-            </button>
-          </div>
-        </div>
-      </Modal>
+        </Modal>
+      )}
     </div>
   );
 };

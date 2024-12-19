@@ -189,23 +189,23 @@ const Users = () => {
         }
       >
         <div>
-          <div className="flex justify-center items-center gap-2 flex-col py-[16px] border-b border-b-gray-300">
-            <h1 className="text-xl font-medium">User Details</h1>
+          <div className="flex justify-center items-center gap-2 flex-col py-[16px] border-b border-[#ccc]">
+            <h1 className="text-[25px] font-medium ">User Details</h1>
           </div>
           <div className="p-[20px]">
-            <div className="flex justify-between border-b mt-4 py-[16px]">
+            <div className="flex justify-between border-b border-[#ccc] mt-4 py-[16px]">
               <p>Full Name:</p>
               <p>{selectedUser?.fullName || "N/A"}</p>
             </div>
-            <div className="flex justify-between border-b py-[16px]">
+            <div className="flex justify-between border-b border-[#ccc] py-[16px]">
               <p>Email:</p>
               <p>{selectedUser?.email || "N/A"}</p>
             </div>
-            <div className="flex justify-between border-b py-[16px]">
+            <div className="flex justify-between border-b border-[#ccc] py-[16px]">
               <p>Phone:</p>
               <p>{selectedUser?.phoneNumber || "N/A"}</p>
             </div>
-            <div className="flex justify-between border-b py-[16px]">
+            <div className="flex justify-between border-b border-[#ccc] py-[16px]">
               <p>Date:</p>
               <p>{selectedUser?.dataOfBirth || "N/A"}</p>
             </div>

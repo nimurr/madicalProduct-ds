@@ -1,6 +1,10 @@
 import { IoMdNotificationsOutline } from "react-icons/io";
 
 const Notification = () => {
+
+
+  
+
   return (
     <div className="mt-8 mx-0">
       <h1 className="font-semibold text-[30px]">Notifications</h1>
