@@ -1,76 +1,83 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useState, useEffect } from "react"; 
+import { useState, useEffect } from "react";
 import url from "../../../redux/api/baseUrl";
 import { useCreateUpdateCategoryMutation } from "../../../redux/features/auth/heashboard/updateCategory";
 import { FaArrowLeft } from "react-icons/fa6";
-
+import { useGetSingleCategoriesQuery } from "../../../redux/features/auth/profile/getCategories";
+import Swal from "sweetalert2";
 
 export default function UpdateCategory() {
-
   const navigate = useNavigate();
-
   const { id } = useParams(); // Get category ID from URL
+
   const [categoryData, setCategoryData] = useState({
     categoryName: "",
     image: null,
+    imagePreview: null, // To preview the uploaded image
   });
 
   const [updateCategory, { isError, isLoading }] = useCreateUpdateCategoryMutation();
+  const { data: categoryItem } = useGetSingleCategoriesQuery(id);
 
-  // Fetch the category data when the component is mounted
+  // Update state with fetched category data
   useEffect(() => {
-    const fetchCategory = async () => {
-      try {
-        // Fetching category data from the backend (replace with actual API call)
-        const response = await fetch(`${url}/api/v1/category/${id}`);
-        const data = await response.json();
-        
-        // Set fetched category data (image could be a URL or a file)
-        setCategoryData({
-          categoryName: data.categoryName,
-          image: data.image ? data.image : null, // Ensure image is handled
-        });
-      } catch (error) {
-        console.error("Failed to fetch category data:", error);
-      }
-    };
-
-    fetchCategory();
-  }, [id]);
+    if (categoryItem?.data?.attributes) {
+      setCategoryData((prevData) => ({
+        ...prevData,
+        categoryName: categoryItem.data.attributes.categoryName,
+        imagePreview: url + categoryItem.data.attributes.image,
+      }));
+    }
+  }, [categoryItem]);
 
   // Handle form submission
   const handleUpdate = async (e) => {
     e.preventDefault();
-  
+
     const formData = new FormData();
     formData.append("categoryName", categoryData.categoryName);
-  
+
     if (categoryData.image) {
       formData.append("image", categoryData.image);
     }
-  
-    // Log FormData content (for debugging)
-    formData.forEach((value, key) => {
-      console.log(key, value);
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Complete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await updateCategory({ id, newPost: formData }).unwrap();
+
+          Swal.fire({
+            title: "Category Updated!",
+            text: "The category has been successfully updated.",
+            icon: "success",
+          });
+
+          setCategoryData({
+            categoryName: "",
+            image: null,
+          });
+          navigate(-1);
+        } catch (error) {
+          console.error("Error updating category:", error);
+          Swal.fire({
+            title: "Error!",
+            text: "Failed to update category. Please try again.",
+            icon: "error",
+          });
+        }
+      }
     });
 
-    try {
-      // Send the updated data to the backend
-      await updateCategory({ id, newPost: formData }).unwrap();
-      console.log("Category updated successfully!");
 
-      // Reset form data after successful update
-      setCategoryData({
-        categoryName: "",
-        image: null,
-      });
-
-      alert('Category updated successfully!');
-    } catch (error) {
-      console.error("Error updating category:", error);
-    }
   };
-  
 
   // Handle file input changes
   const handleFileChange = (e) => {
@@ -78,41 +85,35 @@ export default function UpdateCategory() {
     if (file) {
       setCategoryData((prevData) => ({
         ...prevData,
-        image: file, // Update the image file in state
+        image: file,
+        imagePreview: URL.createObjectURL(file), // Preview the uploaded image
       }));
     }
   };
 
   return (
     <div className="mt-20">
-     <button
-      className="bg-primaryBg text-[#fff] py-2 px-5 rounded flex justify-center items-center gap-2 w-48 font-semibold"
-      onClick={() => navigate(-1)} // Go back to the previous page
-    >
-      <FaArrowLeft /> Back To Previus
-    </button>
-      <form onSubmit={handleUpdate} className="max-w-lg mx-auto p-4 bg-white shadow-lg rounded-lg">
+      <button
+        className="bg-primaryBg text-[#fff] py-2 px-5 rounded flex justify-center items-center gap-2 w-48 font-semibold"
+        onClick={() => navigate(-1)} // Go back to the previous page
+      >
+        <FaArrowLeft /> Back To Previous
+      </button>
+
+      <form
+        onSubmit={handleUpdate}
+        className="max-w-lg mx-auto p-4 bg-white shadow-lg rounded-lg md:mt-0 mt-10"
+      >
         <div className="mb-6">
           {/* Show image preview */}
-          {categoryData.image ? (
-            typeof categoryData.image === "string" ? (
-              // If image is a string (URL), show it
-              <img
-                src={categoryData.image}
-                alt="Category"
-                className="w-32 h-32 object-cover rounded mx-auto"
-              />
-            ) : (
-              // If image is a file, show a preview of it
-              <img
-                src={URL.createObjectURL(categoryData.image)}
-                alt="Category Preview"
-                className="w-32 h-32 object-cover rounded mx-auto"
-
-              />
-            )
+          {categoryData.imagePreview ? (
+            <img
+              src={categoryData.imagePreview}
+              alt="Category Preview"
+              className="w-32 h-32 object-cover rounded mx-auto"
+            />
           ) : (
-            <p className="text-center text-gray-500">No image selected</p>
+            <p className="text-[#f11]">No image available</p>
           )}
         </div>
 
@@ -121,7 +122,6 @@ export default function UpdateCategory() {
           <input
             type="file"
             name="image"
-            required
             onChange={handleFileChange}
             className="block w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:ring-primaryBg focus:border-primaryBg"
           />
@@ -148,10 +148,10 @@ export default function UpdateCategory() {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full py-3 bg-primaryBg !text-[#fff] text-lg font-semibold rounded-lg shadow-md hover:bg-primaryBg/80 focus:outline-none focus:ring-2 focus:ring-primaryBg focus:ring-opacity-50"
+          className="w-full py-3 bg-primaryBg text-[#fff] text-lg font-semibold rounded-lg shadow-md hover:bg-primaryBg/80 focus:outline-none focus:ring-2 focus:ring-primaryBg focus:ring-opacity-50"
           disabled={isLoading}
         >
-          {isLoading ? 'Updating...' : 'Update'}
+          {isLoading ? "Updating..." : "Update"}
         </button>
 
         {/* Display error message if update fails */}

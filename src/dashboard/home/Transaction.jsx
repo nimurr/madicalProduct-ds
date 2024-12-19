@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Table, Modal } from "antd";
 import { BsInfoCircle } from "react-icons/bs";
 import { useGetAllRecentTrangitionQuery } from "../../redux/features/auth/heashboard/recentTransaction";
@@ -7,15 +7,16 @@ const Transaction = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [currentPage, setCurrentPage] = useState(1); // Current page
-  const [pageSize, setPageSize] = useState(5); // Page size
+  const [filteredData, setFilteredData] = useState([]); // Filtered transactions
 
   const { data: transaction } = useGetAllRecentTrangitionQuery();
 
-  // console.log(transaction);
-
-  // Sliced data for the current page
-  const paginatedData =
-    transaction?.data.slice((currentPage - 1) * pageSize, currentPage * pageSize) || [];
+  // Initialize filtered data
+  useEffect(() => {
+    if (transaction?.data) {
+      setFilteredData(transaction.data);
+    }
+  }, [transaction]);
 
   const columns = [
     {
@@ -75,31 +76,27 @@ const Transaction = () => {
     setIsModalOpen(true);
   };
 
-  const handlePaginationChange = (page, pageSize) => {
+  const handlePaginationChange = (page) => {
     setCurrentPage(page);
-    setPageSize(pageSize);
   };
 
   return (
     <div>
       <h1 className="text-header font-medium my-2">Recent Transactions</h1>
-      <div className="overflow-x-scroll w-full">
+      <div className="overflow-x-atuo w-full">
         <div className=" bg-[#e8ebf0]">
           <Table
-            dataSource={paginatedData}
+            dataSource={filteredData}
             columns={columns}
             rowKey={(record) => record.transactionId}
             pagination={{
-              current: currentPage, // Controlled current page
-              pageSize: pageSize, // Controlled page size
-              total: transaction?.data.length || 0, // Total number of items
-              showSizeChanger: true, // Allows changing the page size
-              pageSizeOptions: ["5", "10", "20"], // Page size options
-              onChange: handlePaginationChange, // Handle page change
-              showTotal: (total, range) =>
-                `${range[0]}-${range[1]} of ${total} items`, // Total items info
+              total: filteredData.length,
+              defaultPageSize: 25,
+              showSizeChanger: false,
+              current: currentPage,
+              onChange: handlePaginationChange,
+              showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
             }}
-            bordered
           />
 
           {selectedTransaction && (

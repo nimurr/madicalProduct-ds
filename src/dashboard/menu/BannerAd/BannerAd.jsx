@@ -34,8 +34,16 @@ const dataSource = [
 
 const BannerAd = () => {
     const [filteredData, setFilteredData] = useState(dataSource);
+    const [currentPage, setCurrentPage] = useState(1); // Current page state
+    const [pageSize] = useState(10); // Items per page
 
     const columns = [
+        {
+            title: "#SL",
+            key: "sl",
+            render: (_, __, index) =>
+                (currentPage - 1) * pageSize + index + 1, // Dynamically calculate serial number
+        },
         {
             title: "#Tr.ID",
             dataIndex: "trId",
@@ -66,7 +74,10 @@ const BannerAd = () => {
             title: "Action",
             key: "action",
             render: (_, record) => (
-                <Link to={'/dashboard/bannerads/sdfg655sdf21s5d4f'} className="text-blue-500 text-left">
+                <Link
+                    to={"/dashboard/bannerads/sdfg655sdf21s5d4f"}
+                    className="text-blue-500 text-left"
+                >
                     <IoInformationCircleOutline className="text-header" />
                 </Link>
             ),
@@ -83,10 +94,16 @@ const BannerAd = () => {
         setFilteredData(filtered);
     };
 
+    const handlePaginationChange = (page) => {
+        setCurrentPage(page); // Update current page
+    };
+
     return (
         <div className="mt-14 bg-[#e8ebf0] rounded-t-lg ">
             <div className="md:flex justify-between items-center py-4">
-                <p className="text-header px-5 text-[#616161] font-semibold py-3">Recent Ad Requests</p>
+                <p className="text-header px-5 text-[#616161] font-semibold py-3">
+                    Recent Ad Requests
+                </p>
                 <div className="flex gap-2">
                     <DatePicker
                         className="p-1"
@@ -105,14 +122,15 @@ const BannerAd = () => {
                 </div>
             </div>
 
-            <div className="overflow-x-scroll">
+            <div className="overflow-x-auto">
                 <Table
                     pagination={{
+                        current: currentPage, // Controlled pagination
+                        pageSize: pageSize,
                         total: filteredData.length,
                         showTotal: (total, range) =>
                             `${range[0]}-${range[1]} of ${total} items`,
-                        defaultPageSize: 10,
-                        showSizeChanger: false,
+                        onChange: handlePaginationChange, // Handle page change
                     }}
                     columns={columns}
                     dataSource={filteredData}

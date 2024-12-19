@@ -12,6 +12,7 @@ import { useCreatePostSubcategoryMutation } from "../../../redux/features/auth/h
 import { useGetSubCategoriesQuery } from "../../../redux/features/auth/heashboard/getSubCategory";
 import { useDeleteCategoriesMutation } from "../../../redux/features/auth/heashboard/deleteCategory";
 import { FaArrowLeft } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 const SubCategory = () => {
   const { id } = useParams(); // Extract category ID from the URL params
@@ -37,14 +38,36 @@ const SubCategory = () => {
   const [deleteCategory] = useDeleteCategoriesMutation();
 
   const handleDelete = async (categoryId) => {
-    try {
-      await deleteCategory(categoryId).unwrap(); // Trigger the delete mutation
-      // Optionally handle successful deletion, like showing a success message
-    } catch (err) {
-      // Optionally handle errors, e.g., show an error message
-      console.error("Failed to delete category:", err);
-    }
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteCategory(categoryId).unwrap(); // Trigger the delete mutation
+          Swal.fire({
+            title: "Deleted!",
+            text: "The category has been deleted successfully.",
+            icon: "success",
+          });
+          // Optionally handle UI updates or fetch updated data here
+        } catch (err) {
+          console.error("Failed to delete category:", err);
+          Swal.fire({
+            title: "Error!",
+            text: "Failed to delete the category. Please try again.",
+            icon: "error",
+          });
+        }
+      }
+    });
   };
+  
 
   useEffect(() => {
     // You can dynamically set the categoryName based on your logic

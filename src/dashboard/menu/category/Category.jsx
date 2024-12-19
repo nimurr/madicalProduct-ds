@@ -6,6 +6,7 @@ import { useGetCategoriesQuery } from "../../../redux/features/auth/profile/getC
 import { useDeleteCategoriesMutation } from "../../../redux/features/auth/heashboard/deleteCategory";
 import { useCreatePostMutation } from "../../../redux/features/auth/heashboard/postCategory";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Category = () => {
   const [imageUrl, setImageUrl] = useState(null);
@@ -22,7 +23,7 @@ const Category = () => {
   };
 
   // Fetch Categories
-  const { data , isLoading } = useGetCategoriesQuery();
+  const { data, isLoading } = useGetCategoriesQuery();
   console.log(data);
 
 
@@ -89,13 +90,34 @@ const Category = () => {
 
   // Delete Category Handler
   const handleDelete = async (categoryId) => {
-    try {
-      await deleteCategory(categoryId).unwrap(); // Trigger the delete mutation
-      // Optionally handle successful deletion, like showing a success message
-    } catch (err) {
-      // Optionally handle errors, e.g., show an error message
-      console.error("Failed to delete category:", err);
-    }
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteCategory(categoryId).unwrap(); // Trigger the delete mutation
+          Swal.fire({
+            title: "Deleted!",
+            text: "The category has been deleted.",
+            icon: "success",
+          });
+          // Optionally, handle UI updates or fetch updated data here
+        } catch (err) {
+          console.error("Failed to delete category:", err);
+          Swal.fire({
+            title: "Error!",
+            text: "Failed to delete the category. Please try again.",
+            icon: "error",
+          });
+        }
+      }
+    });
   };
 
   if (isLoading) return <div className="text-[30px] text-[#fd3131] text-center mt-10">Category Loading...</div>;

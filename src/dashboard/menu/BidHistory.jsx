@@ -145,7 +145,7 @@ const BidHistory = () => {
             />
           </div>
         </div>
-        <div className="overflow-x-scroll bg-[#e8ebf0]">
+        <div className="overflow-x-auto bg-[#e8ebf0]">
           <Table
             pagination={{
               total: filteredData.length,

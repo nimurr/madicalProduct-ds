@@ -3,7 +3,7 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 const Notification = () => {
 
 
-  
+
 
   return (
     <div className="mt-8 mx-0">
@@ -54,7 +54,6 @@ const Notification = () => {
           <p className="text-[14px] ml-8 text-[#76b395]">Fri, 12:30pm</p>
         </div>
       </div>
-
 
     </div>
   );

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Input, Modal, DatePicker, Space, Table, Button } from "antd";
+import React, { useState, useEffect } from "react";
+import { Input, Modal, DatePicker, Space, Table, Spin } from "antd";
 import { BsInfoCircle } from "react-icons/bs";
 import { CloseOutlined } from "@ant-design/icons";
 import { useGetAllRecentTrangitionQuery } from "../../redux/features/auth/heashboard/recentTransaction";
@@ -8,19 +8,71 @@ import { useGetDashboardStatusQuery } from "../../redux/features/auth/heashboard
 const { Search } = Input;
 
 const Earning = () => {
-
-  const { data: transaction } = useGetAllRecentTrangitionQuery();
-    const { data: dashboardStatus } = useGetDashboardStatusQuery();
-
-    console.log(dashboardStatus?.data?.attributes?.totalEarnings);
-
+  const { data: transaction, isLoading: isTransactionLoading } = useGetAllRecentTrangitionQuery();
+  const { data: dashboardStatus, isLoading: isDashboardLoading } = useGetDashboardStatusQuery();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const [filteredData, setFilteredData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    // Initialize filtered data with all transactions
+    if (transaction?.data) {
+      setFilteredData(transaction.data);
+    }
+  }, [transaction]);
 
   const handleView = (record) => {
     setSelectedTransaction(record);
     setIsModalOpen(true);
+  };
+
+  const handleSearch = (value) => {
+    if (!value) {
+      setFilteredData(transaction?.data || []); // Reset to original data if search input is cleared
+      return;
+    }
+
+    const filtered = transaction?.data.filter(
+      (item) =>
+        item.userDetails?.fullName?.toLowerCase().includes(value.toLowerCase()) ||
+        item.userDetails?.email?.toLowerCase().includes(value.toLowerCase())
+    );
+
+    setFilteredData(filtered);
+  };
+
+  const handleDateSearch = (date) => {
+    if (!date) {
+      setFilteredData(transaction?.data || []); // Reset to original data if no date is selected
+      return;
+    }
+
+    const filtered = transaction?.data.filter((item) => {
+      const timestamp = item.timestamp;
+      if (!timestamp) return false;
+
+      const formattedTransactionDate = new Date(timestamp).toLocaleDateString("en-US", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+
+      const selectedDate = new Date(date).toLocaleDateString("en-US", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+
+      return formattedTransactionDate === selectedDate;
+    });
+
+    setFilteredData(filtered);
+  };
+
+  const handlePaginationChange = (page) => {
+    setCurrentPage(page);
   };
 
   // Columns for the table
@@ -29,7 +81,7 @@ const Earning = () => {
       title: "#SI",
       dataIndex: "transactionId",
       key: "transactionId",
-      render: (text, _, index) => index + 1,
+      render: (_, __, index) => index + 1 + (currentPage - 1) * 5,
     },
     {
       title: "User Name",
@@ -51,18 +103,18 @@ const Earning = () => {
     },
     {
       title: "Date",
-      dataIndex: "date",
-      key: "date",
+      dataIndex: "timestamp",
+      key: "timestamp",
       render: (_, record) => {
         const timestamp = record?.timestamp;
         if (!timestamp) return "N/A";
 
-        const date = new Date(timestamp); // Convert timestamp to Date object
+        const date = new Date(timestamp);
         return date.toLocaleDateString("en-US", {
           day: "2-digit",
           month: "short",
           year: "numeric",
-        }); // Format: DD MMM YYYY
+        });
       },
     },
     {
@@ -80,17 +132,29 @@ const Earning = () => {
     },
   ];
 
+  if (isTransactionLoading || isDashboardLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
+
   return (
     <div className="mt-14">
       <div className="rounded-t-lg mb-5">
         <div className="grid lg:grid-cols-4 gap-5">
           <div className="p-6 rounded-lg bg-[#e8ebf0]">
             <p className="text-[20px] font-semibold mb-2">Total Earnings</p>
-            <h2 className="text-header font-semibold text-primaryBg">${dashboardStatus?.data?.attributes?.totalEarnings} K</h2>
+            <h2 className="text-header font-semibold text-primaryBg">
+              ${dashboardStatus?.data?.attributes?.totalEarnings} K
+            </h2>
           </div>
           <div className="p-6 rounded-lg bg-[#e8ebf0]">
             <p className="text-[20px] font-semibold mb-2">Total Withdraw</p>
-            <h2 className="text-header font-semibold text-primaryBg">${dashboardStatus?.data?.attributes?.totalWithdraw} K</h2>
+            <h2 className="text-header font-semibold text-primaryBg">
+              ${dashboardStatus?.data?.attributes?.totalWithdraw} K
+            </h2>
           </div>
         </div>
 
@@ -100,7 +164,7 @@ const Earning = () => {
           </div>
           <div>
             <Space direction="vertical">
-              <DatePicker onChange={(date, dateString) => console.log(dateString)} />
+              <DatePicker onChange={handleDateSearch} />
             </Space>
             <Search
               className="md:ml-2 md:mt-0 mt-3"
@@ -108,24 +172,25 @@ const Earning = () => {
                 width: "200px",
               }}
               placeholder="Search Email or User Name"
-              onSearch={(value) => console.log("Search:", value)}
+              onSearch={handleSearch}
               enterButton
             />
           </div>
         </div>
-
-        <div className="overflow-x-scroll bg-[#e8ebf0]">
+        <div className="overflow-x-auto bg-[#e8ebf0]">
           <Table
-            dataSource={transaction?.data || []}
+            pagination={{
+              total: filteredData.length,
+              showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+              defaultPageSize: 10,
+              showSizeChanger: false,
+              current: currentPage,
+              onChange: handlePaginationChange,
+            }}
             columns={columns}
-            rowKey={(record) => record.transactionId}
-            // pagination={{
-            //   pageSize: 5,
-            //   showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
-            // }}
-            pagination={true}
+            dataSource={filteredData}
+            rowKey={(record) => record.id || record.email}
           />
-
         </div>
       </div>
 
@@ -169,12 +234,17 @@ const Earning = () => {
               </div>
               <div className="flex justify-between border-b border-[#ccc] py-[16px]">
                 <p>Date:</p>
-                <p>{selectedTransaction.date || "N/A"}</p>
+                <p>{new Date(selectedTransaction.timestamp).toLocaleDateString("en-US", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                })}</p>
               </div>
             </div>
           </div>
         </Modal>
       )}
+
     </div>
   );
 };
