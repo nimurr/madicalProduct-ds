@@ -4,6 +4,7 @@ import users from "../../../public/image/randomuser.jpg";
 import "./transaction.css";
 
 import { BsInfoCircle } from "react-icons/bs";
+import { useGetAllRecentTrangitionQuery } from "../../redux/features/auth/heashboard/recentTransaction";
 
 const Transaction = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -88,6 +89,17 @@ const Transaction = () => {
       )
     }
   ];
+
+  const {data : transaction } = useGetAllRecentTrangitionQuery();
+
+
+  console.log(transaction);
+
+
+
+
+
+
 
   const handleView = () => {
     // setUser(value);
