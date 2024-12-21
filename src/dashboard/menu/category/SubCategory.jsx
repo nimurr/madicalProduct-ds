@@ -13,6 +13,7 @@ import { useGetSubCategoriesQuery } from "../../../redux/features/auth/heashboar
 import { useDeleteCategoriesMutation } from "../../../redux/features/auth/heashboard/deleteCategory";
 import { FaArrowLeft } from "react-icons/fa";
 import Swal from "sweetalert2";
+import url from "../../../redux/api/baseUrl";
 
 const SubCategory = () => {
   const { id } = useParams(); // Extract category ID from the URL params
@@ -166,7 +167,7 @@ const SubCategory = () => {
             className="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:scale-105"
           >
             <img
-              src={`http://192.168.10.169:6089${category?.image}`}
+              src={`${url}${category?.image}`}
               alt={category.name}
               className="w-full h-48 object-cover"
             />

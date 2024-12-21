@@ -219,7 +219,12 @@ const Users = () => {
             </div>
             <div className="flex justify-between border-b border-[#ccc] py-[16px]">
               <p>Date:</p>
-              <p>{selectedUser?.dataOfBirth || "N/A"}</p>
+              <p>{selectedUser?.dataOfBirth ?  new Date(selectedUser.dataOfBirth).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                  })
+                  : "N/A" }</p>
             </div>
             <div className="flex justify-between items-center pt-[16px]">
               <p>Address:</p>

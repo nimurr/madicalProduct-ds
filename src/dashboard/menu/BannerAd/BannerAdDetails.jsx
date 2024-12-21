@@ -9,7 +9,7 @@ const BannerAdDetails = () => {
                 {/* Image Section */}
                 <div className="md:w-1/4 p-2">
                     <img
-                        src="../../../../public/image/handsome-ads.png" // Replace this with your image path
+                        src="../image/handsome-ads.png" // Replace this with your image path
                         alt="Medicine Ad"
                         className="object-cover w-full h-full"
                     />

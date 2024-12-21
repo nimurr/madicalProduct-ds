@@ -1,115 +1,110 @@
 import { useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 import { Modal, message } from "antd";
-import marketingImage from "../../../public/image/marketingFeesImage.png"; // replace with your image path
-import referralImage from "../../../public/image/persentage.png"; // replace with your image path
+import marketingImage from "/image/marketingFeesImage.png";
+import referralImage from "/image/persentage.png";
 import { useGetMarketingFeesQuery } from "../../redux/features/auth/heashboard/marketingFeesGet";
 import { useUpdateFeesMutation } from "../../redux/features/auth/heashboard/marketingFeesUpdate";
-import swal from "sweetalert";
 
 const MarketingFees = () => {
+
+  //============== Modals ==============
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [productPrice, setProductPrice] = useState("");
-  const [productPriceError, setProductPriceError] = useState(false);
 
   const [isMessagingModalOpen, setIsMessagingModalOpen] = useState(false);
   const [messagingPrice, setMessagingPrice] = useState("");
-  const [messagingPriceError, setMessagingPriceError] = useState(false);
 
   const [isBidModalOpen, setIsBidModalOpen] = useState(false);
   const [bidPrice, setBidPrice] = useState("");
-  const [bidPriceError, setBidPriceError] = useState(false);
+
+  const [isReferralModalOpen, setIsReferralModalOpen] = useState(false);
+  const [referralPercentage, setReferralPercentage] = useState("");
+  console.log(referralPercentage);
+
 
   const { data: marketingFeesData } = useGetMarketingFeesQuery();
-  const [updateMassengingFees, { isLoading }] = useUpdateFeesMutation();
+  const [updateFees, { isLoading }] = useUpdateFeesMutation();
 
-  // Default values for fees (fallback to provided ones if data is not available)
+  //============== Default values for fees ==============
   const productMarketingFees =
-    marketingFeesData?.data?.attributes[0].productMarketingFees;
-  const messagingFees = marketingFeesData?.data?.attributes[0].messagingFees;
-  const bidFees = marketingFeesData?.data?.attributes[0].bidFees;
+    marketingFeesData?.data?.attributes[0]?.productMarketingFees || 0;
 
-  // Handle modals for Product Fees
+  const messagingFees = marketingFeesData?.data?.attributes[0]?.messagingFees || 0;
+  const bidFees = marketingFeesData?.data?.attributes[0]?.bidFees || 0;
+  const referralFee = marketingFeesData?.data?.attributes[0]?.referralPercentage || 0;
+
+  console.log(referralFee);
+
+  //=========== Modal Handlers ===========
   const showProductModal = () => setIsProductModalOpen(true);
   const handleProductCancel = () => setIsProductModalOpen(false);
 
-  // Handle modals for Messaging Fees
   const showMessagingModal = () => setIsMessagingModalOpen(true);
   const handleMessagingCancel = () => setIsMessagingModalOpen(false);
 
-  // Handle modals for Bid Fees
   const showBidModal = () => setIsBidModalOpen(true);
   const handleBidCancel = () => setIsBidModalOpen(false);
 
-  const handleProductPriceChange = (e) => setProductPrice(e.target.value);
+  const showReferralModal = () => setIsReferralModalOpen(true);
+  const handleReferralCancel = () => setIsReferralModalOpen(false);
 
+  //===================== Form Handlers ===============
   const handleProductSubmit = async (e) => {
     e.preventDefault();
-    const data = {
-      messagingFees,
-      bidFees,
-      productMarketingFees: e.target.productPrice.value
-    };
+    const data = { messagingFees, bidFees, productMarketingFees: productPrice, referralPercentage };
 
     try {
-      await updateMassengingFees({ data, id: "marketing" }).unwrap();
+      await updateFees({ data, id: "marketing" }).unwrap();
       message.success("Product Marketing Fee updated successfully.");
       setIsProductModalOpen(false);
     } catch (error) {
-      message.error("Failed to update Product Marketing Fee.", error.message);
+      message.error("Failed to update Product Marketing Fee.");
     }
   };
 
   const handleMessagingSubmit = async (e) => {
     e.preventDefault();
-    // console.log(e.target.messagingPrice.value);
-    const data = {
-      messagingFees: e.target.messagingPrice.value,
-      bidFees,
-      productMarketingFees
-    };
+    const data = { messagingFees: messagingPrice, bidFees, productMarketingFees, referralPercentage };
 
     try {
-      await updateMassengingFees({ data, id: "messaging" }).unwrap();
-      message.success("Product Marketing Fee updated successfully.");
-      setIsProductModalOpen(false);
+      await updateFees({ data, id: "messaging" }).unwrap();
+      message.success("Messaging Fee updated successfully.");
+      setIsMessagingModalOpen(false);
     } catch (error) {
-      message.error("Failed to update Product Marketing Fee.", error.message);
+      message.error("Failed to update Messaging Fee.");
     }
   };
 
-  const handleBidFees = async (e) => {
+  const handleBidSubmit = async (e) => {
     e.preventDefault();
-    console.log(e.target.bidPriceFees.value)
-    const data = {
-      messagingFees,
-      bidFees: e.target.bidPriceFees.value,
-      productMarketingFees
-    };
+    const data = { messagingFees, bidFees: bidPrice, productMarketingFees, referralPercentage };
 
     try {
-      await updateMassengingFees({ data, id: "bid" }).unwrap();
-      message.success("Product Marketing Fee updated successfully.");
-      setIsProductModalOpen(false);
+      await updateFees({ data, id: "bid" }).unwrap();
+      message.success("Bid Fee updated successfully.");
+      setIsBidModalOpen(false);
     } catch (error) {
-      message.error("Failed to update Product Marketing Fee.", error.message);
+      message.error("Failed to update Bid Fee.");
     }
-
   };
 
-
-  // Add this line to create state for referral modal
-  const [isReferralModalOpen, setIsReferralModalOpen] = useState(false);
-  // Update the referral modal handlers
-  const showReferralModal = () => setIsReferralModalOpen(true);
-  const handleReferralCancel = () => setIsReferralModalOpen(false);
-  const handleReferralFees = (e) => {
+  const handleReferralSubmit = async (e) => {
     e.preventDefault();
-    console.log('sdsljdfkljsdflkjsdf shdflkh sd');
-  }
+    const data = { messagingFees, bidFees, productMarketingFees, referralPercentage };
+
+    try {
+      await updateFees({ data, id: "percentage" }).unwrap();
+      message.success("Referral Percentage updated successfully.");
+      setIsReferralModalOpen(false);
+    } catch (error) {
+      message.error("Failed to update Referral Percentage.");
+    }
+  };
+
 
   return (
-    <div className="mt-10 ">
+    <div className="mt-10">
       <h1 className="font-semibold text-header">Marketing</h1>
 
       {/* Product Marketing Fees */}
@@ -118,9 +113,7 @@ const MarketingFees = () => {
         className="mt-8 cursor-pointer flex justify-between bg-[#F7F7F7] rounded items-center w-full h-[75px]"
       >
         <p className="text-[18px] ml-8 font-medium">Product Marketing Fees</p>
-        <div className="mr-8 text-[#193664] px-2 py-1 rounded cursor-pointer">
-          <IoIosArrowForward />
-        </div>
+        <IoIosArrowForward className="mr-8 text-[#193664]" />
       </div>
       <Modal
         title="Product Marketing Fees"
@@ -128,42 +121,26 @@ const MarketingFees = () => {
         onCancel={handleProductCancel}
         footer={null}
       >
-        <hr className="my-5" />
-        <div className="w-3/4 mx-auto my-5 flex items-center justify-center gap-8">
+        <div className="w-3/4 mx-auto flex items-center justify-center gap-8 my-5">
           <img src={marketingImage} alt="Product Marketing" />
           <div>
-            <h3 className="text-[20px]">Current marketing fees</h3>
-            <h2 className="font-semibold text-[25px]">
-              ${productMarketingFees} K
-            </h2>
+            <h3 className="text-[20px]">Current Marketing Fee</h3>
+            <h2 className="font-semibold text-[25px]">${productMarketingFees} K</h2>
           </div>
         </div>
         <form onSubmit={handleProductSubmit}>
-          <label>
-            <span className="block mb-1">Price</span>
-            <input
-              required
-              className="w-full p-2 rounded-xl border-[2px] border-[#eee]"
-              type="number"
-              placeholder="Price ..."
-              name="productPrice"
-              value={productPrice}
-              onChange={handleProductPriceChange}
-            />
-            {productPriceError && (
-              <span className="text-red-500">Please enter a valid price</span>
-            )}
-          </label>
-
-          <div className="mt-4 flex justify-center">
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="bg-primaryBg  text-[#fff] font-semibold rounded-xl py-3 w-full mt-20"
-            >
-              {isLoading ? "Updating..." : "Update"}
-            </button>
-          </div>
+          <input
+            type="number"
+            placeholder="Price..."
+            className="w-full p-2 border rounded"
+            // value={productPrice}
+            defaultValue={productMarketingFees}
+            onChange={(e) => setProductPrice(e.target.value)}
+            required
+          />
+          <button className="bg-primaryBg text-whiteText py-2 px-5 mt-5 rounded w-full" disabled={isLoading}>
+            {isLoading ? "Updating..." : "Update"}
+          </button>
         </form>
       </Modal>
 
@@ -173,9 +150,7 @@ const MarketingFees = () => {
         className="mt-8 cursor-pointer flex justify-between bg-[#F7F7F7] rounded items-center w-full h-[75px]"
       >
         <p className="text-[18px] ml-8 font-medium">Messaging Fees</p>
-        <div className="mr-8 text-[#193664] px-2 py-1 rounded cursor-pointer">
-          <IoIosArrowForward />
-        </div>
+        <IoIosArrowForward className="mr-8 text-[#193664]" />
       </div>
       <Modal
         title="Messaging Fees"
@@ -183,38 +158,25 @@ const MarketingFees = () => {
         onCancel={handleMessagingCancel}
         footer={null}
       >
-        <hr className="my-5" />
-        <div className="w-3/4 mx-auto my-5 flex items-center justify-center gap-8">
+        <div className="w-3/4 mx-auto flex items-center justify-center gap-8 my-5">
           <img src={marketingImage} alt="Messaging Fees" />
           <div>
-            <h3 className="text-[20px]">Current messaging fees</h3>
+            <h3 className="text-[20px]">Current Messaging Fee</h3>
             <h2 className="font-semibold text-[25px]">${messagingFees} K</h2>
           </div>
         </div>
         <form onSubmit={handleMessagingSubmit}>
-          <label>
-            <span className="block mb-1">Price</span>
-            <input
-              required
-              className="w-full p-2 rounded-xl border-[2px] border-[#eee]"
-              type="number"
-              placeholder="Price ..."
-              value={messagingPrice}
-              name="messagingPrice"
-              onChange={(e) => setMessagingPrice(e.target.value)}
-            />
-          </label>
-
-          <div className="mt-4 flex justify-center">
-            <button
-              // eslint-disable-next-line react/jsx-no-duplicate-props
-              type={"submit"}
-              disabled={isLoading}
-              className="bg-primaryBg  text-[#fff] font-semibold rounded-xl py-3 w-full mt-20"
-            >
-              {isLoading ? "Updating..." : "Update"}
-            </button>
-          </div>
+          <input
+            type="number"
+            placeholder="Price..."
+            className="w-full p-2 border rounded"
+            defaultValue={messagingFees}
+            onChange={(e) => setMessagingPrice(e.target.value)}
+            required
+          />
+          <button className="bg-primaryBg text-whiteText py-2 px-5 mt-5 rounded w-full" disabled={isLoading}>
+            {isLoading ? "Updating..." : "Update"}
+          </button>
         </form>
       </Modal>
 
@@ -224,9 +186,7 @@ const MarketingFees = () => {
         className="mt-8 cursor-pointer flex justify-between bg-[#F7F7F7] rounded items-center w-full h-[75px]"
       >
         <p className="text-[18px] ml-8 font-medium">Bid Fees</p>
-        <div className="mr-8 text-[#193664] px-2 py-1 rounded cursor-pointer">
-          <IoIosArrowForward />
-        </div>
+        <IoIosArrowForward className="mr-8 text-[#193664]" />
       </div>
       <Modal
         title="Bid Fees"
@@ -234,100 +194,63 @@ const MarketingFees = () => {
         onCancel={handleBidCancel}
         footer={null}
       >
-        <hr className="my-5" />
-        <div className="w-3/4 mx-auto my-5 flex items-center justify-center gap-8">
+        <div className="w-3/4 mx-auto flex items-center justify-center gap-8 my-5">
           <img src={marketingImage} alt="Bid Fees" />
           <div>
-            <h3 className="text-[20px]">Current bid fees</h3>
+            <h3 className="text-[20px]">Current Bid Fee</h3>
             <h2 className="font-semibold text-[25px]">${bidFees} K</h2>
           </div>
         </div>
-        <form onSubmit={handleBidFees}>
-          <label>
-            <span className="block mb-1">Price</span>
-            <input
-              required
-              className="w-full p-2 rounded-xl border-[2px] border-[#eee]"
-              type="number"
-              placeholder="Price ..."
-              value={bidPrice}
-              name="bidPriceFees"
-              onChange={(e) => setBidPrice(e.target.value)}
-            />
-            {bidPriceError && (
-              <span className="text-red-500">Please enter a valid price</span>
-            )}
-          </label>
-
-          <div className="mt-4 flex justify-center">
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="bg-primaryBg  text-[#fff] font-semibold rounded-xl py-3 w-full mt-20"
-            >
-              {isLoading ? "Updating..." : "Update"}
-            </button>
-          </div>
+        <form onSubmit={handleBidSubmit}>
+          <input
+            type="number"
+            placeholder="Price..."
+            className="w-full p-2 border rounded"
+            defaultValue={bidFees}
+            onChange={(e) => setBidPrice(e.target.value)}
+            required
+          />
+          <button className="bg-primaryBg text-whiteText py-2 px-5 mt-5 rounded w-full" disabled={isLoading}>
+            {isLoading ? "Updating..." : "Update"}
+          </button>
         </form>
       </Modal>
 
-      {/* Referral Modal */}
+      {/* Referral Percentage */}
       <div
         onClick={showReferralModal}
         className="mt-8 cursor-pointer flex justify-between bg-[#F7F7F7] rounded items-center w-full h-[75px]"
       >
-        <p className="text-[18px] ml-8 font-medium">Product Referral Percentage</p>
-        <div className="mr-8 text-[#193664] px-2 py-1 rounded cursor-pointer">
-          <IoIosArrowForward />
-        </div>
+        <p className="text-[18px] ml-8 font-medium">Referral Percentage</p>
+        <IoIosArrowForward className="mr-8 text-[#193664]" />
       </div>
-      {/* Modal for Referral Percentage */}
       <Modal
         title="Referral Percentage"
-        open={isReferralModalOpen} // Updated to use referral modal state
-        onCancel={handleReferralCancel} // Updated to use referral modal state
+        open={isReferralModalOpen}
+        onCancel={handleReferralCancel}
         footer={null}
       >
-        <hr className="my-5" />
-        <div className="w-3/4 mx-auto my-5 flex items-center justify-center gap-8">
+        <div className="w-3/4 mx-auto flex items-center justify-center gap-8 my-5">
           <img className="w-14" src={referralImage} alt="Referral Percentage" />
           <div>
-            <h3 className="text-[20px]">Current referral percentage</h3>
-            <h2 className="font-semibold text-[25px]">2%</h2> {/* Placeholder for referral value */}
+            <h3 className="text-[20px]">Current Referral Percentage</h3>
+            <h2 className="font-semibold text-[25px]">{referralFee}%</h2>
           </div>
         </div>
-        <form onSubmit={handleReferralFees}>
-          <label>
-            <span className="block mb-1">Price</span>
-            <input
-              required
-              className="w-full p-2 rounded-xl border-[2px] border-[#eee]"
-              type="number"
-              placeholder="Price ..."
-              value={bidPrice} // Use correct value for referral price if needed
-              name="referralPrice"
-              onChange={(e) => setBidPrice(e.target.value)} // Adjust to handle referral price input
-            />
-            {bidPriceError && (
-              <span className="text-red-500">Please enter a valid price</span>
-            )}
-          </label>
-
-          <div className="mt-4 flex justify-center">
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="bg-primaryBg text-[#fff] font-semibold rounded-xl py-3 w-full mt-20"
-            >
-              {isLoading ? "Updating..." : "Update"}
-            </button>
-          </div>
+        <form onSubmit={handleReferralSubmit}>
+          <input
+            type="number"
+            placeholder="Percentage..."
+            className="w-full p-2 border rounded"
+            defaultValue={referralFee}
+            onChange={(e) => setReferralPercentage(e.target.value)}
+            required
+          />
+          <button className="bg-primaryBg text-whiteText py-2 px-5 mt-5 rounded w-full" disabled={isLoading}>
+            {isLoading ? "Updating..." : "Update"}
+          </button>
         </form>
       </Modal>
-
-
-
-
     </div>
   );
 };

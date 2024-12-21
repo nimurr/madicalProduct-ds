@@ -72,6 +72,13 @@ const Header = () => {
 
     try {
       const res = await passwordChange(ChangePassword).unwrap();
+
+      Swal.fire({
+        title: res?.message,
+        icon: "success",
+        draggable: true
+      });
+      // alert(res?.message);
       if (res?.code == 200) {
         setIsModalOpen(false);
         toast.success(res?.message);

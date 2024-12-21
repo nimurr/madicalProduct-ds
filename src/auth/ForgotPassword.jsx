@@ -1,5 +1,5 @@
 import { Form, Input, Button } from "antd";
-import character from "../../public/image/forgotpass.png";
+import character from "/image/forgotpass.png";
 import { HiOutlineMailOpen } from "react-icons/hi";
 
 import { useState } from "react";

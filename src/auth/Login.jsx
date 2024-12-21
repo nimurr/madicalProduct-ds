@@ -1,5 +1,5 @@
 import { Button, Checkbox, Form, Input } from "antd";
-import signin from "../../public/image/Isometric.png";
+import signin from "/image/Isometric.png";
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { HiOutlineMailOpen } from "react-icons/hi";
@@ -37,6 +37,8 @@ const Login = () => {
           "BBootNIW54IBRESHBFkv5NRL2gFr3V068R3w_lDQup3_jcJ-qYhkG1VkewR9mUNEYMHMbR-6KxEhK1otgWiB96g"
       });
       setFcmToken(token);
+
+      console.log(token);
 
       // Send this token  to server ( db)
     } else if (permission === "denied") {

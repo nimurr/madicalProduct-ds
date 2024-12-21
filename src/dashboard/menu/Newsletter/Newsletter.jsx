@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Input, Modal, DatePicker, Space, Table, Button, message } from "antd";
 import { BsInfoCircle } from "react-icons/bs";
 import { CloseOutlined } from "@ant-design/icons";
-import users from "../../../../public/image/users.jpg";
+import users from "/image/users.jpg";
 import styles from "./../style.module.css";
 import emailjs from 'emailjs-com';
 

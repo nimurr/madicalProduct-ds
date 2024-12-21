@@ -1,94 +1,91 @@
 import { Button, DatePicker, Input, Modal, Space, Table } from "antd";
 import { BsInfoCircle } from "react-icons/bs";
-import { useState } from "react";
-import users from "../../../public/image/users.jpg";
+import { useState, useEffect } from "react";
 import { CloseOutlined } from "@ant-design/icons";
-import styles from "./style.module.css";
+import { useGetAllBidHistoryQuery } from "../../redux/features/auth/heashboard/bidHistory";
+import url from "../../redux/api/baseUrl";
 
 const { Search } = Input;
-
-const dataSource = [
-  {
-    key: "1",
-    customerName: "Bashar Islam",
-    email: "abc@email.com",
-    address: "Dhaka Bangladesh",
-    date: "2024-04-16",
-    phone: "4536656"
-  },
-  {
-    key: "2",
-    customerName: "Ali Akbar",
-    email: "ali@email.com",
-    address: "Chittagong, Bangladesh",
-    date: "2024-05-16",
-    phone: "4536677"
-  },
-  {
-    key: "3",
-    customerName: "Rena Begum",
-    email: "rina@email.com",
-    address: "Sylhet, Bangladesh",
-    date: "2024-06-16",
-    phone: "4536699"
-  }
-];
 
 const BidHistory = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
-  const [filteredData, setFilteredData] = useState(dataSource);
+  const [filteredData, setFilteredData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
 
+  // Fetch bid history data
+  const { data: bidHistoryData, isLoading, error } = useGetAllBidHistoryQuery();
+  const bids = bidHistoryData?.data?.bids || [];
+
+  useEffect(() => {
+    setFilteredData(bids); // Initialize filtered data
+  }, [bids]);
+
+  // Table columns
   const columns = [
     {
       title: "#SI",
       dataIndex: "si",
       key: "si",
-      render: (text, _, index) => index + 1
+      render: (_, __, index) => index + 1 + (currentPage - 1) * pageSize,
     },
     {
       title: "User Name",
       dataIndex: "customerName",
       key: "customerName",
-      render: (_, record) => <p>{record?.customerName}</p>
+      render: (_, record) => <p>{record?.user?.fullName}</p>,
     },
     {
-      title: "Business-Name",
+      title: "Business Name",
       dataIndex: "name",
       key: "name",
       render: (_, record) => (
         <div className="flex gap-2 items-center">
+          <img
+            className="min-w-[34px] h-[34px] rounded-full"
+            src={url + record?.user?.image || "/path/to/default-avatar.jpg"}
+            alt={record?.user?.fullName}
+          />
           <div>
-            <img
-              className="min-w-[34px] h-[34px] rounded-full"
-              src={users}
-              alt=""
-            />
-          </div>
-          <div>
-            <p className="font-medium">{record?.customerName}</p>
-            <p className="text-xs">{record?.email}</p>
+            <p className="font-medium">{record?.user?.fullName || "N/A"}</p>
+            <p className="text-xs">{record?.user?.email || "N/A"}</p>
           </div>
         </div>
-      )
+      ),
     },
     {
-      title: "BidStatus",
-      dataIndex: "BidStatus",
-      key: "BidStatus",
-      render: (_, record) => <p>win</p>
+      title: "Bid Status",
+      dataIndex: "bidStatus",
+      key: "bidStatus",
+      render: (_, record) => <p>{record?.status || "N/A"}</p>,
     },
     {
-      title: "LastPrice",
-      dataIndex: "LastPrice",
-      key: "LastPrice",
-      render: (_, record) => <p>$35</p>
+      title: "Last Price",
+      dataIndex: "lastPrice",
+      key: "lastPrice",
+      render: (_, record) => {
+        const totalAmount = record?.history?.reduce(
+          (prev, current) => prev + (current.amount || 0),
+          0
+        );
+        return <p>${totalAmount.toFixed(2)}</p>;
+      },
     },
     {
       title: "Date",
-      key: "date",
       dataIndex: "date",
-      render: (_, record) => <p>{record.date}</p>
+      key: "date",
+      render: (_, record) => {
+        const formattedDate = record?.createdAt
+          ? new Date(record.createdAt).toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            })
+          : "N/A";
+        return <p>{formattedDate}</p>;
+      },
     },
     {
       title: "Action",
@@ -101,30 +98,56 @@ const BidHistory = () => {
             className="text-primaryBg cursor-pointer"
           />
         </Space>
-      )
-    }
+      ),
+    },
   ];
 
+  // View record details in modal
   const handleView = (record) => {
     setSelectedRecord(record);
     setIsModalOpen(true);
   };
 
-  const onSearch = (value) => {
-    const filtered = dataSource.filter(
+  // Search functionality
+  const handleSearch = (value) => {
+    const lowercasedValue = value.toLowerCase();
+    const filtered = bids.filter(
       (record) =>
-        record.customerName.toLowerCase().includes(value.toLowerCase()) ||
-        record.email.toLowerCase().includes(value.toLowerCase())
+        record?.user?.fullName?.toLowerCase().includes(lowercasedValue) ||
+        record?.user?.email?.toLowerCase().includes(lowercasedValue)
     );
     setFilteredData(filtered);
   };
 
-  const onChange = (date, dateString) => {
-    console.log(date, dateString);
+  // Date filter functionality
+  const handleDateFilter = (date, dateString) => {
+    if (!dateString) {
+      setFilteredData(bids); // Reset to all bids if no date selected
+      return;
+    }
+    const filtered = bids.filter((record) => {
+      const bidDate = new Date(record?.createdAt).toLocaleDateString("en-GB");
+      return bidDate === dateString;
+    });
+    setFilteredData(filtered);
   };
 
+  // Handle pagination
+  const handlePaginationChange = (page, pageSize) => {
+    setCurrentPage(page);
+    setPageSize(pageSize);
+  };
+
+  // Loading and error states
+  if (isLoading) {
+    return <div className="text-center text-lg text-primaryBg">Loading...</div>;
+  }
+  if (error) {
+    return <div className="text-center text-lg text-red-500">Error loading data!</div>;
+  }
+
   return (
-    <div className="">
+    <div>
       <div className="rounded-t-lg mt-[24px]">
         <div className="flex py-[22px] justify-between items-center flex-wrap">
           <div>
@@ -132,15 +155,18 @@ const BidHistory = () => {
           </div>
           <div>
             <Space direction="vertical">
-              <DatePicker onChange={onChange} />
+              <DatePicker
+                onChange={handleDateFilter}
+                format="DD/MM/YYYY"
+              />
             </Space>
             <Search
               style={{
                 width: "200px",
-                marginLeft: "4px"
+                marginLeft: "4px",
               }}
               placeholder="Search by name or email"
-              onSearch={onSearch}
+              onSearch={handleSearch}
               enterButton
             />
           </div>
@@ -148,29 +174,13 @@ const BidHistory = () => {
         <div className="overflow-x-auto bg-[#e8ebf0]">
           <Table
             pagination={{
+              current: currentPage,
+              pageSize: pageSize,
               total: filteredData.length,
               showTotal: (total, range) =>
                 `${range[0]}-${range[1]} of ${total} items`,
-              defaultPageSize: 5,
               showSizeChanger: true,
-              itemRender: (current, type, originalElement) => {
-                if (type === "prev") {
-                  return (
-                    <Button className="border border-blue-500 text-blue-500 bg-transparent hover:bg-blue-500 hover:text-white transition-colors duration-300">
-                      Back
-                    </Button>
-                  );
-                }
-                if (type === "next") {
-                  return (
-                    <Button className="border border-blue-500 text-blue-500 bg-transparent hover:bg-blue-500 hover:text-white transition-colors duration-300">
-                      Next
-                    </Button>
-                  );
-                }
-                return originalElement;
-              },
-              className: styles.paginationCenter
+              onChange: handlePaginationChange,
             }}
             columns={columns}
             dataSource={filteredData}
@@ -178,48 +188,60 @@ const BidHistory = () => {
         </div>
       </div>
 
+      {/* Modal */}
       <Modal
         open={isModalOpen}
         onOk={() => setIsModalOpen(false)}
         onCancel={() => setIsModalOpen(false)}
-        footer={[]}
+        footer={null}
         closeIcon={
           <CloseOutlined
             style={{
               color: "white",
               backgroundColor: "#de0a26",
               borderRadius: "10%",
-              padding: "10px"
+              padding: "10px",
             }}
           />
         }
       >
         <div>
-          <div className="flex justify-center items-center gap-2 py-4 flex-col border-b border-b-gray-300">
-            <h1 className="text-xl font-medium">Trainer Details</h1>
+          <div className="flex justify-center items-center gap-2 py-4 flex-col border-b border-[#ccc] border-b-gray-300">
+            <h1 className="text-[20px] font-medium">Bid Details</h1>
           </div>
           <div className="p-[20px]">
-            <div className="flex justify-between border-b py-[16px]">
+            <div className="flex justify-between border-b border-[#ccc] py-[16px]">
               <p>Full Name:</p>
-              <p>{selectedRecord?.customerName || "N/A"}</p>
+              <p>{selectedRecord?.user?.fullName || "N/A"}</p>
             </div>
-
-            <div className="flex justify-between border-b py-[16px]">
+            <div className="flex justify-between border-b border-[#ccc] py-[16px]">
               <p>Email:</p>
-              <p>{selectedRecord?.email || "N/A"}</p>
+              <p>{selectedRecord?.user?.email || "N/A"}</p>
             </div>
-            <div className="flex justify-between border-b py-[16px]">
-              <p>Phone:</p>
-              <p>{selectedRecord?.phone || "N/A"}</p>
+            <div className="flex justify-between border-b border-[#ccc] py-[16px]">
+              <p>Bio:</p>
+              <p>{selectedRecord?.user?.bio || "N/A"}</p>
             </div>
-            <div className="flex justify-between border-b py-[16px]">
+            <div className="flex justify-between border-b border-[#ccc] py-[16px]">
+              <p>Type:</p>
+              <p>{selectedRecord?.type || "N/A"}</p>
+            </div>
+            <div className="flex justify-between border-b border-[#ccc] py-[16px]">
               <p>Date:</p>
-              <p>{"N/A"}</p>
+              <p>
+                {selectedRecord?.createdAt
+                  ? new Date(selectedRecord.createdAt).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    })
+                  : "N/A"}
+              </p>
             </div>
             <div className="flex justify-between items-center pt-[16px]">
               <p>Address:</p>
               <p className="px-[15px] py-[10px] rounded-lg">
-                {selectedRecord?.address || "N/A"}
+                {selectedRecord?.user?.address || "N/A"}
               </p>
             </div>
           </div>

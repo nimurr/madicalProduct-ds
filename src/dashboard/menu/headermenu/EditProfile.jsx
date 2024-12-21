@@ -5,7 +5,7 @@ import PhoneInput from "react-phone-number-input";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import { LuImagePlus } from "react-icons/lu";
 import "react-phone-number-input/style.css";
-import defaultUserImage from "../../../../public/image/randomuser.jpg";
+import defaultUserImage from "/image/randomuser.jpg";
 import { useUpdateProfileMutation } from "../../../redux/features/auth/profile/editProfile";
 import toast, { Toaster } from "react-hot-toast";
 import { useGetProfileQuery } from "../../../redux/features/auth/profile/getProfile";

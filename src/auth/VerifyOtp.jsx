@@ -1,4 +1,4 @@
-import otpImage from "../../public/image/opt.png";
+import otpImage from "/image/opt.png";
 import {
   Link,
   useLocation,

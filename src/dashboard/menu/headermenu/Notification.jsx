@@ -1,11 +1,20 @@
 import { IoMdNotificationsOutline } from "react-icons/io";
+import { useGetAllNotificationQuery } from "../../../redux/features/auth/heashboard/notification";
 
 const Notification = () => {
 
 
+  const { data: notification } = useGetAllNotificationQuery();
+
+
+
+  const notifications = notification?.data?.attributes;
+
+  console.log(notifications);
 
 
   return (
+
     <div className="mt-8 mx-0">
       <h1 className="font-semibold text-[30px]">Notifications</h1>
 

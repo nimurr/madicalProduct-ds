@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import logo from "../../public/image/logo.png";
+import logo from "/image/logo.png";
 
 import { BiCategory, BiSolidDashboard } from "react-icons/bi";
 
@@ -106,6 +106,18 @@ const Sidebar = () => {
             </NavLink>
 
             <NavLink
+              to="agents"
+              className={({ isActive }) =>
+                isActive
+                  ? "flex cursor-pointer items-center text-[18px] font-medium p-[10px] bg-[#FFFFFF] text-[#193664] m-[6px] rounded-lg"
+                  : "flex text-[white] cursor-pointer items-center text-[18px] font-medium p-[10px]   m-[6px] rounded-lg"
+              }
+            >
+              <FaUserShield className="h-7 w-7 lg:h-5 lg:w-5" />
+              <span className="hidden ml-2 sm:block">Agents</span>
+            </NavLink>
+
+            <NavLink
               to="provider"
               className={({ isActive }) =>
                 isActive
@@ -117,17 +129,7 @@ const Sidebar = () => {
               <span className="hidden ml-2 sm:block">Provider</span>
             </NavLink>
 
-            <NavLink
-              to="agents"
-              className={({ isActive }) =>
-                isActive
-                  ? "flex cursor-pointer items-center text-[18px] font-medium p-[10px] bg-[#FFFFFF] text-[#193664] m-[6px] rounded-lg"
-                  : "flex text-[white] cursor-pointer items-center text-[18px] font-medium p-[10px]   m-[6px] rounded-lg"
-              }
-            >
-              <FaUserShield className="h-7 w-7 lg:h-5 lg:w-5" />
-              <span className="hidden ml-2 sm:block">Agents</span>
-            </NavLink>
+
 
             <NavLink
               to="bidhistory"
@@ -177,7 +179,7 @@ const Sidebar = () => {
               <span className="hidden ml-2 sm:block">Withdrawal Request</span>
             </NavLink>
 
-            <NavLink
+            {/* <NavLink
               to="/dashboard/bannerads"
               className={({ isActive }) =>
                 isActive
@@ -187,7 +189,7 @@ const Sidebar = () => {
             >
               <FaAd className="h-7 w-7 lg:h-5 lg:w-5" />
               <span className="hidden ml-2 sm:block">Banner Ad</span>
-            </NavLink>
+            </NavLink> */}
 
             <NavLink
               to="settings"

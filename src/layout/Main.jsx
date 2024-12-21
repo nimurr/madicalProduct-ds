@@ -14,13 +14,13 @@ const Main = () => {
     return (
       <div className="h-screen w-full flex items-center justify-center">
         <div className="relative">
-          <img src="../../public/image/Loading_image.gif" alt="" />
+          <img src="/image/Loading_image.gif" alt="" />
           <span className="font-semibold text-[#414141] absolute opacity-20 left-[45%] top-[50%] translate-[-50% -50%]">Loading...</span>
         </div>
       </div>
     )
   }
-
+ 
   if (!data?.data?.attributes?.isAdmin) {
     return navitage('/');
   }

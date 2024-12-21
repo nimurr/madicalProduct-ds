@@ -3,7 +3,7 @@ import { Form, Input, Button, notification } from "antd";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import updateImage from "../../public/image/updatepass.png";
+import updateImage from "/image/updatepass.png";
 import { MdOutlineArrowBackIos } from "react-icons/md";
 
 import toast, { Toaster } from "react-hot-toast";

@@ -7,6 +7,7 @@ import { useDeleteCategoriesMutation } from "../../../redux/features/auth/heashb
 import { useCreatePostMutation } from "../../../redux/features/auth/heashboard/postCategory";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import url from "../../../redux/api/baseUrl";
 
 const Category = () => {
   const [imageUrl, setImageUrl] = useState(null);
@@ -146,7 +147,7 @@ const Category = () => {
           >
             <Link to={`/dashboard/category/sub-category/${category.id}`}>
               <img
-                src={`http://192.168.10.169:6089${category?.image}`}
+                src={`${url}${category?.image}`}
                 alt={category.name}
                 className="w-full h-48 object-cover"
               />

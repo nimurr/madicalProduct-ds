@@ -100,7 +100,7 @@ const Provider = () => {
   // Fetch the provider data using the Redux query hook
   const { data: allProviderData, isLoading, error } = useGetAllProviderQuery();
 
-  console.log(allProviderData);
+  // console.log(allProviderData);
 
   const [providerPost] = useCreateIsBlockedMutation();
 
