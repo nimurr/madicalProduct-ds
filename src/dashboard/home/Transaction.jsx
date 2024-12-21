@@ -108,14 +108,14 @@ const Transaction = () => {
             >
               <div>
                 <div
-                  style={{ fontFamily: "Aldrich" }}
+                  style={{ fontFamily: "arial" }}
                   className="flex justify-center items-center gap-2 flex-col border-b border-[#ccc]"
                 >
                   <p className="text-[20px] mb-[16px] font-semibold">
                     {selectedTransaction.userDetails?.fullName || "N/A"}
                   </p>
                 </div>
-                <div style={{ fontFamily: "Aldrich" }} className="p-[20px]">
+                <div  style={{ fontFamily: "arial" }}className="p-[20px]">
                   <div className="flex justify-between border-b border-[#ccc] py-[16px]">
                     <p className="font-semibold ">Full Name:</p>
                     <p className="font-sans">

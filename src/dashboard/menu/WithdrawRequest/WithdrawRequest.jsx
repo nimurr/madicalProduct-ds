@@ -4,22 +4,24 @@ import {
   useGetAllWidthdrawRequestQuery,
   useUpdateWidthrawRequestMutation,
 } from "../../../redux/features/auth/heashboard/widthdrawRequest";
+import { Pagination } from "antd";
 
 const WithdrawRequest = () => {
   const { data: WidthdrawRequest, isLoading, error } = useGetAllWidthdrawRequestQuery();
   const [updateWidthrawRequest, { isLoading: isUpdating }] = useUpdateWidthrawRequestMutation();
 
-  const [statusData, setStatusData] = useState({}); // State to store status changes for each request
+  const [statusData, setStatusData] = useState({});
   const [filterStatus, setFilterStatus] = useState(""); // State to track the selected filter
+  const [currentPage, setCurrentPage] = useState(1); // Current page number
+  const [pageSize] = useState(10); // Items per page
 
   const handleStatusChange = (e, transactionId) => {
     setStatusData((prev) => ({ ...prev, [transactionId]: e.target.value }));
   };
 
   const handleSubmitStatus = async (request) => {
-    const { transactionId } = request; // Use transactionId instead of id
-
-    const newStatus = statusData[transactionId]; // Get the updated status for the transaction
+    const { transactionId } = request;
+    const newStatus = statusData[transactionId];
 
     if (!newStatus) {
       Swal.fire({
@@ -67,11 +69,15 @@ const WithdrawRequest = () => {
     return <div>Error loading data!</div>;
   }
 
-  // Filtered Requests
   const filteredRequests =
     filterStatus === ""
       ? WidthdrawRequest?.data
       : WidthdrawRequest?.data.filter((req) => req.status === filterStatus);
+
+  // Pagination logic: Calculate start and end indices for current page
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const currentPageRequests = filteredRequests?.slice(startIndex, endIndex);
 
   return (
     <div className="shadow-md rounded-lg my-14 bg-[#f7f7f7]">
@@ -122,7 +128,7 @@ const WithdrawRequest = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredRequests.map((request) => (
+            {currentPageRequests?.map((request) => (
               <tr key={request.transactionId} className="bg-[#f7f7f7] hover:bg-[#fffcfc]">
                 <td className="px-4 py-5">{request.transactionId}</td>
                 <td className="px-4 py-5">{request?.userDetails?.fullName}</td>
@@ -168,6 +174,16 @@ const WithdrawRequest = () => {
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Pagination */}
+      <div className="p-5 flex justify-end">
+        <Pagination
+          current={currentPage}
+          total={filteredRequests?.length}
+          pageSize={pageSize}
+          onChange={(page) => setCurrentPage(page)}
+        />
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ import { useVerifyEmailMutation } from "../redux/features/auth/verifyEmail";
 
 const VerifyOtp = () => {
 
-    
+
   // const location = useLocation()
   const queryParams = new URLSearchParams(location.search);
   // const [error, setError] = useState('')
@@ -47,6 +47,13 @@ const VerifyOtp = () => {
 
     // 872998
   };
+
+  // const handleResendOTP = () => {
+
+  //   console.log(sendOtp());
+  //   sendOtp();
+
+  // };
 
   return (
     <div className="w-full max-w-[1296px] shadow-xl mt-12 sm:mt-24 mx-auto rounded-[8px] p-4 sm:p-10">
@@ -102,12 +109,12 @@ const VerifyOtp = () => {
               />
             </div>
             <div className="flex justify-between items-center mt-4 sm:mt-6">
-              <small className="text-[14px] sm:text-[16px] font-normal">
+              {/* <small className="text-[14px] sm:text-[16px] font-normal">
                 Didn’t receive the code?
-              </small>
-              <small className="text-[14px] sm:text-[16px] font-medium text-[#00BF63] cursor-pointer">
+              </small> */}
+              {/* <small onClick={handleResendOTP} className="text-[14px] sm:text-[16px] font-medium text-[#00BF63] cursor-pointer">
                 Resend
-              </small>
+              </small> */}
             </div>
           </div>
           {/* <p className="text-red-500 font-medium">{error}</p> */}
