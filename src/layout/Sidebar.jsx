@@ -179,7 +179,7 @@ const Sidebar = () => {
               <span className="hidden ml-2 sm:block">Withdrawal Request</span>
             </NavLink>
 
-            {/* <NavLink
+            <NavLink
               to="/dashboard/bannerads"
               className={({ isActive }) =>
                 isActive
@@ -189,7 +189,7 @@ const Sidebar = () => {
             >
               <FaAd className="h-7 w-7 lg:h-5 lg:w-5" />
               <span className="hidden ml-2 sm:block">Banner Ad</span>
-            </NavLink> */}
+            </NavLink>
 
             <NavLink
               to="settings"

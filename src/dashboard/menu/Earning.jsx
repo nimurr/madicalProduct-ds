@@ -147,18 +147,18 @@ const Earning = () => {
           <div className="p-6 rounded-lg bg-[#e8ebf0] flex items-center justify-between flex-wrap gap-5">
             <img className="w-10" src="/image/marketingFeesImage.png" alt="" />
             <div>
-              <p className="text-[18px] font-semibold mb-2">Total Earnings</p>
-              <h2 className="text-header font-semibold text-primaryBg">
-                ${dashboardStatus?.data?.attributes?.totalEarnings} K
+              <p className="text-[18px] font-semibold mb-2 text-right">Total Earnings</p>
+              <h2 className="text-header font-semibold text-primaryBg text-right">
+                ${dashboardStatus?.data?.attributes?.totalEarnings}
               </h2>
             </div>
           </div>
           <div className="p-6 rounded-lg bg-[#e8ebf0] flex items-center justify-between flex-wrap gap-5">
             <img className="w-10" src="/image/marketingFeesImage.png" alt="" />
             <div>
-              <p className="text-[18px] font-semibold mb-2">Total Withdraw</p>
-              <h2 className="text-header font-semibold text-primaryBg">
-                ${dashboardStatus?.data?.attributes?.totalWithdraw} K
+              <p className="text-[18px] font-semibold mb-2 text-right">Total Withdraw</p>
+              <h2 className="text-header font-semibold text-right text-primaryBg">
+                ${dashboardStatus?.data?.attributes?.totalWithdraw} 
               </h2>
             </div>
           </div>

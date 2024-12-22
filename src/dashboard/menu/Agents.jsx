@@ -1,4 +1,4 @@
-import { Button, DatePicker, Input, Modal, Space, Table } from "antd";
+import { Button, DatePicker, Input, Modal, Space, Table, Checkbox } from "antd";
 import { BsInfoCircle } from "react-icons/bs";
 import { useState, useEffect } from "react";
 import { CloseOutlined } from "@ant-design/icons";
@@ -13,6 +13,7 @@ const Agents = () => {
   const [selectedAgent, setSelectedAgent] = useState(null); // To store the selected agent
   const [currentPage, setCurrentPage] = useState(1); // To track current page
   const [filteredAgents, setFilteredAgents] = useState([]); // To store filtered agents
+  const [selectedEmails, setSelectedEmails] = useState([]); // To store selected emails
 
   // Fetching the data
   const { data, isLoading, error } = useGetAllAgentsQuery();
@@ -36,10 +37,6 @@ const Agents = () => {
 
   // Search logic
   const handleSearch = (value) => {
-    if (!value) {
-      setFilteredAgents(agents); // Reset to all agents if search input is empty
-      return;
-    }
     const searchValue = value.toLowerCase();
     const filtered = agents.filter(
       (agent) =>
@@ -49,34 +46,57 @@ const Agents = () => {
     setFilteredAgents(filtered);
   };
 
-  // Date search logic
-  const handleDateSearch = (date, dateString) => {
-    if (!dateString) {
-      setFilteredAgents(agents); // Reset to all agents if date input is cleared
-      return;
+  // Handle Select/Deselect All
+  const handleSelectAll = (checked) => {
+    if (checked) {
+      setSelectedEmails(filteredAgents.map((agent) => agent.email));
+    } else {
+      setSelectedEmails([]);
     }
-
-    const filtered = agents.filter((agent) => {
-      const agentDate = agent.dataOfBirth
-        ? new Date(agent.dataOfBirth).toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "long",
-          year: "numeric",
-        })
-        : null;
-      return agentDate === dateString; // Compare formatted dates
-    });
-
-    setFilteredAgents(filtered);
   };
 
-  // Handle pagination change
-  const handlePaginationChange = (page) => {
-    setCurrentPage(page);
+  // Handle Individual Checkbox
+  const handleCheckboxChange = (email, checked) => {
+    if (checked) {
+      setSelectedEmails((prev) => [...prev, email]);
+    } else {
+      setSelectedEmails((prev) => prev.filter((e) => e !== email));
+    }
+  };
+
+  // Handle Sending Email
+  const handleSendEmails = () => {
+    const mailtoLink = `mailto:${selectedEmails.join(",")}`;
+    window.location.href = mailtoLink;
+  };
+
+  // Handle modal for agent details
+  const handleView = (agent) => {
+    setSelectedAgent(agent); // Set the selected agent
+    setIsModalOpen(true); // Open modal
   };
 
   // Columns for the table
   const columns = [
+    {
+      title: (
+        <Checkbox
+          onChange={(e) => handleSelectAll(e.target.checked)}
+          checked={
+            selectedEmails.length === filteredAgents.length &&
+            filteredAgents.length > 0
+          }
+        />
+      ),
+      dataIndex: "select",
+      key: "select",
+      render: (_, record) => (
+        <Checkbox
+          onChange={(e) => handleCheckboxChange(record.email, e.target.checked)}
+          checked={selectedEmails.includes(record.email)}
+        />
+      ),
+    },
     {
       title: "#SI",
       dataIndex: "si",
@@ -87,17 +107,13 @@ const Agents = () => {
       title: "Agent Name",
       dataIndex: "fullName",
       key: "fullName",
-      render: (_, record) => (
-        <div className="flex gap-2 items-center">
-          <p className="font-medium">{record?.fullName}</p>
-        </div>
-      ),
+      render: (_, record) => <p className="font-medium">{record?.fullName}</p>,
     },
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
-      render: (_, record) => <p>{record?.email || "Apple Or Facebook User"}</p>,
+      render: (_, record) => <p>{record?.email || "N/A"}</p>,
     },
     {
       title: "Phone",
@@ -112,10 +128,10 @@ const Agents = () => {
         <p>
           {record?.dataOfBirth
             ? new Date(record.dataOfBirth).toLocaleDateString("en-GB", {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-            })
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })
             : "N/A"}
         </p>
       ),
@@ -142,12 +158,6 @@ const Agents = () => {
     },
   ];
 
-  // Handle modal for agent details
-  const handleView = (agent) => {
-    setSelectedAgent(agent); // Set the selected agent
-    setIsModalOpen(true); // Open modal
-  };
-
   return (
     <div>
       <div className="rounded-t-lg mt-5">
@@ -159,12 +169,11 @@ const Agents = () => {
             <Space direction="vertical">
               <DatePicker
                 format="DD MMMM YYYY"
-                onChange={handleDateSearch}
+                onChange={handleSearch}
                 placeholder="Select Date"
               />
             </Space>
             <Search
-              className="md:ml-2"
               placeholder="Search by name or email"
               onSearch={handleSearch}
               enterButton
@@ -180,20 +189,29 @@ const Agents = () => {
               defaultPageSize: 10,
               showSizeChanger: false,
               current: currentPage,
-              onChange: handlePaginationChange,
+              onChange: setCurrentPage,
             }}
             columns={columns}
             dataSource={filteredAgents}
-            rowKey={(record) => record.id || record.email}
+            rowKey={(record) => record.email}
           />
         </div>
+        <Button
+          onClick={handleSendEmails}
+          disabled={selectedEmails.length === 0}
+          className="mt-4"
+          type="primary"
+        >
+          Send Email to Selected Agents
+        </Button>
       </div>
+
       {/* Agent Details Modal */}
       <Modal
         open={isModalOpen}
         onOk={() => setIsModalOpen(false)}
         onCancel={() => setIsModalOpen(false)}
-        footer={[]}
+        footer={null}
         closeIcon={
           <CloseOutlined
             style={{
@@ -223,24 +241,20 @@ const Agents = () => {
               <p>{selectedAgent?.phoneNumber || "N/A"}</p>
             </div>
             <div className="flex justify-between border-b border-[#ccc] py-[16px]">
-              <p>Date:</p>
+              <p>Date of Birth:</p>
               <p>
                 {selectedAgent?.dataOfBirth
-                  ? new Date(selectedAgent.dataOfBirth).toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "long",
-                    year: "numeric",
-                  })
+                  ? new Date(selectedAgent.dataOfBirth).toLocaleDateString(
+                      "en-GB",
+                      {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                      }
+                    )
                   : "N/A"}
               </p>
-
             </div>
-            {/* <div className="flex justify-between items-center pt-[16px]">
-              <p>Address:</p>
-              <p className="px-[15px] py-[10px] rounded-lg">
-                {selectedAgent?.address || "N/A"}
-              </p>
-            </div> */}
           </div>
         </div>
       </Modal>

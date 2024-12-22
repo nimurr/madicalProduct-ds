@@ -64,7 +64,7 @@ const Login = () => {
   // Handle form submission
   const onFinish = async (values) => {
     // const formData = { ...values , fcmToken  };
-    const formData = { ...values, fcmToken };
+    const formData = { ...values };
 
     console.log(formData);
     // formData
