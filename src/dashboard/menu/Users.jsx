@@ -160,7 +160,7 @@ const Users = () => {
           className="mt-4"
           type="primary"
         >
-          Send Email to Selected
+          Send Email to Selected Users
         </Button>
       </div>
       {/* User Details Modal */}

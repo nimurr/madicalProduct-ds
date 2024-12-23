@@ -124,7 +124,7 @@ const AddBannerAds = () => {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="bg-[#1e66ca] text-whiteText hover:bg-[#1e66ca] font-semibold px-20 py-3 rounded-md"
+            className="bg-primaryBg text-whiteText hover:bg-[#1e66ca] font-semibold px-20 py-3 rounded-md"
           >
             Create Ad
           </button>

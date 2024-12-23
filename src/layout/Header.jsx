@@ -23,6 +23,7 @@ import { useGetProfileQuery } from "../redux/features/auth/profile/getProfile";
 import { useChangePasswordMutation } from "../redux/features/auth/changePassword";
 import toast, { Toaster } from "react-hot-toast";
 import url from "../redux/api/baseUrl";
+import { useGetAllNotificationQuery } from "../redux/features/auth/heashboard/notification";
 
 
 // import { getToken } from "firebase/messaging";
@@ -33,6 +34,10 @@ import url from "../redux/api/baseUrl";
 const Header = () => {
   const { data: responseData } = useGetProfileQuery();
   // console.log("user : " ,responseData);
+  const { data: notification } = useGetAllNotificationQuery();
+  const notifications = notification?.data?.attributes?.totalUnread;
+  // console.log(notifications);
+
 
   const [passwordChange] = useChangePasswordMutation();
 
@@ -104,9 +109,8 @@ const Header = () => {
 
   const menu = (
     <Menu
-      className={`transition ease-in-out duration-300 transform ${
-        menuVisible ? "custom-dropdown-menu-visible" : "custom-dropdown-menu"
-      }`}
+      className={`transition ease-in-out duration-300 transform ${menuVisible ? "custom-dropdown-menu-visible" : "custom-dropdown-menu"
+        }`}
     >
       <Toaster />
       <Menu.Item className="hover:!bg-[#193664] hover:!text-[#fff]" key="1">
@@ -128,9 +132,9 @@ const Header = () => {
   );
 
   return (
-    <div className="flex justify-between items-center mb-[24px] p-[16px] rounded-md !bg-[#E8EBF0]">
+    <div className="flex justify-between items-center mb-[24px] sm:p-[16px] p-2 rounded-md !bg-[#E8EBF0]">
       <div className="text-white">
-        <p className="text-header text-[#000000] font-medium">Welcome!</p>
+        <p className="sm:text-header text-[24px] text-[#000000] font-medium">Welcome!</p>
         <h1 className="text-[#000000]">
           {responseData?.data?.attributes?.fullName}
         </h1>
@@ -147,7 +151,7 @@ const Header = () => {
               marginTop: "10px",
               marginRight: "5px"
             }}
-            count={2}
+            count={notifications}
           >
             <IoIosNotificationsOutline
               style={{ cursor: "pointer" }}
@@ -168,7 +172,9 @@ const Header = () => {
                 src={url + "" + responseData?.data?.attributes?.image}
                 className="mr-2 h-[52px] w-[52px]"
               />
-              {responseData?.data?.attributes?.fullName}{" "}
+              <div className="hidden sm:block">
+                {responseData?.data?.attributes?.fullName}{" "}
+              </div>
               <DownOutlined className="ml-1" />
             </a>
           </Dropdown>

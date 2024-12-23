@@ -6,25 +6,25 @@ import { useGetProfileQuery } from "../redux/features/auth/profile/getProfile";
 
 const Main = () => {
 
-  // const { data, isLoading } = useGetProfileQuery();
+  const { data, isLoading } = useGetProfileQuery();
 
-  // console.log(data?.data?.attributes?.isAdmin);
-  // const navitage = useNavigate()
+  console.log(data?.data?.attributes?.isAdmin);
+  const navitage = useNavigate()
 
-  // if (isLoading) {
-  //   return (
-  //     <div className="h-screen w-full flex items-center justify-center">
-  //       <div className="relative">
-  //         <img src="/image/Loading_image.gif" alt="" />
-  //         <span className="font-semibold text-[#414141] absolute opacity-20 left-[45%] top-[50%] translate-[-50% -50%]">Loading...</span>
-  //       </div>
-  //     </div>
-  //   )
-  // }
+  if (isLoading) {
+    return (
+      <div className="h-screen w-full flex items-center justify-center">
+        <div className="relative">
+          <img src="/image/Loading_image.gif" alt="" />
+          <span className="font-semibold text-[#414141] absolute opacity-20 left-[45%] top-[50%] translate-[-50% -50%]">Loading...</span>
+        </div>
+      </div>
+    )
+  }
  
-  // if (!data?.data?.attributes?.isAdmin) {
-  //   return navitage('/');
-  // }
+  if (!data?.data?.attributes?.isAdmin) {
+    return navitage('/');
+  }
  
 
   return (

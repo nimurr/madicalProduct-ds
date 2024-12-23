@@ -7,101 +7,47 @@ import { useGetMarketingFeesQuery } from "../../redux/features/auth/heashboard/m
 import { useUpdateFeesMutation } from "../../redux/features/auth/heashboard/marketingFeesUpdate";
 
 const MarketingFees = () => {
-
-  //============== Modals ==============
+  // Modals State Management
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
-  const [productPrice, setProductPrice] = useState("");
-
   const [isMessagingModalOpen, setIsMessagingModalOpen] = useState(false);
-  const [messagingPrice, setMessagingPrice] = useState("");
-
   const [isBidModalOpen, setIsBidModalOpen] = useState(false);
-  const [bidPrice, setBidPrice] = useState("");
-
   const [isReferralModalOpen, setIsReferralModalOpen] = useState(false);
+  const [isAdsFeeModalOpen, setIsAdsFeeModalOpen] = useState(false);
+
+  // Input States
+  const [productPrice, setProductPrice] = useState("");
+  const [messagingPrice, setMessagingPrice] = useState("");
+  const [bidPrice, setBidPrice] = useState("");
   const [referralPercentage, setReferralPercentage] = useState("");
-  console.log(referralPercentage);
+  const [newAdsFee, setNewAdsFee] = useState("");
 
-
+  // Fetch Marketing Fees Data
   const { data: marketingFeesData } = useGetMarketingFeesQuery();
   const [updateFees, { isLoading }] = useUpdateFeesMutation();
 
-  //============== Default values for fees ==============
+  // Default Fees from API
   const productMarketingFees =
     marketingFeesData?.data?.attributes[0]?.productMarketingFees || 0;
-
   const messagingFees = marketingFeesData?.data?.attributes[0]?.messagingFees || 0;
   const bidFees = marketingFeesData?.data?.attributes[0]?.bidFees || 0;
   const referralFee = marketingFeesData?.data?.attributes[0]?.referralPercentage || 0;
+  const adsFees = marketingFeesData?.data?.attributes[0]?.adsFees || 10;
 
-  console.log(referralFee);
+  // Modal Handlers
+  const showModal = (setModalOpen) => setModalOpen(true);
+  const handleCancel = (setModalOpen) => setModalOpen(false);
 
-  //=========== Modal Handlers ===========
-  const showProductModal = () => setIsProductModalOpen(true);
-  const handleProductCancel = () => setIsProductModalOpen(false);
-
-  const showMessagingModal = () => setIsMessagingModalOpen(true);
-  const handleMessagingCancel = () => setIsMessagingModalOpen(false);
-
-  const showBidModal = () => setIsBidModalOpen(true);
-  const handleBidCancel = () => setIsBidModalOpen(false);
-
-  const showReferralModal = () => setIsReferralModalOpen(true);
-  const handleReferralCancel = () => setIsReferralModalOpen(false);
-
-  //===================== Form Handlers ===============
-  const handleProductSubmit = async (e) => {
+  // Form Submission Handlers
+  const handleSubmit = async (e, data, id, setModalOpen) => {
     e.preventDefault();
-    const data = { messagingFees, bidFees, productMarketingFees: productPrice, referralPercentage };
-
     try {
-      await updateFees({ data, id: "marketing" }).unwrap();
-      message.success("Product Marketing Fee updated successfully.");
-      setIsProductModalOpen(false);
+      await updateFees({ data, id }).unwrap();
+      message.success(`${id.replace(/^\w/, (c) => c.toUpperCase())} updated successfully.`);
+      setModalOpen(false);
     } catch (error) {
-      message.error("Failed to update Product Marketing Fee.");
+      message.error(`Failed to update ${id.replace(/^\w/, (c) => c.toUpperCase())}.`);
     }
   };
-
-  const handleMessagingSubmit = async (e) => {
-    e.preventDefault();
-    const data = { messagingFees: messagingPrice, bidFees, productMarketingFees, referralPercentage };
-
-    try {
-      await updateFees({ data, id: "messaging" }).unwrap();
-      message.success("Messaging Fee updated successfully.");
-      setIsMessagingModalOpen(false);
-    } catch (error) {
-      message.error("Failed to update Messaging Fee.");
-    }
-  };
-
-  const handleBidSubmit = async (e) => {
-    e.preventDefault();
-    const data = { messagingFees, bidFees: bidPrice, productMarketingFees, referralPercentage };
-
-    try {
-      await updateFees({ data, id: "bid" }).unwrap();
-      message.success("Bid Fee updated successfully.");
-      setIsBidModalOpen(false);
-    } catch (error) {
-      message.error("Failed to update Bid Fee.");
-    }
-  };
-
-  const handleReferralSubmit = async (e) => {
-    e.preventDefault();
-    const data = { messagingFees, bidFees, productMarketingFees, referralPercentage };
-
-    try {
-      await updateFees({ data, id: "percentage" }).unwrap();
-      message.success("Referral Percentage updated successfully.");
-      setIsReferralModalOpen(false);
-    } catch (error) {
-      message.error("Failed to update Referral Percentage.");
-    }
-  };
-
 
   return (
     <div className="mt-10">
@@ -109,7 +55,7 @@ const MarketingFees = () => {
 
       {/* Product Marketing Fees */}
       <div
-        onClick={showProductModal}
+        onClick={() => showModal(setIsProductModalOpen)}
         className="mt-8 cursor-pointer flex justify-between bg-[#F7F7F7] rounded items-center w-full h-[75px]"
       >
         <p className="text-[18px] ml-8 font-medium">Product Marketing Fees</p>
@@ -118,7 +64,7 @@ const MarketingFees = () => {
       <Modal
         title="Product Marketing Fees"
         open={isProductModalOpen}
-        onCancel={handleProductCancel}
+        onCancel={() => handleCancel(setIsProductModalOpen)}
         footer={null}
       >
         <div className="w-3/4 mx-auto flex items-center justify-center gap-8 my-5">
@@ -128,12 +74,20 @@ const MarketingFees = () => {
             <h2 className="font-semibold text-[25px]">${productMarketingFees} K</h2>
           </div>
         </div>
-        <form onSubmit={handleProductSubmit}>
+        <form
+          onSubmit={(e) =>
+            handleSubmit(
+              e,
+              { messagingFees, bidFees, productMarketingFees: productPrice, referralPercentage },
+              "marketing",
+              setIsProductModalOpen
+            )
+          }
+        >
           <input
             type="number"
             placeholder="Price..."
             className="w-full p-2 border rounded"
-            // value={productPrice}
             defaultValue={productMarketingFees}
             onChange={(e) => setProductPrice(e.target.value)}
             required
@@ -146,7 +100,7 @@ const MarketingFees = () => {
 
       {/* Messaging Fees */}
       <div
-        onClick={showMessagingModal}
+        onClick={() => showModal(setIsMessagingModalOpen)}
         className="mt-8 cursor-pointer flex justify-between bg-[#F7F7F7] rounded items-center w-full h-[75px]"
       >
         <p className="text-[18px] ml-8 font-medium">Messaging Fees</p>
@@ -155,7 +109,7 @@ const MarketingFees = () => {
       <Modal
         title="Messaging Fees"
         open={isMessagingModalOpen}
-        onCancel={handleMessagingCancel}
+        onCancel={() => handleCancel(setIsMessagingModalOpen)}
         footer={null}
       >
         <div className="w-3/4 mx-auto flex items-center justify-center gap-8 my-5">
@@ -165,7 +119,16 @@ const MarketingFees = () => {
             <h2 className="font-semibold text-[25px]">${messagingFees} K</h2>
           </div>
         </div>
-        <form onSubmit={handleMessagingSubmit}>
+        <form
+          onSubmit={(e) =>
+            handleSubmit(
+              e,
+              { messagingFees: messagingPrice, bidFees, productMarketingFees, referralPercentage },
+              "messaging",
+              setIsMessagingModalOpen
+            )
+          }
+        >
           <input
             type="number"
             placeholder="Price..."
@@ -182,7 +145,7 @@ const MarketingFees = () => {
 
       {/* Bid Fees */}
       <div
-        onClick={showBidModal}
+        onClick={() => showModal(setIsBidModalOpen)}
         className="mt-8 cursor-pointer flex justify-between bg-[#F7F7F7] rounded items-center w-full h-[75px]"
       >
         <p className="text-[18px] ml-8 font-medium">Bid Fees</p>
@@ -191,7 +154,7 @@ const MarketingFees = () => {
       <Modal
         title="Bid Fees"
         open={isBidModalOpen}
-        onCancel={handleBidCancel}
+        onCancel={() => handleCancel(setIsBidModalOpen)}
         footer={null}
       >
         <div className="w-3/4 mx-auto flex items-center justify-center gap-8 my-5">
@@ -201,7 +164,16 @@ const MarketingFees = () => {
             <h2 className="font-semibold text-[25px]">${bidFees} K</h2>
           </div>
         </div>
-        <form onSubmit={handleBidSubmit}>
+        <form
+          onSubmit={(e) =>
+            handleSubmit(
+              e,
+              { messagingFees, bidFees: bidPrice, productMarketingFees, referralPercentage },
+              "bid",
+              setIsBidModalOpen
+            )
+          }
+        >
           <input
             type="number"
             placeholder="Price..."
@@ -218,7 +190,7 @@ const MarketingFees = () => {
 
       {/* Referral Percentage */}
       <div
-        onClick={showReferralModal}
+        onClick={() => showModal(setIsReferralModalOpen)}
         className="mt-8 cursor-pointer flex justify-between bg-[#F7F7F7] rounded items-center w-full h-[75px]"
       >
         <p className="text-[18px] ml-8 font-medium">Referral Percentage</p>
@@ -227,7 +199,7 @@ const MarketingFees = () => {
       <Modal
         title="Referral Percentage"
         open={isReferralModalOpen}
-        onCancel={handleReferralCancel}
+        onCancel={() => handleCancel(setIsReferralModalOpen)}
         footer={null}
       >
         <div className="w-3/4 mx-auto flex items-center justify-center gap-8 my-5">
@@ -237,7 +209,16 @@ const MarketingFees = () => {
             <h2 className="font-semibold text-[25px]">{referralFee}%</h2>
           </div>
         </div>
-        <form onSubmit={handleReferralSubmit}>
+        <form
+          onSubmit={(e) =>
+            handleSubmit(
+              e,
+              { messagingFees, bidFees, productMarketingFees, referralPercentage },
+              "percentage",
+              setIsReferralModalOpen
+            )
+          }
+        >
           <input
             type="number"
             placeholder="Percentage..."
@@ -247,6 +228,54 @@ const MarketingFees = () => {
             required
           />
           <button className="bg-primaryBg text-whiteText py-2 px-5 mt-5 rounded w-full" disabled={isLoading}>
+            {isLoading ? "Updating..." : "Update"}
+          </button>
+        </form>
+      </Modal>
+
+      {/* Ads Fee */}
+      <div
+        onClick={() => showModal(setIsAdsFeeModalOpen)}
+        className="mt-8 cursor-pointer flex justify-between bg-[#F7F7F7] rounded items-center w-full h-[75px]"
+      >
+        <p className="text-[18px] ml-8 font-medium">Ads Fee</p>
+        <IoIosArrowForward className="mr-8 text-[#193664]" />
+      </div>
+      <Modal
+        title="Ads Fee"
+        open={isAdsFeeModalOpen}
+        onCancel={() => handleCancel(setIsAdsFeeModalOpen)}
+        footer={null}
+      >
+        <div className="w-3/4 mx-auto flex items-center justify-center gap-8 my-5">
+          <div>
+            <h3 className="text-[20px]">Current Ads Fee</h3>
+            <h2 className="font-semibold text-[25px]">${adsFees}</h2>
+          </div>
+        </div>
+        <form
+          onSubmit={(e) =>
+            handleSubmit(
+              e,
+              { messagingFees, bidFees, productMarketingFees, referralPercentage, adsFees: newAdsFee },
+              "ads",
+              setIsAdsFeeModalOpen
+            )
+          }
+        >
+          <input
+            type="number"
+            placeholder="Enter new Ads Fee..."
+            className="w-full p-2 border rounded"
+            defaultValue={adsFees}
+            onChange={(e) => setNewAdsFee(e.target.value)}
+            required
+          />
+          <button
+            type="submit"
+            className="bg-primaryBg text-whiteText py-2 px-5 mt-5 rounded w-full"
+            disabled={isLoading}
+          >
             {isLoading ? "Updating..." : "Update"}
           </button>
         </form>

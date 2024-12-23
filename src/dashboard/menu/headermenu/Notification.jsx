@@ -1,59 +1,81 @@
-import { IoMdNotificationsOutline } from "react-icons/io";
-import { useGetAllNotificationQuery } from "../../../redux/features/auth/heashboard/notification";
+import React from "react";
+import { useGetAllNotificationQuery, useUpdateNotificationMutation } from "../../../redux/features/auth/heashboard/notification";
 import url from "../../../redux/api/baseUrl";
-// import ReactMarkdown from "react-markdown";
-
+import { useNavigate } from "react-router-dom";
 
 const Notification = () => {
-
+  // Fetch notifications
+  const navigate = useNavigate();
 
   const { data: notification } = useGetAllNotificationQuery();
-
   const notifications = notification?.data?.attributes?.notifications;
-  console.log(notifications);
+  const notifications2 = notification?.data?.attributes;
+  console.log(notifications2);
 
+  // Update notification mutation
+  const [updateNotification, { isLoading }] = useUpdateNotificationMutation();
+  if(isLoading){
+    return <div className="text-center my-10 text-[40px] text-[#bd0000]">Loading...</div>
+  }
+
+  // Handle notification update
+  const handleShowAllThisItem = async (notificationId) => {
+    console.log(notificationId);
+    try {
+      await updateNotification({notificationId}).unwrap();
+      navigate(`/dashboard/withdrawrequest`);
+    } catch (err) {
+      console.error("Failed to update notification:", err);
+      alert("Failed to update the notification.");
+    }
+  };
 
   return (
-
     <div className="mt-8 mx-0">
+      {/* Page Title */}
       <h1 className="font-semibold text-[30px]">Notifications</h1>
 
- 
+      {/* Notification List */}
+      {notifications?.map((item, idx) => (
+        <div
+          key={idx}
+          onClick={() => handleShowAllThisItem(item?._id)}
+          className={`mt-3 ${
+            item?.status === "unread" ? "bg-[#9cbbff4b]" : "bg-white"
+          } cursor-pointer flex items-center border-[2px] border-[#9cbbff4b] rounded-lg p-5`}
+        >
+          {/* Notification Icon */}
+          <div>
+            <img
+              className="w-10 ml-5"
+              src={item?.icon ? `${url}${item.icon}` : "/default-icon.png"}
+              alt="Notification Icon"
+            />
+          </div>
 
-      {
-        notifications?.map((item, idx) => {
-          return (
-            <div key={idx} className="mt-8 bg-[#e9e9e9] flex items-center border rounded border-[#19366433] justify-start gap-5 w-full h-auto py-5">
-              <div>
-                <p className="">
-                  {/* <IoMdNotificationsOutline className=" h-12 w-12 ml-4 border rounded-full p-2 border-[#193664] text-[#193664]]" /> */}
-                  <img className="w-10 ml-5" src={`${url}${item?.icon}`} alt="" />
-                </p>
-              </div>
-              <div>
-                {/* <img className="w-14 h-14 border-2 border-primaryBg rounded-full" src="/image/category3.png" alt="" /> */}
-                <img className="min-w-14 mx-5 min-h-14 max-w-14  border-2 border-primaryBg rounded-full" src={`${url}${item?.image}`} alt="" />
-              </div>
-              <div>
-                <p className="text-[20px] font-medium  capitalize text-primaryBg">
-                 
-                 {item?.title} <br /> 
-                </p>
-                {/* <p className='text-[18px] ml-8 font-medium'>{notification?.createdAt?.split("T")[0] ? notification?.createdAt?.split("T")[0] : "N/A"}</p> */}
-                <div onClick={handleShowAllThisItem}>
-                  {/* {item?.content} */}
-                  {/* <ReactMarkdown>{item?.content.slice(0, 50)+'...'}  
+          {/* Notification Image */}
+          <div>
+            <img
+              className="w-14 h-14 border-2 border-primaryBg rounded-full mx-5"
+              src={item?.image ? `${url}${item.image}` : "/default-image.png"}
+              alt="Notification"
+            />
+          </div>
 
-                    if click this then show this all : {item?.content} 
-                  </ReactMarkdown> */}
-                </div>
-              </div>
-            </div>
-          )
-        })
-      }
- 
+          {/* Notification Content */}
+          <div>
+            <p className="text-lg font-medium capitalize text-primaryBg">
+              {item?.title}
+            </p>
+            <p className="text-sm text-gray-500">
+              {item?.createdAt?.split("T")[0] || "N/A"}
+            </p>
+          </div>
+        </div>
+      ))}
 
+      {/* Loading Indicator */}
+      {/* {isLoading && <p className="text-blue-500">Updating notification...</p>} */}
     </div>
   );
 };

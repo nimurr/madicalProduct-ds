@@ -124,6 +124,7 @@ const BannerAd = () => {
 
             <div className="overflow-x-auto">
                 <Table
+                    className="custom-ant-table"
                     pagination={{
                         current: currentPage, // Controlled pagination
                         pageSize: pageSize,

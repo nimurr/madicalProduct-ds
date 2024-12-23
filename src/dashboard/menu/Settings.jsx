@@ -40,6 +40,7 @@ const Settings = () => {
             <IoIosArrowForward />
           </Link>
         </div>
+
       </div>
     </div>
   );
