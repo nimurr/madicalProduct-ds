@@ -180,7 +180,7 @@ const Sidebar = () => {
             </NavLink>
 
             <NavLink
-              to="/dashboard/bannerads"
+              to="/dashboard/bannerads/banneradsAll"
               className={({ isActive }) =>
                 isActive
                   ? "flex p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium bg-[#FFFFFF] text-[#193664] rounded-lg"

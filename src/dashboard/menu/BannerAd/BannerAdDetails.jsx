@@ -1,104 +1,82 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
 import { Tabs, Modal, message } from "antd";
-import { useGetSingleAdsBannerQuery, useUpdateDeclimeMutation, useUpdatePublishedMutation } from "../../../redux/features/auth/heashboard/adsBanner";
+import { useGetAllAdsBannerQuery, useUpdateDeclimeMutation, useUpdatePublishedMutation } from "../../../redux/features/auth/heashboard/adsBanner";
 import url from "../../../redux/api/baseUrl";
-import BannerAd from "./BannerAd";
 
 const { TabPane } = Tabs;
 
 const BannerAdDetails = () => {
 
 
-    const { id } = useParams();
-    const { data: bannerAd } = useGetSingleAdsBannerQuery(id);
-    const [updateDeclime, { isLoading }] = useUpdateDeclimeMutation()
-    const [updatePublished] = useUpdatePublishedMutation()
-    
-    const BannerAdDetails = bannerAd?.data?.attributes;
+    const [status , setStus] = useState("published");
+    const handleTabChange = (key) => {
+        setStus(key);
+    };
+
+    const { data: adsState } = useGetAllAdsBannerQuery(status); // Fetch all ads data
 
 
-    const [bannerPublishedAdData, setBannerPublishedAdData] = useState(null);
-    useEffect(() => {
-        if (bannerAd?.data?.attributes) {
-            const isOnPublished = bannerAd.data.attributes.status === "published";
-            setBannerPublishedAdData(isOnPublished ? bannerAd.data.attributes : null);
-        }
-    }, [bannerAd]);
-    console.log("Filtered Published-on Data:", bannerPublishedAdData);
+    // console.log(adsState);
+
+    // Extract ads by status
+    const newAds = adsState?.data?.attributes?.filter((ad) => ad.status === "on-hold") || [];
+    const publishedAds = adsState?.data?.attributes?.filter((ad) => ad.status === "published") || [];
+    const declinedAds = adsState?.data?.attributes?.filter((ad) => ad.status === "declaim") || [];
+
+    console.log(newAds , publishedAds , declinedAds);
 
 
-    const [bannerDeclaimAdData, setBannerDeclaimAdData] = useState(null);
-    useEffect(() => {
-        if (bannerAd?.data?.attributes) {
-            const isOnDeclaim = bannerAd.data.attributes.status === "declaim";
-            setBannerDeclaimAdData(isOnDeclaim ? bannerAd.data.attributes : null);
-        }
-    }, [bannerAd]);
-    console.log("Filtered Declaim-on Data:", bannerDeclaimAdData);
-
-
-
-
+    // console.log(newAds);
 
     const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState(false);
     const [isDeclineModalVisible, setIsDeclineModalVisible] = useState(false);
+    const [selectedAd, setSelectedAd] = useState(null);
 
-    // Handlers for Feedback Modal
-    const showFeedbackModal = () => {
+    const [updateDeclime] = useUpdateDeclimeMutation();
+    const [updatePublished] = useUpdatePublishedMutation();
+
+    // Feedback Modal Handlers
+    const showFeedbackModal = (ad) => {
+        setSelectedAd(ad);
         setIsFeedbackModalVisible(true);
     };
-
     const handleFeedbackCancel = () => {
         setIsFeedbackModalVisible(false);
     };
 
-    // Handlers for Decline Modal
-    const showDeclineModal = () => {
+    // Decline Modal Handlers
+    const showDeclineModal = (ad) => {
+        setSelectedAd(ad);
         setIsDeclineModalVisible(true);
     };
-
     const handleDeclineCancel = () => {
         setIsDeclineModalVisible(false);
     };
 
-    
+    // Decline Submit
     const handleDeclineSubmit = async (e) => {
-        e.preventDefault()
-
-        const status = 'declaim';
-        const declaimedMessage = e.target.feedback.value;
-        console.log(id, status, declaimedMessage);
+        e.preventDefault();
+        const status = "declaim";
+        const feedback = e.target.feedback.value;
 
         try {
-
-            const res = await updateDeclime({ id, status, declaimedMessage }).unwrap();
-            console.log(res);
-            message.success('Ad Declaim Successfully');
+            await updateDeclime({ id: selectedAd.id, status, declaimedMessage: feedback }).unwrap();
+            message.success("Ad Declined Successfully");
             setIsDeclineModalVisible(false);
         } catch (error) {
-            message.error('Failed to Declaim Ad');
+            message.error("Failed to Decline Ad");
         }
-
-
     };
 
-    const handlePublishAds = async (e) => {
-        e.preventDefault()
-
-        const status = 'published'; 
-
+    // Publish Ad
+    const handlePublishAds = async (ad) => {
+        const status = "published";
         try {
-
-            const res = await updatePublished({ id, status }).unwrap();
-            console.log(res);
-            message.success('Ad Published Successfully');
-            setIsDeclineModalVisible(false);
+            await updatePublished({ id: ad.id, status }).unwrap();
+            message.success("Ad Published Successfully");
         } catch (error) {
-            message.error('Failed to Declaim Ad');
+            message.error("Failed to Publish Ad");
         }
-
-
     };
 
     return (
@@ -106,194 +84,109 @@ const BannerAdDetails = () => {
             {/* Tabs Section */}
             <Tabs
                 defaultActiveKey="1"
-                tabBarStyle={{ fontWeight: "600", fontSize: "1.5rem" }} // Tailwind `text-2xl` equivalent
+                tabBarStyle={{ fontWeight: "600", fontSize: "1.5rem" }}
                 className="px-4"
             >
                 {/* New Ads Tab */}
-                <TabPane tab="New Ads" key="1">
-                    {
-                        BannerAdDetails?.status === "on-hold" ?
-
-                            <div className="p-4">
-                                {/* Flex Container */}
-                                <div className="flex flex-col md:flex-row bg-[#eee]">
-                                    {/* Image Section */}
+                <TabPane tab="New Ads" onClick={() => handleTabChange("on-hold")} key="1">
+                    {newAds.length > 0 ? (
+                        newAds.map((ad) => (
+                            <div key={ad.id} className="p-4 mb-4 bg-white rounded-lg shadow">
+                                <div className="flex flex-col md:flex-row">
                                     <div className="md:w-1/4 p-2">
                                         <img
-                                            src={url + BannerAdDetails?.image}
-                                            alt="Medicine Ad"
-                                            className="object-cover min-w-[300px] h-full"
+                                            src={url + ad.image}
+                                            alt="Ad"
+                                            className="object-cover w-full h-full rounded-lg"
                                         />
                                     </div>
-
-                                    {/* Content Section */}
-                                    <div className="md:w-2/3 p-6 bg-gray-50">
-                                        <h1 className="text-[35px] font-bold text-gray-800 mb-2">
-                                            {BannerAdDetails?.title}
-                                        </h1>
-                                        <h2 className="text-[25px] text-[#1e66ca] text-xl font-semibold mb-4">
-                                            {BannerAdDetails?.subTitle}
-                                        </h2>
-                                        <p className="text-gray-600 mb-4">
-                                            {BannerAdDetails?.description}
-                                        </p>
-                                        <div className="flex justify-between mb-4">
-                                            <div>
-                                                <h3 className="text-gray-800 font-semibold mb-2">Key Benefits:</h3>
-                                                <ul className="list-disc list-inside text-gray-600">
-                                                    {
-                                                        BannerAdDetails?.keys?.map((benefit, index) => <li className="mt-1" key={index}>{benefit}</li>)
-                                                    }
-                                                </ul>
-                                            </div>
-                                            <div>
-                                                <h3 className="text-gray-800 font-semibold mb-2">Price:</h3>
-                                                <p className="text-blue-500 text-lg font-semibold">
-                                                    <span className="text-[#1e66ca]">${BannerAdDetails?.amount}</span> per unit
-                                                </p>
+                                    <div className="md:w-3/4 p-6">
+                                        <h1 className="text-[35px] font-bold text-gray-800 mb-2">{ad.title}</h1>
+                                        <p className="text-gray-600 mb-4">{ad.description}</p>
+                                        <div className="flex justify-between items-center">
+                                            <p className="text-blue-500 text-lg font-semibold">
+                                                ${ad.amount} per unit
+                                            </p>
+                                            <div className="flex gap-4">
+                                                <button
+                                                    onClick={() => showDeclineModal(ad)}
+                                                    className="px-4 py-2 bg-red-500 text-white rounded-lg"
+                                                >
+                                                    Decline
+                                                </button>
+                                                <button
+                                                    onClick={() => handlePublishAds(ad)}
+                                                    className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+                                                >
+                                                    Publish
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex justify-end my-5 gap-2">
-                                    <button
-                                        className="text-white py-3 w-60 text-center border-[2px] border-[#dd0909] text-[#dd0909] font-semibold rounded-lg shadow-md"
-                                        onClick={showDeclineModal}
-                                    >
-                                        Decline
-                                    </button>
-                                    <button
-                                    onClick={handlePublishAds}
-                                        className="text-white py-3 w-60 text-center bg-primaryBg text-whiteText font-semibold rounded-lg shadow-md"
-                                    >
-                                        Publish Ad
-                                    </button>
-                                </div>
                             </div>
-                            :
-                            <p className="text-center my-5 text-[20px] text-[#c90707] font-semibold">No Ad Found</p>
-                    }
+                        ))
+                    ) : (
+                        <p className="text-center text-[30px] text-[#ce0c0c]">No New Ads Found !!!</p>
+                    )}
                 </TabPane>
 
                 {/* Published Ads Tab */}
-                <TabPane tab="Published Ads" key="2">
-                    {
-                        bannerPublishedAdData ?
-                            <div className="p-4">
-                                {/* Flex Container */}
-                                <div className="flex flex-col md:flex-row bg-[#eee]">
-                                    {/* Image Section */}
+                <TabPane tab="Published Ads" onClick={() => handleTabChange("published")} key="2">
+                    {publishedAds.length > 0 ? (
+                        publishedAds.map((ad) => (
+                            <div key={ad.id} className="p-4 mb-4 bg-white rounded-lg shadow">
+                                <div className="flex flex-col md:flex-row">
                                     <div className="md:w-1/4 p-2">
                                         <img
-                                            src={url + bannerPublishedAdData?.image}
-                                            alt="Medicine Ad"
-                                            className="object-cover min-w-[300px] h-full"
+                                            src={url + ad.image}
+                                            alt="Ad"
+                                            className="object-cover w-full h-full rounded-lg"
                                         />
                                     </div>
-
-                                    {/* Content Section */}
-                                    <div className="md:w-2/3 p-6 bg-gray-50">
-                                        <h1 className="text-[35px] font-bold text-gray-800 mb-2">
-                                            {bannerPublishedAdData?.title}
-                                        </h1>
-                                        <h2 className="text-[25px] text-[#1e66ca] text-xl font-semibold mb-4">
-                                            {bannerPublishedAdData?.subTitle}
-                                        </h2>
-                                        <p className="text-gray-600 mb-4">
-                                            {bannerPublishedAdData?.description}
-                                        </p>
-                                        <div className="flex justify-between mb-4">
-                                            <div>
-                                                <h3 className="text-gray-800 font-semibold mb-2">Key Benefits:</h3>
-                                                <ul className="list-disc list-inside text-gray-600">
-                                                    {
-                                                        bannerPublishedAdData?.keys?.map((benefit, index) => <li className="mt-1" key={index}>{benefit}</li>)
-                                                    }
-                                                    {/* <li className="mt-1">Jorem ipsum dolor sit amet</li>
-                                            <li className="mt-1">Jorem ipsum dolor sit amet</li>
-                                            <li className="mt-1">Jorem ipsum dolor sit amet</li> */}
-                                                </ul>
-                                            </div>
-                                            <div>
-                                                <h3 className="text-gray-800 font-semibold mb-2">Price:</h3>
-                                                <p className="text-blue-500 text-lg font-semibold">
-                                                    <span className="text-[#1e66ca]">${bannerPublishedAdData?.amount}</span> per unit
-                                                </p>
-                                            </div>
-                                        </div>
+                                    <div className="md:w-3/4 p-6">
+                                        <h1 className="text-[35px] font-bold text-gray-800 mb-2">{ad.title}</h1>
+                                        <p className="text-gray-600 mb-4">{ad.description}</p>
                                     </div>
                                 </div>
                             </div>
-
-                            :
-
-                            <p className="text-center my-5 text-[20px] text-[#c90707] font-semibold">No Published Ads !!!</p>
-                    }
+                        ))
+                    ) : (
+                        <p className="text-center text-[30px] text-[#ce0c0c]">No Published Ads Found !!!</p>
+                    )}
                 </TabPane>
 
                 {/* Declined Ads Tab */}
-                <TabPane tab="Declined Ads" key="3">
-                    {
-                        bannerDeclaimAdData ?
-                            <div className="p-4">
-                                {/* Flex Container */}
-                                <div className="flex flex-col md:flex-row bg-[#eee]">
-                                    {/* Image Section */}
+                <TabPane tab="Declined Ads" onClick={() => handleTabChange("declaim")} key="3">
+                    {declinedAds.length > 0 ? (
+                        declinedAds.map((ad) => (
+                            <div key={ad.id} className="p-4 mb-4 bg-white rounded-lg shadow">
+                                <div className="flex flex-col md:flex-row">
                                     <div className="md:w-1/4 p-2">
                                         <img
-                                            src={url + bannerDeclaimAdData?.image}
-                                            alt="Medicine Ad"
-                                            className="object-cover min-w-[300px] h-full"
+                                            src={url + ad.image}
+                                            alt="Ad"
+                                            className="object-cover w-full h-full rounded-lg"
                                         />
                                     </div>
-
-                                    {/* Content Section */}
-                                    <div className="md:w-2/3 p-6 bg-gray-50">
-                                        <h1 className="text-[35px] font-bold text-gray-800 mb-2">
-                                            {bannerDeclaimAdData?.title}
-                                        </h1>
-                                        <h2 className="text-[25px] text-[#1e66ca] text-xl font-semibold mb-4">
-                                            {bannerDeclaimAdData?.subTitle}
-                                        </h2>
-                                        <p className="text-gray-600 mb-4">
-                                            {bannerDeclaimAdData?.description}
-                                        </p>
-                                        <div className="flex justify-between mb-4">
-                                            <div>
-                                                <h3 className="text-gray-800 font-semibold mb-2">Key Benefits:</h3>
-                                                <ul className="list-disc list-inside text-gray-600">
-                                                    {
-                                                        bannerDeclaimAdData?.keys?.map((benefit, index) => <li className="mt-1" key={index}>{benefit}</li>)
-                                                    }
-                                                    {/* <li className="mt-1">Jorem ipsum dolor sit amet</li>
-                                                    <li className="mt-1">Jorem ipsum dolor sit amet</li>
-                                                    <li className="mt-1">Jorem ipsum dolor sit amet</li> */}
-                                                </ul>
-                                            </div>
-                                            <div>
-                                                <h3 className="text-gray-800 font-semibold mb-2">Price:</h3>
-                                                <p className="text-blue-500 text-lg font-semibold">
-                                                    <span className="text-[#1e66ca]">${bannerDeclaimAdData?.amount}</span> per unit
-                                                </p>
-                                            </div>
-                                        </div>
+                                    <div className="md:w-3/4 p-6">
+                                        <h1 className="text-[35px] font-bold text-gray-800 mb-2">{ad.title}</h1>
+                                        <p className="text-gray-600 mb-4">{ad.description}</p>
+                                        <button
+                                            onClick={() => showFeedbackModal(ad)}
+                                            className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+                                        >
+                                            View Feedback
+                                        </button>
                                     </div>
                                 </div>
-                                <div className="flex justify-end my-5 gap-2">
-                                    <button
-                                        className="bg-primaryBg px-10 py-3 rounded text-whiteText"
-                                        onClick={showFeedbackModal}
-                                    >
-                                        View Feedback
-                                    </button>
-                                </div>
                             </div>
-                            :
-                            <p className="text-center my-5 text-[20px] text-[#c90707] font-semibold">No Declined Ads !!!</p>
-                    }
+                        ))
+                    ) : (
+                        <p className="text-center text-[30px] text-[#ce0c0c]">No Declined Ads Found !!!</p>
+                    )}
                 </TabPane>
             </Tabs>
-
 
             {/* Feedback Modal */}
             <Modal
@@ -304,7 +197,9 @@ const BannerAdDetails = () => {
                 <div>
                     <h2 className="text-[25px] font-semibold text-center mb-4">Feedback</h2>
                     <p className="text-gray-600 text-center text-[18px] my-10">
-                        {bannerDeclaimAdData?.declaimedMessage ? bannerDeclaimAdData?.declaimedMessage : <p className="text-[#c90707] text-[20px]">No Feedback</p>}
+                        {selectedAd?.attributes.declaimedMessage || (
+                            <span className="text-red-500">No Feedback</span>
+                        )}
                     </p>
                 </div>
             </Modal>
@@ -317,17 +212,19 @@ const BannerAdDetails = () => {
             >
                 <div>
                     <h2 className="text-[20px] font-semibold mb-4">Write Feedback</h2>
-
-                    <form onSubmit={handleDeclineSubmit} action="">
-                        <input className="w-full rounded py-3 px-2 border-[2px] border-[#cfcfcf]" name="feedback" type="text" placeholder="Enter Feedback" />
-
-                        <div className="flex justify-center gap-4 mt-10">
+                    <form onSubmit={handleDeclineSubmit}>
+                        <input
+                            className="w-full rounded py-3 px-2 border-[2px] border-gray-300"
+                            name="feedback"
+                            type="text"
+                            placeholder="Enter Feedback"
+                        />
+                        <div className="flex justify-center gap-4 mt-4">
                             <button
-                                // onClick={handleDeclineConfirm}
                                 type="submit"
-                                className="bg-primaryBg text-whiteText px-6 py-2 rounded-lg font-semibold"
+                                className="px-4 py-2 bg-blue-500 text-white rounded-lg"
                             >
-                                Send
+                                Submit
                             </button>
                         </div>
                     </form>
