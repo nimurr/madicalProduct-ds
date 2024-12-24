@@ -1,42 +1,35 @@
-import { Input, DatePicker, Space, Table, Button } from "antd";
+import { Input, DatePicker, Table } from "antd";
 import { useState } from "react";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
+import { useGetAllAdsBannerQuery } from "../../../redux/features/auth/heashboard/adsBanner";
 
 const { Search } = Input;
 
-const dataSource = [
-    {
-        key: "1",
-        trId: "TR001",
-        userName: "John Doe",
-        officeName: "NYC Office",
-        amount: 1500,
-        date: "2024-12-15",
-    },
-    {
-        key: "2",
-        trId: "TR002",
-        userName: "Jane Smith",
-        officeName: "LA Office",
-        amount: 2000,
-        date: "2024-12-14",
-    },
-    {
-        key: "3",
-        trId: "TR003",
-        userName: "Alice Johnson",
-        officeName: "Chicago Office",
-        amount: 1200,
-        date: "2024-12-13",
-    },
-];
-
 const BannerAd = () => {
-    const [filteredData, setFilteredData] = useState(dataSource);
+    const status = "on-hold"; // Dynamic status if needed
+    const { data: adsState, isLoading, error } = useGetAllAdsBannerQuery(status);
+
+    // Extracting the ads data
+    const allAdsRequest =
+        adsState?.data?.attributes?.map((item, index) => ({
+            key: index + 1,
+            id: item.id,
+            title: item.title,
+            description: item.description,
+            amount: item.amount,
+            createdAt: item.createdAt,
+        })) || [];
+
+
+        console.log(adsState);
+
+    // Initialize filteredData directly
+    const [filteredData, setFilteredData] = useState(allAdsRequest);
     const [currentPage, setCurrentPage] = useState(1); // Current page state
     const [pageSize] = useState(10); // Items per page
 
+    // Columns definition
     const columns = [
         {
             title: "#SL",
@@ -45,37 +38,33 @@ const BannerAd = () => {
                 (currentPage - 1) * pageSize + index + 1, // Dynamically calculate serial number
         },
         {
-            title: "#Tr.ID",
-            dataIndex: "trId",
-            key: "trId",
+            title: "Title",
+            dataIndex: "title",
+            key: "title",
         },
         {
-            title: "User Name",
-            dataIndex: "userName",
-            key: "userName",
-        },
-        {
-            title: "Office Name",
-            dataIndex: "officeName",
-            key: "officeName",
+            title: "Description",
+            dataIndex: "description",
+            key: "description",
         },
         {
             title: "Amount",
             dataIndex: "amount",
             key: "amount",
-            render: (amount) => `$${amount}`,
+            render: (amount) => `$${amount}`, // Format amount as currency
         },
         {
-            title: "Date",
-            dataIndex: "date",
-            key: "date",
+            title: "Created At",
+            dataIndex: "createdAt",
+            key: "createdAt",
+            render: (createdAt) => new Date(createdAt).toLocaleDateString(), // Format the date
         },
         {
             title: "Action",
             key: "action",
             render: (_, record) => (
                 <Link
-                    to={"/dashboard/bannerads/sdfg655sdf21s5d4f"}
+                    to={`/dashboard/bannerads/${record.id}`}
                     className="text-blue-500 text-left"
                 >
                     <IoInformationCircleOutline className="text-header" />
@@ -84,19 +73,45 @@ const BannerAd = () => {
         },
     ];
 
+    // Search function
     const handleSearch = (value) => {
-        const filtered = dataSource.filter(
+        const filtered = allAdsRequest.filter(
             (item) =>
-                item.userName.toLowerCase().includes(value.toLowerCase()) ||
-                item.officeName.toLowerCase().includes(value.toLowerCase()) ||
-                item.date.includes(value)
+                item.title.toLowerCase().includes(value.toLowerCase()) ||
+                item.description.toLowerCase().includes(value.toLowerCase())
         );
         setFilteredData(filtered);
     };
 
+    // DatePicker filter
+    const handleDateFilter = (date, dateString) => {
+        const filtered = allAdsRequest.filter((item) =>
+            new Date(item.createdAt)
+                .toLocaleDateString()
+                .includes(dateString)
+        );
+        setFilteredData(filtered);
+    };
+
+    // Handle pagination changes
     const handlePaginationChange = (page) => {
         setCurrentPage(page); // Update current page
     };
+
+    // Loading state
+    if (isLoading) {
+        return <p>Loading...</p>;
+    }
+
+    // Error state
+    if (error) {
+        return <p>Error loading data</p>;
+    }
+
+    // No data state
+    if (allAdsRequest.length === 0) {
+        return <p className="text-center my-20 text-[30px] text-[#be0202] font-semibold">Ads Request Not available !!!</p>;
+    }
 
     return (
         <div className="mt-14 bg-[#e8ebf0] rounded-t-lg ">
@@ -107,15 +122,10 @@ const BannerAd = () => {
                 <div className="flex gap-2">
                     <DatePicker
                         className="p-1"
-                        onChange={(date, dateString) => {
-                            const filtered = dataSource.filter((item) =>
-                                item.date.includes(dateString)
-                            );
-                            setFilteredData(filtered);
-                        }}
+                        onChange={handleDateFilter}
                     />
                     <Search
-                        placeholder="Search by User, Date, or Office"
+                        placeholder="Search by Title or Description"
                         onSearch={handleSearch}
                         enterButton
                     />
@@ -134,7 +144,7 @@ const BannerAd = () => {
                         onChange: handlePaginationChange, // Handle page change
                     }}
                     columns={columns}
-                    dataSource={filteredData}
+                    dataSource={allAdsRequest}
                 />
             </div>
         </div>

@@ -1,10 +1,46 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { Tabs, Modal, message } from "antd";
+import { useGetSingleAdsBannerQuery, useUpdateDeclimeMutation, useUpdatePublishedMutation } from "../../../redux/features/auth/heashboard/adsBanner";
+import url from "../../../redux/api/baseUrl";
+import BannerAd from "./BannerAd";
 
 const { TabPane } = Tabs;
 
 const BannerAdDetails = () => {
+
+
+    const { id } = useParams();
+    const { data: bannerAd } = useGetSingleAdsBannerQuery(id);
+    const [updateDeclime, { isLoading }] = useUpdateDeclimeMutation()
+    const [updatePublished] = useUpdatePublishedMutation()
+    
+    const BannerAdDetails = bannerAd?.data?.attributes;
+
+
+    const [bannerPublishedAdData, setBannerPublishedAdData] = useState(null);
+    useEffect(() => {
+        if (bannerAd?.data?.attributes) {
+            const isOnPublished = bannerAd.data.attributes.status === "published";
+            setBannerPublishedAdData(isOnPublished ? bannerAd.data.attributes : null);
+        }
+    }, [bannerAd]);
+    console.log("Filtered Published-on Data:", bannerPublishedAdData);
+
+
+    const [bannerDeclaimAdData, setBannerDeclaimAdData] = useState(null);
+    useEffect(() => {
+        if (bannerAd?.data?.attributes) {
+            const isOnDeclaim = bannerAd.data.attributes.status === "declaim";
+            setBannerDeclaimAdData(isOnDeclaim ? bannerAd.data.attributes : null);
+        }
+    }, [bannerAd]);
+    console.log("Filtered Declaim-on Data:", bannerDeclaimAdData);
+
+
+
+
+
     const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState(false);
     const [isDeclineModalVisible, setIsDeclineModalVisible] = useState(false);
 
@@ -26,18 +62,43 @@ const BannerAdDetails = () => {
         setIsDeclineModalVisible(false);
     };
 
-    const handleDeclineSubmit = (e) => {
+    
+    const handleDeclineSubmit = async (e) => {
         e.preventDefault()
 
+        const status = 'declaim';
+        const declaimedMessage = e.target.feedback.value;
+        console.log(id, status, declaimedMessage);
 
-        console.log(e.target.feedback.value);
-        if (!e.target.feedback.value) {
-            return message.warning("Please enter a reason for declining the ad.");
-        }
-        else {
+        try {
+
+            const res = await updateDeclime({ id, status, declaimedMessage }).unwrap();
+            console.log(res);
+            message.success('Ad Declaim Successfully');
             setIsDeclineModalVisible(false);
-            message.success("Ad Declined Successfully.");
+        } catch (error) {
+            message.error('Failed to Declaim Ad');
         }
+
+
+    };
+
+    const handlePublishAds = async (e) => {
+        e.preventDefault()
+
+        const status = 'published'; 
+
+        try {
+
+            const res = await updatePublished({ id, status }).unwrap();
+            console.log(res);
+            message.success('Ad Published Successfully');
+            setIsDeclineModalVisible(false);
+        } catch (error) {
+            message.error('Failed to Declaim Ad');
+        }
+
+
     };
 
     return (
@@ -50,171 +111,186 @@ const BannerAdDetails = () => {
             >
                 {/* New Ads Tab */}
                 <TabPane tab="New Ads" key="1">
-                    <div className="p-4">
-                        {/* Flex Container */}
-                        <div className="flex flex-col md:flex-row bg-[#eee]">
-                            {/* Image Section */}
-                            <div className="md:w-1/4 p-2">
-                                <img
-                                    src={"/image/category1.png"}
-                                    alt="Medicine Ad"
-                                    className="object-cover min-w-[300px] h-full"
-                                />
-                            </div>
+                    {
+                        BannerAdDetails?.status === "on-hold" ?
 
-                            {/* Content Section */}
-                            <div className="md:w-2/3 p-6 bg-gray-50">
-                                <h1 className="text-[35px] font-bold text-gray-800 mb-2">
-                                    Your Health, Our Priority
-                                </h1>
-                                <h2 className="text-[25px] text-[#1e66ca] text-xl font-semibold mb-4">
-                                    Medicine Name
-                                </h2>
-                                <p className="text-gray-600 mb-4">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu
-                                    turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus
-                                    nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum
-                                    tellus elit sed risus.
-                                </p>
-                                <div className="flex justify-between mb-4">
-                                    <div>
-                                        <h3 className="text-gray-800 font-semibold mb-2">Key Benefits:</h3>
-                                        <ul className="list-disc list-inside text-gray-600">
-                                            <li className="mt-1">Jorem ipsum dolor sit amet</li>
-                                            <li className="mt-1">Jorem ipsum dolor sit amet</li>
-                                            <li className="mt-1">Jorem ipsum dolor sit amet</li>
-                                        </ul>
+                            <div className="p-4">
+                                {/* Flex Container */}
+                                <div className="flex flex-col md:flex-row bg-[#eee]">
+                                    {/* Image Section */}
+                                    <div className="md:w-1/4 p-2">
+                                        <img
+                                            src={url + BannerAdDetails?.image}
+                                            alt="Medicine Ad"
+                                            className="object-cover min-w-[300px] h-full"
+                                        />
                                     </div>
-                                    <div>
-                                        <h3 className="text-gray-800 font-semibold mb-2">Price:</h3>
-                                        <p className="text-blue-500 text-lg font-semibold">
-                                            <span className="text-[#1e66ca]">$120</span> per unit
+
+                                    {/* Content Section */}
+                                    <div className="md:w-2/3 p-6 bg-gray-50">
+                                        <h1 className="text-[35px] font-bold text-gray-800 mb-2">
+                                            {BannerAdDetails?.title}
+                                        </h1>
+                                        <h2 className="text-[25px] text-[#1e66ca] text-xl font-semibold mb-4">
+                                            {BannerAdDetails?.subTitle}
+                                        </h2>
+                                        <p className="text-gray-600 mb-4">
+                                            {BannerAdDetails?.description}
                                         </p>
+                                        <div className="flex justify-between mb-4">
+                                            <div>
+                                                <h3 className="text-gray-800 font-semibold mb-2">Key Benefits:</h3>
+                                                <ul className="list-disc list-inside text-gray-600">
+                                                    {
+                                                        BannerAdDetails?.keys?.map((benefit, index) => <li className="mt-1" key={index}>{benefit}</li>)
+                                                    }
+                                                </ul>
+                                            </div>
+                                            <div>
+                                                <h3 className="text-gray-800 font-semibold mb-2">Price:</h3>
+                                                <p className="text-blue-500 text-lg font-semibold">
+                                                    <span className="text-[#1e66ca]">${BannerAdDetails?.amount}</span> per unit
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+                                <div className="flex justify-end my-5 gap-2">
+                                    <button
+                                        className="text-white py-3 w-60 text-center border-[2px] border-[#dd0909] text-[#dd0909] font-semibold rounded-lg shadow-md"
+                                        onClick={showDeclineModal}
+                                    >
+                                        Decline
+                                    </button>
+                                    <button
+                                    onClick={handlePublishAds}
+                                        className="text-white py-3 w-60 text-center bg-primaryBg text-whiteText font-semibold rounded-lg shadow-md"
+                                    >
+                                        Publish Ad
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        <div className="flex justify-end my-5 gap-2">
-                            <button
-                                className="text-white py-3 w-60 text-center border-[2px] border-[#dd0909] text-[#dd0909] font-semibold rounded-lg shadow-md"
-                                onClick={showDeclineModal}
-                            >
-                                Decline
-                            </button>
-                            <Link
-                                to={"/dashboard/bannerads/createads"}
-                                className="text-white py-3 w-60 text-center bg-primaryBg text-whiteText font-semibold rounded-lg shadow-md"
-                            >
-                                Publish Ad
-                            </Link>
-                        </div>
-                    </div>
+                            :
+                            <p className="text-center my-5 text-[20px] text-[#c90707] font-semibold">No Ad Found</p>
+                    }
                 </TabPane>
 
                 {/* Published Ads Tab */}
                 <TabPane tab="Published Ads" key="2">
-                    <div className="p-4">
-                        {/* Flex Container */}
-                        <div className="flex flex-col md:flex-row bg-[#eee]">
-                            {/* Image Section */}
-                            <div className="md:w-1/4 p-2">
-                                <img
-                                    src={"/image/category1.png"}
-                                    alt="Medicine Ad"
-                                    className="object-cover min-w-[300px] h-full"
-                                />
-                            </div>
-
-                            {/* Content Section */}
-                            <div className="md:w-2/3 p-6 bg-gray-50">
-                                <h1 className="text-[35px] font-bold text-gray-800 mb-2">
-                                    Your Health, Our Priority
-                                </h1>
-                                <h2 className="text-[25px] text-[#1e66ca] text-xl font-semibold mb-4">
-                                    Medicine Name
-                                </h2>
-                                <p className="text-gray-600 mb-4">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu
-                                    turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus
-                                    nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum
-                                    tellus elit sed risus.
-                                </p>
-                                <div className="flex justify-between mb-4">
-                                    <div>
-                                        <h3 className="text-gray-800 font-semibold mb-2">Key Benefits:</h3>
-                                        <ul className="list-disc list-inside text-gray-600">
-                                            <li className="mt-1">Jorem ipsum dolor sit amet</li>
-                                            <li className="mt-1">Jorem ipsum dolor sit amet</li>
-                                            <li className="mt-1">Jorem ipsum dolor sit amet</li>
-                                        </ul>
+                    {
+                        bannerPublishedAdData ?
+                            <div className="p-4">
+                                {/* Flex Container */}
+                                <div className="flex flex-col md:flex-row bg-[#eee]">
+                                    {/* Image Section */}
+                                    <div className="md:w-1/4 p-2">
+                                        <img
+                                            src={url + bannerPublishedAdData?.image}
+                                            alt="Medicine Ad"
+                                            className="object-cover min-w-[300px] h-full"
+                                        />
                                     </div>
-                                    <div>
-                                        <h3 className="text-gray-800 font-semibold mb-2">Price:</h3>
-                                        <p className="text-blue-500 text-lg font-semibold">
-                                            <span className="text-[#1e66ca]">$120</span> per unit
+
+                                    {/* Content Section */}
+                                    <div className="md:w-2/3 p-6 bg-gray-50">
+                                        <h1 className="text-[35px] font-bold text-gray-800 mb-2">
+                                            {bannerPublishedAdData?.title}
+                                        </h1>
+                                        <h2 className="text-[25px] text-[#1e66ca] text-xl font-semibold mb-4">
+                                            {bannerPublishedAdData?.subTitle}
+                                        </h2>
+                                        <p className="text-gray-600 mb-4">
+                                            {bannerPublishedAdData?.description}
                                         </p>
+                                        <div className="flex justify-between mb-4">
+                                            <div>
+                                                <h3 className="text-gray-800 font-semibold mb-2">Key Benefits:</h3>
+                                                <ul className="list-disc list-inside text-gray-600">
+                                                    {
+                                                        bannerPublishedAdData?.keys?.map((benefit, index) => <li className="mt-1" key={index}>{benefit}</li>)
+                                                    }
+                                                    {/* <li className="mt-1">Jorem ipsum dolor sit amet</li>
+                                            <li className="mt-1">Jorem ipsum dolor sit amet</li>
+                                            <li className="mt-1">Jorem ipsum dolor sit amet</li> */}
+                                                </ul>
+                                            </div>
+                                            <div>
+                                                <h3 className="text-gray-800 font-semibold mb-2">Price:</h3>
+                                                <p className="text-blue-500 text-lg font-semibold">
+                                                    <span className="text-[#1e66ca]">${bannerPublishedAdData?.amount}</span> per unit
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+
+                            :
+
+                            <p className="text-center my-5 text-[20px] text-[#c90707] font-semibold">No Published Ads !!!</p>
+                    }
                 </TabPane>
 
                 {/* Declined Ads Tab */}
                 <TabPane tab="Declined Ads" key="3">
-                    <div className="p-4">
-                        {/* Flex Container */}
-                        <div className="flex flex-col md:flex-row bg-[#eee]">
-                            {/* Image Section */}
-                            <div className="md:w-1/4 p-2">
-                                <img
-                                    src={"/image/category1.png"}
-                                    alt="Medicine Ad"
-                                    className="object-cover min-w-[300px] h-full"
-                                />
-                            </div>
-
-                            {/* Content Section */}
-                            <div className="md:w-2/3 p-6 bg-gray-50">
-                                <h1 className="text-[35px] font-bold text-gray-800 mb-2">
-                                    Your Health, Our Priority
-                                </h1>
-                                <h2 className="text-[25px] text-[#1e66ca] text-xl font-semibold mb-4">
-                                    Medicine Name
-                                </h2>
-                                <p className="text-gray-600 mb-4">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu
-                                    turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus
-                                    nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum
-                                    tellus elit sed risus.
-                                </p>
-                                <div className="flex justify-between mb-4">
-                                    <div>
-                                        <h3 className="text-gray-800 font-semibold mb-2">Key Benefits:</h3>
-                                        <ul className="list-disc list-inside text-gray-600">
-                                            <li className="mt-1">Jorem ipsum dolor sit amet</li>
-                                            <li className="mt-1">Jorem ipsum dolor sit amet</li>
-                                            <li className="mt-1">Jorem ipsum dolor sit amet</li>
-                                        </ul>
+                    {
+                        bannerDeclaimAdData ?
+                            <div className="p-4">
+                                {/* Flex Container */}
+                                <div className="flex flex-col md:flex-row bg-[#eee]">
+                                    {/* Image Section */}
+                                    <div className="md:w-1/4 p-2">
+                                        <img
+                                            src={url + bannerDeclaimAdData?.image}
+                                            alt="Medicine Ad"
+                                            className="object-cover min-w-[300px] h-full"
+                                        />
                                     </div>
-                                    <div>
-                                        <h3 className="text-gray-800 font-semibold mb-2">Price:</h3>
-                                        <p className="text-blue-500 text-lg font-semibold">
-                                            <span className="text-[#1e66ca]">$120</span> per unit
+
+                                    {/* Content Section */}
+                                    <div className="md:w-2/3 p-6 bg-gray-50">
+                                        <h1 className="text-[35px] font-bold text-gray-800 mb-2">
+                                            {bannerDeclaimAdData?.title}
+                                        </h1>
+                                        <h2 className="text-[25px] text-[#1e66ca] text-xl font-semibold mb-4">
+                                            {bannerDeclaimAdData?.subTitle}
+                                        </h2>
+                                        <p className="text-gray-600 mb-4">
+                                            {bannerDeclaimAdData?.description}
                                         </p>
+                                        <div className="flex justify-between mb-4">
+                                            <div>
+                                                <h3 className="text-gray-800 font-semibold mb-2">Key Benefits:</h3>
+                                                <ul className="list-disc list-inside text-gray-600">
+                                                    {
+                                                        bannerDeclaimAdData?.keys?.map((benefit, index) => <li className="mt-1" key={index}>{benefit}</li>)
+                                                    }
+                                                    {/* <li className="mt-1">Jorem ipsum dolor sit amet</li>
+                                                    <li className="mt-1">Jorem ipsum dolor sit amet</li>
+                                                    <li className="mt-1">Jorem ipsum dolor sit amet</li> */}
+                                                </ul>
+                                            </div>
+                                            <div>
+                                                <h3 className="text-gray-800 font-semibold mb-2">Price:</h3>
+                                                <p className="text-blue-500 text-lg font-semibold">
+                                                    <span className="text-[#1e66ca]">${bannerDeclaimAdData?.amount}</span> per unit
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+                                <div className="flex justify-end my-5 gap-2">
+                                    <button
+                                        className="bg-primaryBg px-10 py-3 rounded text-whiteText"
+                                        onClick={showFeedbackModal}
+                                    >
+                                        View Feedback
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        <div className="flex justify-end my-5 gap-2">
-                            <button
-                                className="bg-primaryBg px-10 py-3 rounded text-whiteText"
-                                onClick={showFeedbackModal}
-                            >
-                                View Feedback
-                            </button>
-                        </div>
-                    </div>
+                            :
+                            <p className="text-center my-5 text-[20px] text-[#c90707] font-semibold">No Declined Ads !!!</p>
+                    }
                 </TabPane>
             </Tabs>
 
@@ -228,16 +304,7 @@ const BannerAdDetails = () => {
                 <div>
                     <h2 className="text-[25px] font-semibold text-center mb-4">Feedback</h2>
                     <p className="text-gray-600 text-center text-[18px] my-10">
-                        This ad was declined because it did not meet our advertising standards.
-                        Please review the guidelines and resubmit.
-                        This ad was declined because it did not meet our advertising standards.
-                        Please review the guidelines and resubmit.
-                        This ad was declined because it did not meet our advertising standards.
-                        Please review the guidelines and resubmit.
-                        This ad was declined because it did not meet our advertising standards.
-                        Please review the guidelines and resubmit.
-                        This ad was declined because it did not meet our advertising standards.
-                        Please review the guidelines and resubmit.
+                        {bannerDeclaimAdData?.declaimedMessage ? bannerDeclaimAdData?.declaimedMessage : <p className="text-[#c90707] text-[20px]">No Feedback</p>}
                     </p>
                 </div>
             </Modal>
