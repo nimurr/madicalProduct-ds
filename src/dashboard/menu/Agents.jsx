@@ -166,13 +166,13 @@ const Agents = () => {
             <p className="text-header font-semibold">Agents</p>
           </div>
           <div className="flex items-center gap-2">
-            <Space direction="vertical">
+            {/* <Space direction="vertical">
               <DatePicker
                 format="DD MMMM YYYY"
                 onChange={handleSearch}
                 placeholder="Select Date"
               />
-            </Space>
+            </Space> */}
             <Search
               placeholder="Search by name or email"
               onSearch={handleSearch}

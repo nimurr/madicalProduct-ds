@@ -58,7 +58,11 @@ const BidHistory = () => {
       title: "Bid Status",
       dataIndex: "bidStatus",
       key: "bidStatus",
-      render: (_, record) => <p>{record?.status || "N/A"}</p>,
+      render: (_, record) => <p className={`
+        ${record?.status == "pending"	&& "text-[#d00]" }
+        ${record?.status == "completed"	&& "text-[#093be0]" }
+      
+      `}>{record?.status || "N/A"}</p>,
     },
     {
       title: "Last Price",

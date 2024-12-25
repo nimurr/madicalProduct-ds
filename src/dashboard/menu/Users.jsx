@@ -133,9 +133,9 @@ const Users = () => {
         <div className="md:flex py-[22px] justify-between items-center flex-wrap">
           <p className="text-header font-semibold">Users</p>
           <div className="flex items-center gap-2">
-            <Space direction="vertical">
+            {/* <Space direction="vertical">
               <DatePicker format="DD MMMM YYYY" onChange={handleSearch} placeholder="Select Date" />
-            </Space>
+            </Space> */}
             <Search placeholder="Search by name or email" onSearch={handleSearch} enterButton />
           </div>
         </div>

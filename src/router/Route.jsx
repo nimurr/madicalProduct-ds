@@ -128,7 +128,7 @@ export const router = createBrowserRouter([
         element: <BannerAdDetails />
       },
       {
-        path: "bannerads/createads",
+        path: "bannerads/createads/:id",
         element: <AddBannerAds />
       },
       {

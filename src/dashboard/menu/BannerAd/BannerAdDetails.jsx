@@ -1,41 +1,39 @@
 import React, { useEffect, useState } from "react";
 import { Tabs, Modal, message } from "antd";
-import { useGetAllAdsBannerQuery, useUpdateDeclimeMutation, useUpdatePublishedMutation } from "../../../redux/features/auth/heashboard/adsBanner";
+import { useGetAllAdsBannerQuery, useUpdateDeclimeMutation } from "../../../redux/features/auth/heashboard/adsBanner";
 import url from "../../../redux/api/baseUrl";
+import { Link } from "react-router-dom";
 
 const { TabPane } = Tabs;
 
 const BannerAdDetails = () => {
+    const [status, setStus] = useState("on-hold");
+    const [selectedAd, setSelectedAd] = useState(null); // For tracking selected ad in modals
+    const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState(false); // View Feedback Modal
+    const [isDeclineModalVisible, setIsDeclineModalVisible] = useState(false); // Write Feedback Modal
 
-
-    const [status , setStus] = useState("published");
     const handleTabChange = (key) => {
         setStus(key);
     };
 
-    const { data: adsState } = useGetAllAdsBannerQuery(status); // Fetch all ads data
+    const { data: adsState, refetch, isLoading } = useGetAllAdsBannerQuery({ status }); // Fetch all ads data
 
+    const [newAds, setNewAds] = useState([]);
+    const [publishedAds, setPublishedAds] = useState([]);
+    const [declinedAds, setDeclinedAds] = useState([]);
 
-    // console.log(adsState);
-
-    // Extract ads by status
-    const newAds = adsState?.data?.attributes?.filter((ad) => ad.status === "on-hold") || [];
-    const publishedAds = adsState?.data?.attributes?.filter((ad) => ad.status === "published") || [];
-    const declinedAds = adsState?.data?.attributes?.filter((ad) => ad.status === "declaim") || [];
-
-    console.log(newAds , publishedAds , declinedAds);
-
-
-    // console.log(newAds);
-
-    const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState(false);
-    const [isDeclineModalVisible, setIsDeclineModalVisible] = useState(false);
-    const [selectedAd, setSelectedAd] = useState(null);
+    useEffect(() => {
+        const newAds = adsState?.data?.attributes?.filter((ad) => ad.status === "on-hold") || [];
+        const publishedAds = adsState?.data?.attributes?.filter((ad) => ad.status === "published") || [];
+        const declinedAds = adsState?.data?.attributes?.filter((ad) => ad.status === "declaim") || [];
+        setNewAds(newAds);
+        setPublishedAds(publishedAds);
+        setDeclinedAds(declinedAds);
+    }, [adsState]);
 
     const [updateDeclime] = useUpdateDeclimeMutation();
-    const [updatePublished] = useUpdatePublishedMutation();
 
-    // Feedback Modal Handlers
+    // Handlers for View Feedback Modal
     const showFeedbackModal = (ad) => {
         setSelectedAd(ad);
         setIsFeedbackModalVisible(true);
@@ -44,7 +42,7 @@ const BannerAdDetails = () => {
         setIsFeedbackModalVisible(false);
     };
 
-    // Decline Modal Handlers
+    // Handlers for Write Feedback Modal
     const showDeclineModal = (ad) => {
         setSelectedAd(ad);
         setIsDeclineModalVisible(true);
@@ -53,14 +51,18 @@ const BannerAdDetails = () => {
         setIsDeclineModalVisible(false);
     };
 
-    // Decline Submit
     const handleDeclineSubmit = async (e) => {
         e.preventDefault();
         const status = "declaim";
         const feedback = e.target.feedback.value;
 
+        if (!feedback) {
+            return message.error("Please provide feedback");
+        }
+
         try {
             await updateDeclime({ id: selectedAd.id, status, declaimedMessage: feedback }).unwrap();
+            refetch();
             message.success("Ad Declined Successfully");
             setIsDeclineModalVisible(false);
         } catch (error) {
@@ -68,61 +70,62 @@ const BannerAdDetails = () => {
         }
     };
 
-    // Publish Ad
-    const handlePublishAds = async (ad) => {
-        const status = "published";
-        try {
-            await updatePublished({ id: ad.id, status }).unwrap();
-            message.success("Ad Published Successfully");
-        } catch (error) {
-            message.error("Failed to Publish Ad");
-        }
-    };
-
     return (
         <div className="mt-14 bg-gray-100 overflow-hidden">
-            {/* Tabs Section */}
             <Tabs
-                defaultActiveKey="1"
-                tabBarStyle={{ fontWeight: "600", fontSize: "1.5rem" }}
+                defaultActiveKey="on-hold"
+                tabBarStyle={{ fontWeight: "600", fontSize: "30px" }}
                 className="px-4"
+                onChange={handleTabChange}
             >
-                {/* New Ads Tab */}
-                <TabPane tab="New Ads" onClick={() => handleTabChange("on-hold")} key="1">
+                <TabPane tab="New Ads" key="on-hold">
                     {newAds.length > 0 ? (
                         newAds.map((ad) => (
                             <div key={ad.id} className="p-4 mb-4 bg-white rounded-lg shadow">
-                                <div className="flex flex-col md:flex-row">
-                                    <div className="md:w-1/4 p-2">
+                                <div className="flex gap-10 flex-wrap ">
+                                    <div className="w-[320px] p-2">
                                         <img
                                             src={url + ad.image}
                                             alt="Ad"
                                             className="object-cover w-full h-full rounded-lg"
                                         />
                                     </div>
-                                    <div className="md:w-3/4 p-6">
-                                        <h1 className="text-[35px] font-bold text-gray-800 mb-2">{ad.title}</h1>
-                                        <p className="text-gray-600 mb-4">{ad.description}</p>
-                                        <div className="flex justify-between items-center">
-                                            <p className="text-blue-500 text-lg font-semibold">
-                                                ${ad.amount} per unit
-                                            </p>
-                                            <div className="flex gap-4">
-                                                <button
-                                                    onClick={() => showDeclineModal(ad)}
-                                                    className="px-4 py-2 bg-red-500 text-white rounded-lg"
-                                                >
-                                                    Decline
-                                                </button>
-                                                <button
-                                                    onClick={() => handlePublishAds(ad)}
-                                                    className="px-4 py-2 bg-blue-500 text-white rounded-lg"
-                                                >
-                                                    Publish
-                                                </button>
+                                    <div className="w-auto p-6 ">
+                                        <div>
+                                            <h1 className="text-[35px] font-bold text-gray-800 mb-2">{ad.title}</h1>
+                                            <p className="text-gray-600 mb-4">{ad.subTitle}</p>
+                                            <p className="text-gray-600 mb-4">{ad.description}</p>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <ul className="list-disc font-semibold ml-5">
+                                                {ad.keys.map((key, index) => (
+                                                    <li key={index} className="text-gray-600 mb-4">
+                                                        {key}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                            <div>
+                                                <h3 className="font-semibold">Price:</h3>
+                                                <p className="text-blue-500 text-lg ">
+                                                    <span className="font-bold text-primaryBg">${ad.amount}</span> per unit
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div className="flex justify-end gap-4">
+                                    <button
+                                        onClick={() => showDeclineModal(ad)}
+                                        className="px-4 py-2 bg-[#e61704] text-whiteText rounded-lg"
+                                    >
+                                        Decline
+                                    </button>
+                                    <Link
+                                        to={`/dashboard/bannerads/createads/${ad.id}`}
+                                        className="px-4 py-2 bg-primaryBg text-whiteText rounded-lg"
+                                    >
+                                        Publish
+                                    </Link>
                                 </div>
                             </div>
                         ))
@@ -131,22 +134,39 @@ const BannerAdDetails = () => {
                     )}
                 </TabPane>
 
-                {/* Published Ads Tab */}
-                <TabPane tab="Published Ads" onClick={() => handleTabChange("published")} key="2">
+                <TabPane tab="Published Ads" key="published">
                     {publishedAds.length > 0 ? (
                         publishedAds.map((ad) => (
                             <div key={ad.id} className="p-4 mb-4 bg-white rounded-lg shadow">
-                                <div className="flex flex-col md:flex-row">
-                                    <div className="md:w-1/4 p-2">
+                                <div className="flex gap-10 flex-wrap ">
+                                    <div className="w-[320px] p-2">
                                         <img
                                             src={url + ad.image}
                                             alt="Ad"
                                             className="object-cover w-full h-full rounded-lg"
                                         />
                                     </div>
-                                    <div className="md:w-3/4 p-6">
-                                        <h1 className="text-[35px] font-bold text-gray-800 mb-2">{ad.title}</h1>
-                                        <p className="text-gray-600 mb-4">{ad.description}</p>
+                                    <div className="w-auto p-6 ">
+                                        <div>
+                                            <h1 className="text-[35px] font-bold text-gray-800 mb-2">{ad.title}</h1>
+                                            <p className="text-gray-600 mb-4">{ad.subTitle}</p>
+                                            <p className="text-gray-600 mb-4">{ad.description}</p>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <ul className="list-disc font-semibold ml-5">
+                                                {ad.keys.map((key, index) => (
+                                                    <li key={index} className="text-gray-600 mb-4">
+                                                        {key}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                            <div>
+                                                <h3 className="font-semibold">Price:</h3>
+                                                <p className="text-blue-500 text-lg ">
+                                                    <span className="font-bold text-primaryBg">${ad.amount}</span> per unit
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -156,29 +176,48 @@ const BannerAdDetails = () => {
                     )}
                 </TabPane>
 
-                {/* Declined Ads Tab */}
-                <TabPane tab="Declined Ads" onClick={() => handleTabChange("declaim")} key="3">
+                <TabPane tab="Declined Ads" key="declaim">
                     {declinedAds.length > 0 ? (
                         declinedAds.map((ad) => (
                             <div key={ad.id} className="p-4 mb-4 bg-white rounded-lg shadow">
-                                <div className="flex flex-col md:flex-row">
-                                    <div className="md:w-1/4 p-2">
+                                <div className="flex gap-10 flex-wrap ">
+                                    <div className="w-[320px] p-2">
                                         <img
                                             src={url + ad.image}
                                             alt="Ad"
                                             className="object-cover w-full h-full rounded-lg"
                                         />
                                     </div>
-                                    <div className="md:w-3/4 p-6">
-                                        <h1 className="text-[35px] font-bold text-gray-800 mb-2">{ad.title}</h1>
-                                        <p className="text-gray-600 mb-4">{ad.description}</p>
-                                        <button
-                                            onClick={() => showFeedbackModal(ad)}
-                                            className="px-4 py-2 bg-blue-500 text-white rounded-lg"
-                                        >
-                                            View Feedback
-                                        </button>
+                                    <div className="w-auto p-6 ">
+                                        <div>
+                                            <h1 className="text-[35px] font-bold text-gray-800 mb-2">{ad.title}</h1>
+                                            <p className="text-gray-600 mb-4">{ad.subTitle}</p>
+                                            <p className="text-gray-600 mb-4">{ad.description}</p>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <ul className="list-disc font-semibold ml-5">
+                                                {ad.keys.map((key, index) => (
+                                                    <li key={index} className="text-gray-600 mb-4">
+                                                        {key}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                            <div>
+                                                <h3 className="font-semibold">Price:</h3>
+                                                <p className="text-blue-500 text-lg ">
+                                                    <span className="font-bold text-primaryBg">${ad.amount}</span> per unit
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
+                                </div>
+                                <div className="flex justify-end">
+                                    <button
+                                        onClick={() => showFeedbackModal(ad)}
+                                        className="px-4 py-2 bg-primaryBg text-whiteText rounded-lg"
+                                    >
+                                        View Feedback
+                                    </button>
                                 </div>
                             </div>
                         ))
@@ -197,14 +236,12 @@ const BannerAdDetails = () => {
                 <div>
                     <h2 className="text-[25px] font-semibold text-center mb-4">Feedback</h2>
                     <p className="text-gray-600 text-center text-[18px] my-10">
-                        {selectedAd?.attributes.declaimedMessage || (
-                            <span className="text-red-500">No Feedback</span>
-                        )}
+                        {selectedAd?.declaimedMessage || <span className="text-red-500">No Feedback</span>}
                     </p>
                 </div>
             </Modal>
 
-            {/* Decline Confirmation Modal */}
+            {/* Write Feedback Modal */}
             <Modal
                 visible={isDeclineModalVisible}
                 onCancel={handleDeclineCancel}
