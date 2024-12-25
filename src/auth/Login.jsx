@@ -42,7 +42,7 @@ const Login = () => {
 
       // Send this token  to server ( db)
     } else if (permission === "denied") {
-      alert("You denied for the notification");
+      // alert("You denied for the notification");
     }
   }
 

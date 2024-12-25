@@ -16,11 +16,14 @@ const BannerAdDetails = () => {
         setStus(key);
     };
 
-    const { data: adsState, refetch, isLoading } = useGetAllAdsBannerQuery({ status }); // Fetch all ads data
+    const { data: adsState, isLoading } = useGetAllAdsBannerQuery({ status }); // Fetch all ads data
+
+    // console.log(adsState);
 
     const [newAds, setNewAds] = useState([]);
     const [publishedAds, setPublishedAds] = useState([]);
     const [declinedAds, setDeclinedAds] = useState([]);
+
     console.log(newAds , publishedAds, declinedAds);
 
     useEffect(() => {
@@ -63,7 +66,7 @@ const BannerAdDetails = () => {
 
         try {
             await updateDeclime({ id: selectedAd.id, status, declaimedMessage: feedback }).unwrap();
-            refetch();
+            // refetch();
             message.success("Ad Declined Successfully");
             setIsDeclineModalVisible(false);
         } catch (error) {
@@ -260,7 +263,7 @@ const BannerAdDetails = () => {
                         <div className="flex justify-center gap-4 mt-4">
                             <button
                                 type="submit"
-                                className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+                                className="px-4 py-2 bg-primaryBg text-whiteText rounded-lg"
                             >
                                 Submit
                             </button>
