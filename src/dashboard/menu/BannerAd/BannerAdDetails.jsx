@@ -21,6 +21,7 @@ const BannerAdDetails = () => {
     const [newAds, setNewAds] = useState([]);
     const [publishedAds, setPublishedAds] = useState([]);
     const [declinedAds, setDeclinedAds] = useState([]);
+    console.log(newAds , publishedAds, declinedAds);
 
     useEffect(() => {
         const newAds = adsState?.data?.attributes?.filter((ad) => ad.status === "on-hold") || [];
