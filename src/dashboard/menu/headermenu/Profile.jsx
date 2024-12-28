@@ -8,7 +8,17 @@ import url from "../../../redux/api/baseUrl";
 const Profile = () => {
   const navigate = useNavigate();
 
-  const { data: responseData } = useGetProfileQuery();
+  const { data: responseData, isLoading } = useGetProfileQuery();
+
+
+
+  if (isLoading) return <div className="h-[80vh] w-full flex items-center justify-center">
+    <div className="relative">
+      <img className="w-48" src="/image/Loading_image.gif" alt="" />
+    </div>
+  </div>
+
+
 
   console.log(responseData?.data?.attributes);
 

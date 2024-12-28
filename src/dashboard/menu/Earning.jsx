@@ -134,8 +134,10 @@ const Earning = () => {
 
   if (isTransactionLoading || isDashboardLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <Spin size="large" />
+      <div className="h-[80vh] w-full flex items-center justify-center">
+        <div className="relative">
+          <img className="w-48" src="/image/Loading_image.gif" alt="" />
+        </div>
       </div>
     );
   }
@@ -158,7 +160,7 @@ const Earning = () => {
             <div>
               <p className="text-[18px] font-semibold mb-2 text-right">Total Withdraw</p>
               <h2 className="text-header font-semibold text-right text-primaryBg">
-                ${dashboardStatus?.data?.attributes?.totalWithdraw} 
+                ${dashboardStatus?.data?.attributes?.totalWithdraw}
               </h2>
             </div>
           </div>

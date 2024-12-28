@@ -121,7 +121,11 @@ const Category = () => {
     });
   };
 
-  if (isLoading) return <div className="text-[30px] text-[#fd3131] text-center mt-10">Category Loading...</div>;
+  if (isLoading) return <div className="h-[80vh] w-full flex items-center justify-center">
+    <div className="relative">
+      <img className="w-48" src="/image/Loading_image.gif" alt="" />
+    </div>
+  </div>;
 
 
   return (

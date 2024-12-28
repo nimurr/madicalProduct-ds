@@ -27,7 +27,11 @@ const Users = () => {
   }, [users]);
 
   // Handle loading and error states
-  if (isLoading) return <div className="text-[30px] text-[#fd3131] text-center mt-10">User Loading...</div>;
+  if (isLoading) return <div className="h-[80vh] w-full flex items-center justify-center">
+    <div className="relative">
+      <img className="w-48" src="/image/Loading_image.gif" alt="" />
+    </div>
+  </div>;
   if (error) return <div>Error fetching data: {error.message}</div>;
 
   // Handle search
@@ -202,10 +206,10 @@ const Users = () => {
               <p>
                 {selectedUser?.dataOfBirth
                   ? new Date(selectedUser.dataOfBirth).toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "long",
-                      year: "numeric",
-                    })
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                  })
                   : "N/A"}
               </p>
             </div>

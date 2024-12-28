@@ -14,6 +14,7 @@ import { IoMenuOutline } from "react-icons/io5";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { FaUserShield } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
+import { TbReportSearch } from "react-icons/tb";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ const Sidebar = () => {
       <div className="">
         <div className="p-[10px] grid justify-items-stretch  sm:p-[16px]">
           <img
-            className="h-16 rounded-lg justify-self-center"
+            className="w-24 rounded-lg justify-self-center"
             src={logo}
             alt="Logo"
           />
@@ -189,6 +190,17 @@ const Sidebar = () => {
             >
               <FaAd className="h-7 w-7 lg:h-5 lg:w-5" />
               <span className="hidden ml-2 sm:block">Banner Ad</span>
+            </NavLink>
+            <NavLink
+              to="/dashboard/reports"
+              className={({ isActive }) =>
+                isActive
+                  ? "flex p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium bg-[#FFFFFF] text-[#193664] rounded-lg"
+                  : "flex text-[white] p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium   rounded-lg"
+              }
+            >
+              <TbReportSearch className="h-7 w-7 lg:h-5 lg:w-5" />
+              <span className="hidden ml-2 sm:block">Reports</span>
             </NavLink>
 
             <NavLink

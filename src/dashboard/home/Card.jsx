@@ -12,9 +12,19 @@ import { useGetDashboardStatusQuery } from "../../redux/features/auth/heashboard
 
 const Card = () => {
 
-  const { data: dashboardStatus } = useGetDashboardStatusQuery();
+  const { data: dashboardStatus, isLoading } = useGetDashboardStatusQuery();
 
   // console.log(dashboardStatus?.data?.attributes?.totalEarnings);
+
+  if (isLoading) {
+    return (
+      <div className="h-[80vh] w-full flex items-center justify-center">
+        <div className="relative">
+          <img className="w-48" src="/image/Loading_image.gif" alt="" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className=" md:mt-14 md:mb-10 my-10 ">
@@ -39,7 +49,7 @@ const Card = () => {
           </div>
           <div className="mx-6 text-right">
             <p className="text-[18px] font-semibold text-[#193664] my-4">
-            Total Withdraw
+              Total Withdraw
             </p>
             <h1 className="text-[34px] font-medium">${dashboardStatus?.data?.attributes?.totalWithdraw}</h1>
           </div>

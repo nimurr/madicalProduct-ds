@@ -32,11 +32,12 @@ import ProviderCategory from "../dashboard/menu/ProviderCategory";
 import ProviderSubCategory from "../dashboard/menu/ProviderSubCategory";
 import Agents from "../dashboard/menu/Agents";
 import SocketIo from "../dashboard/menu/SocketIo";
-import Newsletter from "../dashboard/menu/Newsletter/Newsletter"; 
+import Newsletter from "../dashboard/menu/Newsletter/Newsletter";
 import WithdrawRequest from "../dashboard/menu/WithdrawRequest/WithdrawRequest";
 import BannerAd from "../dashboard/menu/BannerAd/BannerAd";
 import BannerAdDetails from "../dashboard/menu/BannerAd/BannerAdDetails";
 import AddBannerAds from "../dashboard/menu/BannerAd/AddBannerAds";
+import Reports from "../dashboard/menu/Reports/Reports";
 
 
 export const router = createBrowserRouter([
@@ -60,7 +61,7 @@ export const router = createBrowserRouter([
 
   {
     path: "dashboard",
-    element: <Main></Main> ,
+    element: <Main></Main>,
     children: [
       {
         path: "home",
@@ -130,6 +131,10 @@ export const router = createBrowserRouter([
       {
         path: "bannerads/createads/:id",
         element: <AddBannerAds />
+      },
+      {
+        path: "reports",
+        element: <Reports />
       },
       {
         path: "category",

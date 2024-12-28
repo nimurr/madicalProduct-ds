@@ -62,7 +62,11 @@ const WithdrawRequest = () => {
   };
 
   if (isLoading) {
-    return <div>Loading withdrawal requests...</div>;
+    return <div className="h-[80vh] w-full flex items-center justify-center">
+      <div className="relative">
+        <img className="w-48" src="/image/Loading_image.gif" alt="" />
+      </div>
+    </div>;
   }
 
   if (error) {
@@ -91,7 +95,7 @@ const WithdrawRequest = () => {
         <p className="text-header font-semibold">Withdrawal Requests</p>
       </div>
 
-      <div className="flex items-center justify-between gap-10 flex-wrap px-5">
+      <div className="flex items-center justify-between xl:gap-10 gap-5 flex-wrap px-5">
         <div className="flex flex-wrap gap-5">
           <span className="py-1 px-3 bg-[#f988251f] text-[#f98925] rounded-md font-semibold">
             Pending: ${totalMoney("pending").toFixed(2)}

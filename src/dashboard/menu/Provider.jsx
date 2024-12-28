@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Table, Pagination } from "antd";
+import { Table, Pagination, Input } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { useGetAllProviderQuery } from "../../redux/features/auth/heashboard/providerGet";
 import url from "../../redux/api/baseUrl";
@@ -7,7 +8,6 @@ import { useCreateIsBlockedMutation } from "../../redux/features/auth/heashboard
 import swal from "sweetalert";
 
 const Provider = () => {
-  // Define the columns for the table
   const columns = [
     {
       title: "#SL",
@@ -37,11 +37,7 @@ const Provider = () => {
       title: "RATE",
       dataIndex: "rate",
       key: "rate",
-      render: (text) => (
-        <div>
-          <span>Demo</span> {/* Display the rating */}
-        </div>
-      ),
+      render: () => <div><span>Demo</span></div>,
     },
     {
       title: "ADDRESS",
@@ -52,7 +48,7 @@ const Provider = () => {
       title: "STATUS",
       key: "status",
       render: (_, record) => (
-        <button type="primary" className=" text-[#2168d3] font-semibold">
+        <button type="primary" className="text-[#2168d3] font-semibold">
           {record.isBlock ? (
             <h2 className="bg-[#e23832] text-[#fff] px-1">Blocked</h2>
           ) : (
@@ -84,7 +80,6 @@ const Provider = () => {
       render: (_, record) => (
         <Link
           to={`/dashboard/provider/${record.id}`}
-          type="primary"
           className="text-[#2168d3] font-semibold"
         >
           View
@@ -93,15 +88,11 @@ const Provider = () => {
     },
   ];
 
-  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize] = useState(10); // Items per page
+  const [pageSize] = useState(10);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Fetch the provider data using the Redux query hook
   const { data: allProviderData, isLoading, error } = useGetAllProviderQuery();
-
-  // console.log(allProviderData);
-
   const [providerPost] = useCreateIsBlockedMutation();
 
   const handleActionStatus = async (id) => {
@@ -131,8 +122,10 @@ const Provider = () => {
 
   if (isLoading)
     return (
-      <div className="text-[30px] text-[#fd3131] text-center mt-10">
-        Providers Loading...
+      <div className="h-[80vh] w-full flex items-center justify-center">
+        <div className="relative">
+          <img className="w-48" src="/image/Loading_image.gif" alt="" />
+        </div>
       </div>
     );
 
@@ -141,19 +134,32 @@ const Provider = () => {
   const provider = allProviderData?.data?.attributes?.results || [];
   const totalItems = provider.length;
 
+  const filteredProvider = provider.filter(
+    (item) =>
+      item.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.email.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  const pagedData = provider.slice(
+  const pagedData = filteredProvider.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
 
   return (
     <div className="mt-10">
-      <div>
-        <p className="text-header my-5 font-semibold">Providers</p>
+      <div className="flex justify-between items-center mb-5">
+        <p className="text-header font-semibold">Providers</p>
+        <Input
+          placeholder="Search by Name or Email"
+          onChange={(e) => setSearchQuery(e.target.value)}
+          value={searchQuery}
+          className="w-1/3 py-2 px-4 border border-gray-300 rounded-lg"
+          prefix={<SearchOutlined className="text-gray-500" />}
+        />
       </div>
       <div className="overflow-x-auto bg-[#e8ebf0]">
         <Table
@@ -168,7 +174,7 @@ const Provider = () => {
         <Pagination
           current={currentPage}
           pageSize={pageSize}
-          total={totalItems}
+          total={filteredProvider.length}
           onChange={handlePageChange}
           showSizeChanger={false}
         />

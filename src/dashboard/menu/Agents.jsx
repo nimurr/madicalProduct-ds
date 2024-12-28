@@ -29,8 +29,10 @@ const Agents = () => {
   // Handle loading and error states
   if (isLoading)
     return (
-      <div className="text-[30px] text-[#fd3131] text-center mt-10">
-        Agents Loading...
+      <div className="h-[80vh] w-full flex items-center justify-center">
+        <div className="relative">
+          <img className="w-48" src="/image/Loading_image.gif" alt="" />
+        </div>
       </div>
     );
   if (error) return <div>Error fetching data: {error.message}</div>;
@@ -128,10 +130,10 @@ const Agents = () => {
         <p>
           {record?.dataOfBirth
             ? new Date(record.dataOfBirth).toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "long",
-                year: "numeric",
-              })
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            })
             : "N/A"}
         </p>
       ),
@@ -245,13 +247,13 @@ const Agents = () => {
               <p>
                 {selectedAgent?.dataOfBirth
                   ? new Date(selectedAgent.dataOfBirth).toLocaleDateString(
-                      "en-GB",
-                      {
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric",
-                      }
-                    )
+                    "en-GB",
+                    {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    }
+                  )
                   : "N/A"}
               </p>
             </div>

@@ -59,8 +59,8 @@ const BidHistory = () => {
       dataIndex: "bidStatus",
       key: "bidStatus",
       render: (_, record) => <p className={`
-        ${record?.status == "pending"	&& "text-[#d00]" }
-        ${record?.status == "completed"	&& "text-[#093be0]" }
+        ${record?.status == "pending" && "text-[#d00]"}
+        ${record?.status == "completed" && "text-[#093be0]"}
       
       `}>{record?.status || "N/A"}</p>,
     },
@@ -83,10 +83,10 @@ const BidHistory = () => {
       render: (_, record) => {
         const formattedDate = record?.createdAt
           ? new Date(record.createdAt).toLocaleDateString("en-GB", {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-            })
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          })
           : "N/A";
         return <p>{formattedDate}</p>;
       },
@@ -144,7 +144,11 @@ const BidHistory = () => {
 
   // Loading and error states
   if (isLoading) {
-    return <div className="text-center text-lg text-primaryBg">Loading...</div>;
+    return <div className="h-[80vh] w-full flex items-center justify-center">
+      <div className="relative">
+        <img className="w-48" src="/image/Loading_image.gif" alt="" />
+      </div>
+    </div>;
   }
   if (error) {
     return <div className="text-center text-lg text-red-500">Error loading data!</div>;
@@ -235,10 +239,10 @@ const BidHistory = () => {
               <p>
                 {selectedRecord?.createdAt
                   ? new Date(selectedRecord.createdAt).toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "long",
-                      year: "numeric",
-                    })
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                  })
                   : "N/A"}
               </p>
             </div>

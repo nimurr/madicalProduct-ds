@@ -14,16 +14,20 @@ const Notification = () => {
 
   // Update notification mutation
   const [updateNotification, { isLoading }] = useUpdateNotificationMutation();
-  if(isLoading){
-    return <div className="text-center my-10 text-[40px] text-[#bd0000]">Loading...</div>
+  if (isLoading) {
+    return <div className="h-[80vh] w-full flex items-center justify-center">
+      <div className="relative">
+        <img className="w-48" src="/image/Loading_image.gif" alt="" />
+      </div>
+    </div>
   }
 
   // Handle notification update
   const handleShowAllThisItem = async (notificationId) => {
     console.log(notificationId);
     try {
-      await updateNotification({notificationId}).unwrap();
-      navigate(`/dashboard/withdrawrequest`);
+      await updateNotification({ notificationId }).unwrap();
+      navigate(`/dashboard/earning`);
     } catch (err) {
       console.error("Failed to update notification:", err);
       alert("Failed to update the notification.");
@@ -40,9 +44,8 @@ const Notification = () => {
         <div
           key={idx}
           onClick={() => handleShowAllThisItem(item?._id)}
-          className={`mt-3 ${
-            item?.status === "unread" ? "bg-[#9cbbff4b]" : "bg-white"
-          } cursor-pointer flex items-center border-[2px] border-[#9cbbff4b] rounded-lg p-5`}
+          className={`mt-3 ${item?.status === "unread" ? "bg-[#9cbbff4b]" : "bg-white"
+            } cursor-pointer flex items-center border-[2px] border-[#9cbbff4b] rounded-lg p-5`}
         >
           {/* Notification Icon */}
           <div>

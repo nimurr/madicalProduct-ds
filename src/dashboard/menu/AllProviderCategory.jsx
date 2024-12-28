@@ -8,7 +8,14 @@ import url from "../../redux/api/baseUrl";
 export default function AllProviderCategory() {
 
   const { id } = useParams();
-  const { data: SingleProvider } = useGetSingleProviderQuery(id);
+  const { data: SingleProvider, isLoading } = useGetSingleProviderQuery(id);
+  if (isLoading) {
+    return <div className="h-[80vh] w-full flex items-center justify-center">
+      <div className="relative">
+        <img className="w-48" src="/image/Loading_image.gif" alt="" />
+      </div>
+    </div>;
+  }
 
   const renderStars = (rating) => {
     const fullStars = Math.floor(rating); // Number of full stars

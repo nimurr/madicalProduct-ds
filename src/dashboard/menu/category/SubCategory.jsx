@@ -68,7 +68,9 @@ const SubCategory = () => {
       }
     });
   };
-  
+
+
+
 
   useEffect(() => {
     // You can dynamically set the categoryName based on your logic
@@ -146,7 +148,11 @@ const SubCategory = () => {
       {/* Category Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6">
         {/* Render subcategories dynamically from the API response */}
-        {isLoading && <p>Loading subcategories...</p>}
+        {isLoading && <div className="h-[80vh] w-full flex items-center justify-center">
+          <div className="relative">
+            <img className="w-48 ml-20" src="/image/Loading_image.gif" alt="" />
+          </div>
+        </div>}
         {error && <p>Error fetching subcategories.</p>}
         {data &&
           data.subCategories &&
@@ -190,7 +196,7 @@ const SubCategory = () => {
                   danger
                   className="!bg-[#E8EBF0] text-white"
                   onClick={() => handleDelete(category.id)} // Attach the delete handler
-                  // loading={isDeleting} // Show loading state when deleting
+                // loading={isDeleting} // Show loading state when deleting
                 >
                   {/* {isDeleting ? "Deleting..." : "Delete"} */} delete
                 </Button>

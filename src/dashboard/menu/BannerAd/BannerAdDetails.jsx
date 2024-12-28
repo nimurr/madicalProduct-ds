@@ -24,7 +24,7 @@ const BannerAdDetails = () => {
     const [publishedAds, setPublishedAds] = useState([]);
     const [declinedAds, setDeclinedAds] = useState([]);
 
-    console.log(newAds , publishedAds, declinedAds);
+    console.log(newAds, publishedAds, declinedAds);
 
     useEffect(() => {
         const newAds = adsState?.data?.attributes?.filter((ad) => ad.status === "on-hold") || [];
@@ -100,7 +100,7 @@ const BannerAdDetails = () => {
                                             <p className="text-gray-600 mb-4">{ad.subTitle}</p>
                                             <p className="text-gray-600 mb-4">{ad.description}</p>
                                         </div>
-                                        <div className="flex justify-between">
+                                        <div className="flex justify-between gap-5">
                                             <ul className="list-disc font-semibold ml-5">
                                                 {ad.keys.map((key, index) => (
                                                     <li key={index} className="text-gray-600 mb-4">
@@ -134,7 +134,10 @@ const BannerAdDetails = () => {
                             </div>
                         ))
                     ) : (
-                        <p className="text-center text-[30px] text-[#ce0c0c]">No New Ads Found !!!</p>
+                        <div>
+                            <h2 className="text-[30px] mt-20 text-center font-semibold text-[#f22]">No New Ads Available !!</h2>
+
+                        </div>
                     )}
                 </TabPane>
 
@@ -156,7 +159,7 @@ const BannerAdDetails = () => {
                                             <p className="text-gray-600 mb-4">{ad.subTitle}</p>
                                             <p className="text-gray-600 mb-4">{ad.description}</p>
                                         </div>
-                                        <div className="flex justify-between">
+                                        <div className="flex justify-between gap-5">
                                             <ul className="list-disc font-semibold ml-5">
                                                 {ad.keys.map((key, index) => (
                                                     <li key={index} className="text-gray-600 mb-4">
@@ -176,7 +179,10 @@ const BannerAdDetails = () => {
                             </div>
                         ))
                     ) : (
-                        <p className="text-center text-[30px] text-[#ce0c0c]">No Published Ads Found !!!</p>
+                        <div>
+                            <h2 className="text-[30px] mt-20 text-center font-semibold text-[#f22]">No Published Ads Available !!</h2>
+
+                        </div>
                     )}
                 </TabPane>
 
@@ -198,7 +204,7 @@ const BannerAdDetails = () => {
                                             <p className="text-gray-600 mb-4">{ad.subTitle}</p>
                                             <p className="text-gray-600 mb-4">{ad.description}</p>
                                         </div>
-                                        <div className="flex justify-between">
+                                        <div className="flex justify-between gap-5">
                                             <ul className="list-disc font-semibold ml-5">
                                                 {ad.keys.map((key, index) => (
                                                     <li key={index} className="text-gray-600 mb-4">
@@ -226,7 +232,9 @@ const BannerAdDetails = () => {
                             </div>
                         ))
                     ) : (
-                        <p className="text-center text-[30px] text-[#ce0c0c]">No Declined Ads Found !!!</p>
+                        <div>
+                            <h2 className="text-[30px] mt-20 text-center font-semibold text-[#f22]">No Declined Ads Available !!</h2>
+                        </div>
                     )}
                 </TabPane>
             </Tabs>

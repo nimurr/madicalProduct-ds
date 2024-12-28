@@ -25,7 +25,7 @@ const AddBannerAds = () => {
 
       navigate('/dashboard/bannerads/banneradsAll')
       console.log("Ad successfully published:", res);
-      message.success(`Ad successfully published with ID: ${res}`);
+      message.success(`Ad successfully published.`);	
     } catch (error) {
       console.error("Failed to publish ad:", error);
       message.error("Failed to publish ad. Please try again.");
