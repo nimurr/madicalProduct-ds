@@ -21,7 +21,7 @@ const Provider = () => {
       render: (text, record) => (
         <div className="flex items-center gap-2">
           <img
-            src={`${url}/${record.image}`}
+            src={`${url}${record.image}`}
             alt={text}
             style={{ width: 40, height: 40, borderRadius: "50%" }}
           />
