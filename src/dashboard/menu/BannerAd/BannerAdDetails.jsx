@@ -159,7 +159,7 @@ const BannerAdDetails = () => {
                                             <p className="text-gray-600 mb-4">{ad.subTitle}</p>
                                             <p className="text-gray-600 mb-4">{ad.description}</p>
                                         </div>
-                                        <div className="flex justify-between gap-5">
+                                        <div className="flex justify-between items-start gap-5">
                                             <ul className="list-disc font-semibold ml-5">
                                                 {ad.keys.map((key, index) => (
                                                     <li key={index} className="text-gray-600 mb-4">
@@ -173,6 +173,12 @@ const BannerAdDetails = () => {
                                                     <span className="font-bold text-primaryBg">${ad.amount}</span> per unit
                                                 </p>
                                             </div>
+                                            <button
+                                                onClick={() => showDeclineModal(ad)}
+                                                className="px-4 py-2 bg-[#e61704] text-whiteText rounded-lg"
+                                            >
+                                                Decline
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
