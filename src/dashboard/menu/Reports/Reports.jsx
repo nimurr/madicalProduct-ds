@@ -62,8 +62,9 @@ const Reports = () => {
                         ))
                     ) : (
                         <div className="h-[60vh] w-full flex items-center justify-center">
-                            <div className="relative">
-                                <img className="w-48" src="/image/Loading_image.gif" alt="" />
+                            <div>
+                                <h2 className="text-[30px] mt-16 text-center font-semibold text-[#f22]">No Reports Available !!</h2>
+                              
                             </div>
                         </div>
                     )}

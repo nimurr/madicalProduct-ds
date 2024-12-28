@@ -136,7 +136,7 @@ const BannerAdDetails = () => {
                     ) : (
                         <div>
                             <h2 className="text-[30px] mt-20 text-center font-semibold text-[#f22]">No New Ads Available !!</h2>
-
+                            <img className="w-60 mt-10 mx-auto" src="/image/noadsavailable.png" alt="" />
                         </div>
                     )}
                 </TabPane>
@@ -187,7 +187,6 @@ const BannerAdDetails = () => {
                     ) : (
                         <div>
                             <h2 className="text-[30px] mt-20 text-center font-semibold text-[#f22]">No Published Ads Available !!</h2>
-
                         </div>
                     )}
                 </TabPane>
