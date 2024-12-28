@@ -1,2 +1,2 @@
-const url = "https://shadat6089.sobhoy.com"
+const url = "https://api.bidmedic.com"
 export default url ;
