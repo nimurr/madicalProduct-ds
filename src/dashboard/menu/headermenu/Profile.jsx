@@ -46,7 +46,7 @@ const Profile = () => {
             {/* <Image src={url + profile?.data?.attributes?.image} /> */}
             <Image
               className=" "
-              src={`${url}/${responseData?.data?.attributes?.image}`}
+              src={`${url}${responseData?.data?.attributes?.image}`}
             />
           </div>
 
