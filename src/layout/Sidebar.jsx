@@ -45,7 +45,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="lg:w-[250px]  xl:w-[300px] md:w-[200px] sm:w-[120px] w-[60px] flex flex-col justify-between bg-primaryBg h-full min-h-screen rounded-md">
+    <div className="lg:w-[250px]  xl:w-[300px] md:w-[200px] sm:w-[120px] w-[60px] h-screen overflow-y-auto flex flex-col justify-between bg-primaryBg h-full min-h-screen rounded-md">
       <div className="">
         <div className="p-[10px] grid justify-items-stretch  sm:p-[16px]">
           <img
