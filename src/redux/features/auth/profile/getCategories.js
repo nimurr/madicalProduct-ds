@@ -3,7 +3,7 @@ import { apiSlice } from "../../../api/apiSlice";
 const getCategories = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getCategories: builder.query({
-      query: () => "/category", // Define the GET request endpoint for categories
+      query: (pageNumber) => `/category?page=${pageNumber}`, // Define the GET request endpoint for categories
       method: "GET",
       providesTags: ["Category"]
     })

@@ -13,35 +13,20 @@ const Category = () => {
   const [imageUrl, setImageUrl] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pageNumber, setPageNumber] = useState(1); // Pagination state
+  const { data, isLoading } = useGetCategoriesQuery(pageNumber); // Fetch categories with page number
 
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-    setIsModalOpenEdit(false);
-  };
-
-  // Fetch Categories
-  const { data, isLoading } = useGetCategoriesQuery();
-  console.log(data);
-
-
-
-  // Mutation Hooks
-  const [deleteCategory, { isLoading: isDeleting }] =
-    useDeleteCategoriesMutation();
+  const [deleteCategory, { isLoading: isDeleting }] = useDeleteCategoriesMutation();
   const [postCategory, { isLoading: isPostLoading }] = useCreatePostMutation();
 
   const categories = data?.data?.attributes?.results;
 
-  // Modal Open Handler
+  // Modal open handler
   const openModal = () => {
     setIsModalOpen(true);
   };
 
-  // Form Submit Handler for Adding a Category
+  // Form submit handler for adding a category
   const onFinish = async (value) => {
     console.log("Category Name:", value.categoryName); // Category name from form
     console.log("Image URL:", imageUrl); // Image preview URL
@@ -63,9 +48,7 @@ const Category = () => {
     }
   };
 
-  // Form Submit Handler for Editing a Category
-
-  // File Change Handler (for image upload)
+  // File change handler (for image upload)
   const normFile = (e) => {
     if (Array.isArray(e)) {
       return e;
@@ -89,7 +72,7 @@ const Category = () => {
     }
   };
 
-  // Delete Category Handler
+  // Delete category handler
   const handleDelete = async (categoryId) => {
     Swal.fire({
       title: "Are you sure?",
@@ -121,29 +104,37 @@ const Category = () => {
     });
   };
 
-  if (isLoading) return <div className="h-[80vh] w-full flex items-center justify-center">
-    <div className="relative">
-      <img className="w-48" src="/image/Loading_image.gif" alt="" />
-    </div>
-  </div>;
+  // Handle page change (pagination)
+  const handlePageChange = (page) => {
+    setPageNumber(page); // Update the current page number
+  };
 
+  if (isLoading) {
+    return (
+      <div className="h-[80vh] w-full flex items-center justify-center">
+        <div className="relative">
+          <img className="w-48" src="/image/Loading_image.gif" alt="" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-10 pb-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold text-header">Category</h2>
+        <h2 className="text-2xl font-semibold text-header">Categories</h2>
         <Button
           onClick={openModal}
           icon={<PlusOutlined />}
           className="flex items-center p-5 !bg-primaryBg !text-whiteText"
         >
-          Add Category
+          Add Categories
         </Button>
       </div>
 
       {/* Category Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
         {categories?.map((category) => (
           <div
             key={category.id}
@@ -184,11 +175,23 @@ const Category = () => {
         ))}
       </div>
 
+      {/* Pagination */}
+      <div className="mt-4 flex justify-center">
+        <Button
+          onClick={() => handlePageChange(pageNumber - 1)}
+          disabled={pageNumber === 1}
+          className="mr-4"
+        >
+          Previous
+        </Button>
+        <Button onClick={() => handlePageChange(pageNumber + 1)}>Next</Button>
+      </div>
+
       {/* Add Category Modal */}
       <Modal
         title="Add Category"
         open={isModalOpen}
-        onCancel={handleCancel}
+        onCancel={() => setIsModalOpen(false)}
         footer={null}
       >
         <Form

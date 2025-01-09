@@ -4,7 +4,7 @@ const createPost = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     createPost: builder.mutation({
       query: (newPost) => ({
-        url: "/category",
+        url: `/category`,
         method: "POST",
         body: newPost // newPost would be the data you send for creating a post
       }),

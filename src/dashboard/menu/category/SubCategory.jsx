@@ -4,7 +4,7 @@ import {
   PlusOutlined,
   CloseOutlined,
   EditOutlined,
-  DeleteOutlined
+  DeleteOutlined,
 } from "@ant-design/icons";
 import { TbCameraPlus } from "react-icons/tb";
 import { Link, useParams } from "react-router-dom";
@@ -22,6 +22,9 @@ const SubCategory = () => {
   const [imageFile, setImageFile] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // State for pagination
+  const [pageNumber, setPageNumber] = useState(1); // Initial page number
+
   // Get the mutation hook to create subcategory
   const [createSubcategory, { isLoading: isCreating }] =
     useCreatePostSubcategoryMutation();
@@ -29,14 +32,13 @@ const SubCategory = () => {
   // Fetch subcategories based on dynamic id and categoryName
   const { data, error, isLoading } = useGetSubCategoriesQuery({
     id,
-    categoryName
+    categoryName,
+    pageNumber,
   });
-  // console.log(data?.data?.attributes?.results); // Logging the fetched data
+  // Subcategories fetched from the API
   const subCategoryAll = data?.data?.attributes?.results;
 
-  console.log(subCategoryAll);
-
-  const [deleteCategory] = useDeleteCategoriesMutation();
+  const [deleteCategory, { isLoading: isDeleting }] = useDeleteCategoriesMutation();
 
   const handleDelete = async (categoryId) => {
     Swal.fire({
@@ -69,9 +71,6 @@ const SubCategory = () => {
     });
   };
 
-
-
-
   useEffect(() => {
     // You can dynamically set the categoryName based on your logic
     if (data && data.category) {
@@ -99,7 +98,7 @@ const SubCategory = () => {
     try {
       const response = await createSubcategory({
         id,
-        newPost: formData
+        newPost: formData,
       }).unwrap();
       console.log("Subcategory created successfully:", response);
       setIsModalOpen(false); // Close modal after successful post
@@ -131,42 +130,45 @@ const SubCategory = () => {
     }
   };
 
+  // Handle page change (pagination)
+  const handlePageChange = (page) => {
+    setPageNumber(page); // Update the current page number
+  };
+
   return (
     <div className="mt-12 p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <Link to={'/dashboard/category'} className="text-2xl font-bold text-header flex items-center gap-3"><FaArrowLeft />Subcategory</Link>
+        <Link
+          to={"/dashboard/category"}
+          className="text-2xl font-bold text-header flex items-center gap-3"
+        >
+          <FaArrowLeft />
+          Sub-Category
+        </Link>
         <Button
           onClick={openModal}
           icon={<PlusOutlined />}
           className="flex items-center p-5 !bg-primaryBg !text-whiteText"
         >
-          Add Subcategory
+          Add SubCategory
         </Button>
       </div>
 
       {/* Category Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6">
-        {/* Render subcategories dynamically from the API response */}
-        {isLoading && <div className="h-[80vh] w-full flex items-center justify-center">
-          <div className="relative">
-            <img className="w-48 ml-20" src="/image/Loading_image.gif" alt="" />
-          </div>
-        </div>}
-        {error && <p>Error fetching subcategories.</p>}
-        {data &&
-          data.subCategories &&
-          data.subCategories.length > 0 &&
-          data.subCategories.map((subCategory) => (
-            <div key={subCategory.id}>
-              <h3>{subCategory.name}</h3> {/* Display subcategory name */}
-              <img src={subCategory.imageUrl} alt={subCategory.name} />{" "}
-              {/* Display subcategory image */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
+        {/* Show loading state */}
+        {isLoading && (
+          <div className="h-[80vh] w-full flex items-center justify-center">
+            <div className="relative">
+              <img className="w-48 ml-20" src="/image/Loading_image.gif" alt="" />
             </div>
-          ))}
-      </div>
+          </div>
+        )}
+        {/* Show error state */}
+        {error && <p>Error fetching subcategories.</p>}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6">
+        {/* Display fetched subcategories */}
         {subCategoryAll?.map((category) => (
           <div
             key={category.id}
@@ -196,14 +198,26 @@ const SubCategory = () => {
                   danger
                   className="!bg-[#E8EBF0] text-white"
                   onClick={() => handleDelete(category.id)} // Attach the delete handler
-                // loading={isDeleting} // Show loading state when deleting
+                  loading={isDeleting} // Show loading state when deleting
                 >
-                  {/* {isDeleting ? "Deleting..." : "Delete"} */} delete
+                  Delete
                 </Button>
               </div>
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Pagination */}
+      <div className="mt-4 flex justify-center">
+        <Button
+          onClick={() => handlePageChange(pageNumber - 1)}
+          disabled={pageNumber === 1}
+          className="mr-4"
+        >
+          Previous
+        </Button>
+        <Button onClick={() => handlePageChange(pageNumber + 1)}>Next</Button>
       </div>
 
       {/* Modal to Add Subcategory */}
@@ -218,13 +232,15 @@ const SubCategory = () => {
               color: "white",
               backgroundColor: "#de0a26",
               borderRadius: "10%",
-              padding: "10px"
+              padding: "10px",
             }}
           />
         }
       >
         <div>
-          <h1 className="text-header text-center">Add New Subcategory</h1>
+          <h1 className="text-[30px] text-center font-semibold">
+            Add New Subcategory
+          </h1>
           <Form
             name="form_item_path"
             layout="vertical"
@@ -256,7 +272,7 @@ const SubCategory = () => {
                         height: "100%",
                         objectFit: "cover",
                         borderRadius: "4px",
-                        overflow: "hidden"
+                        overflow: "hidden",
                       }}
                     />
                     <TbCameraPlus className="text-[44px] absolute top-[40%] left-[40%] opacity-60 text-white" />
@@ -270,7 +286,7 @@ const SubCategory = () => {
                       alignItems: "center",
                       justifyContent: "center",
                       backgroundColor: "#f0f0f0",
-                      borderRadius: "4px"
+                      borderRadius: "4px",
                     }}
                   >
                     <TbCameraPlus className="text-6xl text-[#193664]" />
@@ -293,7 +309,7 @@ const SubCategory = () => {
                 style={{
                   backgroundColor: "#193664",
                   color: "#fff",
-                  height: "56px"
+                  height: "56px",
                 }}
                 htmlType="submit"
                 className="h-[36px] py-4 mt-2 text-white hover:border-none border-none rounded-2xl"

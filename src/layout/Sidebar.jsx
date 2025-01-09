@@ -45,7 +45,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="lg:w-[250px]  xl:w-[300px] md:w-[200px] sm:w-[120px] w-[60px] h-screen overflow-y-auto flex flex-col justify-between bg-primaryBg  min-h-screen rounded-md">
+    <div className="lg:w-[250px]  xl:w-[300px] md:w-[200px] sm:w-[120px] w-[60px] h-screen overflow-y-auto flex flex-col justify-between bg-primaryBg min-h-screen rounded-md">
       <div className="">
         <div className="p-[10px] grid justify-items-stretch  sm:p-[16px]">
           <img
@@ -153,7 +153,7 @@ const Sidebar = () => {
               }
             >
               <BiCategory className="h-7 w-7 lg:h-5 lg:w-5" />
-              <span className="hidden ml-2 sm:block">Category</span>
+              <span className="hidden ml-2 sm:block">Categories</span>
             </NavLink>
 
             <NavLink
