@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Table, Modal } from "antd";
 import { BsInfoCircle } from "react-icons/bs";
 import { useGetAllRecentTrangitionQuery } from "../../redux/features/auth/heashboard/recentTransaction";
+import { render } from "react-dom";
 
 const Transaction = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,6 +20,12 @@ const Transaction = () => {
   }, [transaction]);
 
   const columns = [
+    {
+      title: "#SL",
+      dataIndex: "sl",
+      key: "sl",
+      render: (_, __, index) => index + 1 + (currentPage - 1) * 25,
+    },
     {
       title: "#Transaction ID",
       dataIndex: "transactionId",
@@ -80,9 +87,39 @@ const Transaction = () => {
     setCurrentPage(page);
   };
 
+  const handleSearch = (value) => {
+    if (!value) {
+      setFilteredData(transaction?.data || []); // Reset to original data if search input is cleared
+      return;
+    }
+
+    const filtered = transaction?.data.filter(
+      (transaction) =>
+        transaction?.transactionId?.toLowerCase().includes(value.toLowerCase()) ||
+        transaction?.userDetails?.fullName
+          ?.toLowerCase()
+          .includes(value.toLowerCase()) ||
+        transaction?.userDetails?.email
+          ?.toLowerCase()
+          .includes(value.toLowerCase())
+    );
+
+    setFilteredData(filtered);
+    setCurrentPage(
+      Math.ceil(filtered.length / 25) > 0 ? Math.ceil(filtered.length / 25) : 1
+    )
+  };
+
+
   return (
     <div>
-      <h1 className="text-header font-medium my-2">Recent Transactions</h1>
+      <div className="flex justify-between flex-wrap gap-5">
+        <h1 className="text-header font-medium my-2">Recent Transactions</h1>
+        <div className="flex items-center gap-3 flex-wrap">
+          <input className="p-2 rounded-lg border border-[#ccc]" placeholder="Search by Transaction ID" onChange={(e) => handleSearch(e.target.value)} type="text" name="search" id="" />
+          <button className="py-2 rounded-lg px-5 bg-primaryBg text-whiteText font-semibold">Search</button>
+        </div>
+      </div>
       <div className="overflow-x-atuo w-full">
         <div className=" bg-[#e8ebf0]">
           <Table
@@ -115,7 +152,7 @@ const Transaction = () => {
                     {selectedTransaction.userDetails?.fullName || "N/A"}
                   </p>
                 </div>
-                <div  style={{ fontFamily: "arial" }}className="p-[20px]">
+                <div style={{ fontFamily: "arial" }} className="p-[20px]">
                   <div className="flex justify-between border-b border-[#ccc] py-[16px]">
                     <p className="font-semibold ">Full Name:</p>
                     <p className="font-sans">

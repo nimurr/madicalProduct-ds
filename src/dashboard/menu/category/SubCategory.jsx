@@ -144,7 +144,7 @@ const SubCategory = () => {
           className="text-2xl font-bold text-header flex items-center gap-3"
         >
           <FaArrowLeft />
-          Sub-Category
+          Sub Categories
         </Link>
         <Button
           onClick={openModal}
