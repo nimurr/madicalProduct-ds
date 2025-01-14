@@ -49,11 +49,11 @@ const Notification = () => {
         >
           {/* Notification Icon */}
           <div>
-            <img
+            {/* <img
               className="w-10 ml-5"
               src={item?.icon ? `${url}${item.icon}` : "/default-icon.png"}
               alt="Notification Icon"
-            />
+            /> */}
           </div>
 
           {/* Notification Image */}
@@ -70,7 +70,7 @@ const Notification = () => {
             <p className="text-lg font-medium capitalize text-primaryBg">
               {item?.title}
             </p>
-            <p className="text-sm text-gray-500">
+            <p className="text-[13px] ml-7  text-[#8b8b8bb6]">
               {item?.createdAt?.split("T")[0] || "N/A"}
             </p>
           </div>
