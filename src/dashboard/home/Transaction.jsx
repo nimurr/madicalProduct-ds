@@ -116,7 +116,7 @@ const Transaction = () => {
       <div className="flex justify-between flex-wrap gap-5">
         <h1 className="text-header font-medium my-2">Recent Transactions</h1>
         <div className="flex items-center gap-3 flex-wrap">
-          <input className="p-2 rounded-lg border border-[#ccc]" placeholder="Search by Transaction ID" onChange={(e) => handleSearch(e.target.value)} type="text" name="search" id="" />
+          <input className="p-2 min-w-72 rounded-lg border border-[#ccc]" placeholder="Search by Transaction ID" onChange={(e) => handleSearch(e.target.value)} type="text" name="search" id="" />
           <button className="py-2 rounded-lg px-5 bg-primaryBg text-whiteText font-semibold">Search</button>
         </div>
       </div>
