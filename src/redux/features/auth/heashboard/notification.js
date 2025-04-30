@@ -19,7 +19,7 @@ const updateNotification = apiSlice.injectEndpoints({
         method: "PATCH",
         body: notificationId // newPost would be the data you send for creating a post
       }),
-      invalidatesTags: ["Notification"]
+      providesTags: ["Notification"]
     })
   })
 });
