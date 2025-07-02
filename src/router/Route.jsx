@@ -38,7 +38,7 @@ import BannerAd from "../dashboard/menu/BannerAd/BannerAd";
 import BannerAdDetails from "../dashboard/menu/BannerAd/BannerAdDetails";
 import AddBannerAds from "../dashboard/menu/BannerAd/AddBannerAds";
 import Reports from "../dashboard/menu/Reports/Reports";
- 
+
 export const router = createBrowserRouter([
   {
     path: "/",
