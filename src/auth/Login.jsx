@@ -14,11 +14,11 @@ const Login = () => {
 
   const user = localStorage.getItem("user");
 
-  useEffect(() => {
-    if (user) {
-      navigate("/dashboard/home");
-    }
-  }, [user, navigate]);
+  // useEffect(() => {
+  //   if (user) {
+  //     navigate("/dashboard/home");
+  //   }
+  // }, [user, navigate]);
 
   const handleCheckboxChange = (e) => {
     setIsChecked(e.target.checked);
