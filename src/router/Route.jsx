@@ -38,6 +38,7 @@ import BannerAd from "../dashboard/menu/BannerAd/BannerAd";
 import BannerAdDetails from "../dashboard/menu/BannerAd/BannerAdDetails";
 import AddBannerAds from "../dashboard/menu/BannerAd/AddBannerAds";
 import Reports from "../dashboard/menu/Reports/Reports";
+import AllAdmins from "../dashboard/menu/AllAdmins";
 
 export const router = createBrowserRouter([
   {
@@ -154,6 +155,10 @@ export const router = createBrowserRouter([
       {
         path: "settings",
         element: <Settings />
+      },
+      {
+        path: "settings/admins",
+        element: <AllAdmins />
       },
       {
         path: "settings/privacypolicy",
