@@ -70,7 +70,7 @@ const AllAdmins = () => {
                                     </div>
                                 ))
                             }
-                            <div onClick={() => showModal('superAdmin')} className='text-center p-4 rounded-lg shadow-md bg-[#dceff9]'>
+                            <div onClick={() => showModal('superAdmin')} className='text-center cursor-pointer p-4 rounded-lg shadow-md bg-[#dceff9]'>
                                 <button className='bg-green-500 text-white py-2 px-4 rounded-lg' >
                                     <img className='w-24 h-24 mx-auto border-primaryBg' src="/image/add-admin.png" alt="" />
                                     <h2 className='mt-5 text-[20px] font-semibold'> Add Super Admin</h2>
@@ -92,7 +92,7 @@ const AllAdmins = () => {
                                     </div>
                                 ))
                             }
-                            <div onClick={() => showModal('regularAdmin')} className='text-center p-4 rounded-lg shadow-md bg-[#dceff9]'>
+                            <div onClick={() => showModal('regularAdmin')} className='text-center cursor-pointer p-4 rounded-lg shadow-md bg-[#dceff9]'>
                                 <button className='bg-green-500 text-white py-2 px-4 rounded-lg' >
                                     <img className='w-24 h-24 mx-auto border-primaryBg' src="/image/add-admin.png" alt="" />
                                     <h2 className='mt-5 text-[20px] font-semibold'> Add Regular Admin</h2>
@@ -112,6 +112,13 @@ const AllAdmins = () => {
                 width={500}
             >
                 <div className='space-y-4'>
+                    {/* updolad field image ant desing  */}
+                    <Input
+                        type='file'
+                        accept='image/*'
+                        className='mb-4'
+                        onChange={(e) => console.log(e.target.files[0])} // Handle file upload
+                    />
                     <Input
                         placeholder='Enter Admin Name'
                         value={adminName}
