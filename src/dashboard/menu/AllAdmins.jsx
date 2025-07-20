@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button, Input } from 'antd'; // Import Ant Design components
+import { RiDeleteBin6Line } from 'react-icons/ri';
 
 
 const AllAdmins = () => {
@@ -31,6 +32,8 @@ const AllAdmins = () => {
     // Handle form submission
     const handleSubmit = () => {
         console.log('New Admin Details:', { adminName, adminEmail, adminType });
+
+        
         // Reset form and close modal
         setAdminName('');
         setAdminEmail('');
@@ -63,7 +66,10 @@ const AllAdmins = () => {
                         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
                             {
                                 [...Array(4)].map((_, index) => (
-                                    <div className='text-center p-4 rounded-lg shadow-md bg-[#dceff9]' key={index}>
+                                    <div className='text-center p-4 relative rounded-lg shadow-md bg-[#dceff9]' key={index}>
+                                        <div className='absolute top-3 right-0 w-12 h-12 bg-red-500 text-white rounded-full items-center cursor-pointer mb-2 mx-auto'>
+                                            <RiDeleteBin6Line className='text-[#ce251f]' />
+                                        </div>
                                         <img className='w-24 h-24 mx-auto rounded-full border-4 border-primaryBg' src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="" />
                                         <h2 className='mt-5 text-[28px] font-semibold'>Md. Nurunnabi</h2>
                                         <p className='text-gray-500'>nurunnabi404@gmail.com</p>
@@ -85,7 +91,10 @@ const AllAdmins = () => {
                         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
                             {
                                 [...Array(4)].map((_, index) => (
-                                    <div className='text-center p-4 rounded-lg shadow-md bg-[#dceff9]' key={index}>
+                                    <div className='text-center relative p-4 rounded-lg shadow-md bg-[#dceff9]' key={index}>
+                                        <div className='absolute top-3 right-0 w-12 h-12 bg-red-500 text-white rounded-full items-center cursor-pointer mb-2 mx-auto'>
+                                            <RiDeleteBin6Line className='text-[#ce251f]' />
+                                        </div>
                                         <img className='w-24 h-24 mx-auto rounded-full border-4 border-primaryBg' src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="" />
                                         <h2 className='mt-5 text-[28px] font-semibold'>Md. Nurunnabi</h2>
                                         <p className='text-gray-500'>nurunnabi404@gmail.com</p>
@@ -111,7 +120,7 @@ const AllAdmins = () => {
                 footer={null}
                 width={500}
             >
-                <div className='space-y-4'>
+                <form className='space-y-4'>
                     {/* updolad field image ant desing  */}
                     <Input
                         type='file'
@@ -134,7 +143,7 @@ const AllAdmins = () => {
                             Add {adminType === 'superAdmin' ? 'Super Admin' : 'Regular Admin'}
                         </Button>
                     </div>
-                </div>
+                </form>
             </Modal>
         </div>
     );

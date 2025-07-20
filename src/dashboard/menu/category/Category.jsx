@@ -35,6 +35,7 @@ const Category = () => {
     // Prepare the form data
     const formData = new FormData();
     formData.append("categoryName", value.categoryName);
+    formData.append("type", value.type); // Add type to form data
     if (imageFile) {
       formData.append("image", imageFile);
     }
@@ -147,6 +148,9 @@ const Category = () => {
                 className="w-full h-48 object-cover"
               />
             </Link>
+            <div>
+              <p className={`text-xl font-semibold text-center my-3 ${category.type == "product" ? "text-[#afaf1b]" : "text-[#f55]"}`}>{category.type}</p>
+            </div>
             <div className="p-4 text-center">
               <p className="text-lg font-semibold">{category.categoryName}</p>
               <div className="flex justify-center mt-4 space-x-2">
@@ -248,6 +252,22 @@ const Category = () => {
               )}
             </Upload>
           </Form.Item>
+
+          {/* types :- product / service 
+            select optoion for product and service */}
+
+          <Form.Item name="type" label="Type">
+            <select
+              className="w-full p-2 border border-[#999] rounded"
+              style={{ maxWidth: "1000px" }}
+            >
+              <option value="product">Product</option>
+              <option value="service">Service</option>
+
+            </select>
+          </Form.Item>
+
+
 
           {/* Category Name Input */}
           <Form.Item name="categoryName" label="Category Name">
