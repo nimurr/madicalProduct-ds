@@ -90,6 +90,7 @@ const SubCategory = () => {
     // Prepare the form data
     const formData = new FormData();
     formData.append("categoryName", value.name);
+    formData.append("type", value.type); // Add type to form data
     if (imageFile) {
       formData.append("image", imageFile);
     }
@@ -181,6 +182,9 @@ const SubCategory = () => {
             />
 
             <div className="p-4 text-center">
+              <div>
+                <p className={`text-xl font-semibold text-center my-3 ${category.type == "product" ? "text-[#afaf1b]" : "text-[#f55]"}`}>{category.type}</p>
+              </div>
               <p className="text-lg font-semibold">{category.categoryName}</p>
               <div className="flex justify-center mt-4 space-x-2">
                 <Link to={`/dashboard/category/update/${category.id}`}>
@@ -293,6 +297,17 @@ const SubCategory = () => {
                   </div>
                 )}
               </Upload>
+            </Form.Item>
+
+            <Form.Item name="type" label="Type">
+              <select
+                className="w-full p-2 border border-[#999] rounded"
+                style={{ maxWidth: "1000px" }}
+              >
+                <option value="product">Product</option>
+                <option value="service">Service</option>
+
+              </select>
             </Form.Item>
 
             {/* Subcategory Name Input */}

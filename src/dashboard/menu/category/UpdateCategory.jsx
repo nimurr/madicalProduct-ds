@@ -14,6 +14,7 @@ export default function UpdateCategory() {
     categoryName: "",
     image: null,
     imagePreview: null, // To preview the uploaded image
+    type: "product", // Default type, can be changed to 'service'
   });
 
   const [updateCategory, { isError, isLoading }] = useCreateUpdateCategoryMutation();
@@ -34,9 +35,11 @@ export default function UpdateCategory() {
   const handleUpdate = async (e) => {
     e.preventDefault();
 
+    console.log("Updating category with data:", categoryData);
+
     const formData = new FormData();
     formData.append("categoryName", categoryData.categoryName);
-
+    formData.append("type", categoryData.type); // Use existing type or default to 'product'
     if (categoryData.image) {
       formData.append("image", categoryData.image);
     }
@@ -118,13 +121,38 @@ export default function UpdateCategory() {
         </div>
 
         {/* Image Upload Input */}
-        <div className="mb-6">
+        <div className="">
           <input
             type="file"
             name="image"
             onChange={handleFileChange}
             className="block w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:ring-primaryBg focus:border-primaryBg"
           />
+        </div>
+
+        {/* <select
+          className="w-full p-2 border my-5 border-[#999] rounded"
+          style={{ maxWidth: "1000px" }} 
+          
+        >
+          <option value="product">Product</option>
+          <option value="service">Service</option>
+        </select> */}
+        <div className="mb-6">
+          <select
+            className="w-full p-2 border my-5 border-[#999] rounded"
+            style={{ maxWidth: "1000px" }}
+            value={categoryData?.type ? categoryData?.type : categoryItem?.data?.attributes.type} // Default to 'product' if not set
+            onChange={(e) =>
+              setCategoryData((prevData) => ({
+                ...prevData,
+                type: e.target.value,
+              }))
+            }
+          >
+            <option value="product">Product</option>
+            <option value="service">Service</option>
+          </select>
         </div>
 
         {/* Category Name Input */}
