@@ -17,17 +17,27 @@ const Settings = () => {
   //   console.log("Form values: ", ChangePassword);
   // };
 
+  const users = JSON.parse(localStorage.getItem("user"));
+  console.log("users", users?.user);
+  const userRole = users?.user?.role;
+
   return (
     <div className="mt-10">
       <h1 className="font-semibold text-[30px]">Settings</h1>
       <div>
         {/* Privacy policy */}
-        <div onClick={() => navigate("/dashboard/settings/admins")} className="mt-10 cursor-pointer flex justify-between bg-[#F7F7F7] rounded items-center w-full h-[75px]">
-          <p className="text-[18px] ml-8 font-medium">Admins</p>
-          <Link to="/dashboard/settings/admins" className="mr-8 text-[#193664] px-2 py-1 rounded cursor-pointer">
-            <IoIosArrowForward />
-          </Link>
-        </div>
+        {
+          userRole === "masterAdmin" && (
+            <div onClick={() => navigate("/dashboard/settings/admins")} className="mt-10 cursor-pointer flex justify-between bg-[#F7F7F7] rounded items-center w-full h-[75px]">
+              <p className="text-[18px] ml-8 font-medium">Admins</p>
+              <Link to="/dashboard/settings/admins" className="mr-8 text-[#193664] px-2 py-1 rounded cursor-pointer">
+                <IoIosArrowForward />
+              </Link>
+            </div>
+          )
+        }
+
+
         {/* Privacy policy */}
         <div onClick={() => navigate("/dashboard/settings/privacypolicy")} className="mt-8 cursor-pointer flex justify-between bg-[#F7F7F7] rounded items-center w-full h-[75px]">
           <p className="text-[18px] ml-8 font-medium">Privacy Policy</p>

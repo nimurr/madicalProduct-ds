@@ -44,6 +44,13 @@ const Sidebar = () => {
     });
   };
 
+  const users = JSON.parse(localStorage.getItem("user"));
+  console.log("users", users?.user);
+  const userRole = users?.user?.role;
+
+  // role = masterAdmin , superAdmin, basicAdmin
+
+
   return (
     <div className="lg:w-[250px]  xl:w-[300px] md:w-[200px] sm:w-[120px] w-[60px] h-screen overflow-y-auto flex flex-col justify-between bg-primaryBg min-h-screen rounded-md">
       <div className="">
@@ -58,6 +65,9 @@ const Sidebar = () => {
         </div>
         <div className="sm:ml-5 mt-8 ">
           <ul className="">
+
+            {/* {
+              userRole == "masterAdmin" || "superAdmin" || "basicAdmin" && ( */}
             <NavLink
               to="home"
               className={({ isActive }) =>
@@ -69,18 +79,26 @@ const Sidebar = () => {
               <BiSolidDashboard className="h-7 w-7 lg:h-5 lg:w-5" />
               <span className="hidden ml-2 sm:block">Dashboard</span>
             </NavLink>
+            {/* )
+            } */}
 
-            <NavLink
-              to="earning"
-              className={({ isActive }) =>
-                isActive
-                  ? "flex cursor-pointer items-center text-[18px] font-medium p-[10px] bg-[#FFFFFF] text-[#193664] m-[6px] rounded-lg"
-                  : "flex text-[white] cursor-pointer items-center text-[18px] font-medium p-[10px]  m-[6px] rounded-lg"
-              }
-            >
-              <HiCash className="h-7 w-7 lg:h-5 lg:w-5" />
-              <span className="hidden ml-2 sm:block">Earnings</span>
-            </NavLink>
+
+
+            {
+              userRole === "masterAdmin" && (
+                <NavLink
+                  to="earning"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "flex cursor-pointer items-center text-[18px] font-medium p-[10px] bg-[#FFFFFF] text-[#193664] m-[6px] rounded-lg"
+                      : "flex text-[white] cursor-pointer items-center text-[18px] font-medium p-[10px]  m-[6px] rounded-lg"
+                  }
+                >
+                  <HiCash className="h-7 w-7 lg:h-5 lg:w-5" />
+                  <span className="hidden ml-2 sm:block">Earnings</span>
+                </NavLink>
+              )
+            }
 
             {/* <NavLink
               to="newsletter"
@@ -144,17 +162,21 @@ const Sidebar = () => {
               <span className="hidden ml-2 sm:block">Bid History</span>
             </NavLink>
 
-            <NavLink
-              to="category"
-              className={({ isActive }) =>
-                isActive
-                  ? "flex p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium bg-[#FFFFFF] text-[#193664] rounded-lg"
-                  : "flex text-[white] p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium   rounded-lg"
-              }
-            >
-              <BiCategory className="h-7 w-7 lg:h-5 lg:w-5" />
-              <span className="hidden ml-2 sm:block">Categories</span>
-            </NavLink>
+            {
+              userRole === "masterAdmin" | "superAdmin" && (
+                <NavLink
+                  to="category"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "flex p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium bg-[#FFFFFF] text-[#193664] rounded-lg"
+                      : "flex text-[white] p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium   rounded-lg"
+                  }
+                >
+                  <BiCategory className="h-7 w-7 lg:h-5 lg:w-5" />
+                  <span className="hidden ml-2 sm:block">Categories</span>
+                </NavLink>
+              )
+            }
 
             <NavLink
               to="marketing"
@@ -165,7 +187,7 @@ const Sidebar = () => {
               }
             >
               <HiCash className="h-7 w-7 lg:h-5 lg:w-5" />
-              <span className="hidden ml-2 sm:block">Marketing fees</span>
+              <span className="hidden ml-2 sm:block"> Application Fee's</span>
             </NavLink>
 
             <NavLink
@@ -189,7 +211,7 @@ const Sidebar = () => {
               }
             >
               <FaAd className="h-7 w-7 lg:h-5 lg:w-5" />
-              <span className="hidden ml-2 sm:block">Banner Ad</span>
+              <span className="hidden ml-2 sm:block">Banner Ads</span>
             </NavLink>
             <NavLink
               to="/dashboard/reports"

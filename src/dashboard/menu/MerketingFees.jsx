@@ -58,7 +58,7 @@ const MarketingFees = () => {
         onClick={() => showModal(setIsProductModalOpen)}
         className="mt-8 cursor-pointer flex justify-between bg-[#F7F7F7] rounded items-center w-full h-[75px]"
       >
-        <p className="text-[18px] ml-8 font-medium">Product Marketing Fees</p>
+        <p className="text-[18px] ml-8 font-medium">Product Marketing Fee's</p>
         <IoIosArrowForward className="mr-8 text-[#193664]" />
       </div>
       <Modal
@@ -103,7 +103,7 @@ const MarketingFees = () => {
         onClick={() => showModal(setIsMessagingModalOpen)}
         className="mt-8 cursor-pointer flex justify-between bg-[#F7F7F7] rounded items-center w-full h-[75px]"
       >
-        <p className="text-[18px] ml-8 font-medium">Messaging Fees</p>
+        <p className="text-[18px] ml-8 font-medium">Messaging Fee's</p>
         <IoIosArrowForward className="mr-8 text-[#193664]" />
       </div>
       <Modal
@@ -148,7 +148,7 @@ const MarketingFees = () => {
         onClick={() => showModal(setIsBidModalOpen)}
         className="mt-8 cursor-pointer flex justify-between bg-[#F7F7F7] rounded items-center w-full h-[75px]"
       >
-        <p className="text-[18px] ml-8 font-medium">Bid Fees</p>
+        <p className="text-[18px] ml-8 font-medium">Bid Fee's</p>
         <IoIosArrowForward className="mr-8 text-[#193664]" />
       </div>
       <Modal
@@ -238,7 +238,7 @@ const MarketingFees = () => {
         onClick={() => showModal(setIsAdsFeeModalOpen)}
         className="mt-8 cursor-pointer flex justify-between bg-[#F7F7F7] rounded items-center w-full h-[75px]"
       >
-        <p className="text-[18px] ml-8 font-medium">Ads Fee</p>
+        <p className="text-[18px] ml-8 font-medium">Banner Fee's</p>
         <IoIosArrowForward className="mr-8 text-[#193664]" />
       </div>
       <Modal

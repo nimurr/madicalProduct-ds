@@ -49,7 +49,7 @@ const Card = () => {
           </div>
           <div className="mx-6 text-right">
             <p className="text-[18px] font-semibold text-[#193664] my-4">
-              Total Withdraw
+              Total Withdrawls
             </p>
             <h1 className="text-[34px] font-medium">${dashboardStatus?.data?.attributes?.totalWithdraw}</h1>
           </div>
@@ -61,7 +61,7 @@ const Card = () => {
           </div>
           <div className="mx-6 text-right">
             <p className="text-[18px] font-semibold text-primaryBg my-4">
-              Total User
+              Total Users
             </p>
             <h1 className="text-[34px] font-medium">{dashboardStatus?.data?.attributes?.totalUser}</h1>
           </div>
@@ -73,7 +73,7 @@ const Card = () => {
           </div>
           <div className="mx-6 text-right">
             <p className="text-[18px] font-semibold text-[#193664] my-4">
-              Total Provider
+              Total Providers
             </p>
             <h1 className="text-[34px] font-medium">{dashboardStatus?.data?.attributes?.totalProvider}</h1>
           </div>
@@ -85,7 +85,7 @@ const Card = () => {
           </div>
           <div className="mx-6 text-right">
             <p className="text-[18px] font-semibold text-[#193664] my-4">
-              Total Agent
+              Total Agents
             </p>
             <h1 className="text-[34px] font-medium">{dashboardStatus?.data?.attributes?.totalAgent}</h1>
           </div>

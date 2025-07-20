@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Modal, Button, Input } from 'antd'; // Import Ant Design components
+import { Modal, Button, Input, message } from 'antd'; // Import Ant Design components
 import { RiDeleteBin6Line } from 'react-icons/ri';
+import { useAddAdminMutation, useGetAdminsQuery } from '../../redux/features/auth/Admins/admins';
+import url from '../../redux/api/baseUrl';
 
 
 const AllAdmins = () => {
@@ -29,16 +31,36 @@ const AllAdmins = () => {
         setIsModalVisible(false);
     };
 
-    // Handle form submission
-    const handleSubmit = () => {
-        console.log('New Admin Details:', { adminName, adminEmail, adminType });
 
-        
+    const [addAdmins] = useAddAdminMutation();
+    // Handle form submission
+    const handleSubmit = async () => {
+        console.log('New Admin Details:', { adminName, adminEmail, adminType });
+        const formData = {
+            email: adminEmail,
+            access: adminType === 'superAdmin' ? 'superAdmin' : 'basicAdmin',
+        }
+
+        try {
+
+            const response = await addAdmins(formData).unwrap();
+            message.success(`${response?.message}`);
+
+        } catch (error) {
+            console.error('Error adding admin:', error);
+            message.error(error?.data?.message || 'Failed to add admin');
+        }
+
         // Reset form and close modal
         setAdminName('');
         setAdminEmail('');
         setIsModalVisible(false);
     };
+
+    const { data: getAllAdmins, isLoading } = useGetAdminsQuery(activeTab === 'superAdmin' ? 'superAdmin' : 'basicAdmin');
+    const allAdmins = getAllAdmins?.data?.attributes?.results;
+    console.log(allAdmins);
+
 
     return (
         <div className='px-5 py-14'>
@@ -64,24 +86,26 @@ const AllAdmins = () => {
                 {activeTab === 'superAdmin' && (
                     <div>
                         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
-                            {
-                                [...Array(4)].map((_, index) => (
-                                    <div className='text-center p-4 relative rounded-lg shadow-md bg-[#dceff9]' key={index}>
-                                        <div className='absolute top-3 right-0 w-12 h-12 bg-red-500 text-white rounded-full items-center cursor-pointer mb-2 mx-auto'>
-                                            <RiDeleteBin6Line className='text-[#ce251f]' />
-                                        </div>
-                                        <img className='w-24 h-24 mx-auto rounded-full border-4 border-primaryBg' src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="" />
-                                        <h2 className='mt-5 text-[28px] font-semibold'>Md. Nurunnabi</h2>
-                                        <p className='text-gray-500'>nurunnabi404@gmail.com</p>
-                                    </div>
-                                ))
-                            }
-                            <div onClick={() => showModal('superAdmin')} className='text-center cursor-pointer p-4 rounded-lg shadow-md bg-[#dceff9]'>
+                            <div onClick={() => showModal('superAdmin')} className=' border-2 border-primary   text-center cursor-pointer p-4 rounded-lg shadow-md bg-[#dceff9]'>
                                 <button className='bg-green-500 text-white py-2 px-4 rounded-lg' >
                                     <img className='w-24 h-24 mx-auto border-primaryBg' src="/image/add-admin.png" alt="" />
                                     <h2 className='mt-5 text-[20px] font-semibold'> Add Super Admin</h2>
                                 </button>
                             </div>
+
+                            {
+                                allAdmins?.map((item, index) => (
+                                    <div className='text-center p-4 relative rounded-lg shadow-md bg-[#dceff9]' key={index}>
+                                        <div className='absolute top-3 right-0 w-12 h-12 bg-red-500 text-white rounded-full items-center cursor-pointer mb-2 mx-auto'>
+                                            <RiDeleteBin6Line className='text-[#ce251f]' />
+                                        </div>
+                                        <img className='w-24 h-24 mx-auto rounded-full border-4 border-primaryBg' src={url + item?.image} alt="" />
+                                        <h2 className='mt-5 text-[25px] font-semibold'>{item?.fullName}</h2>
+                                        <p className='text-gray-500'>{item?.email}</p>
+                                    </div>
+                                ))
+                            }
+
                         </div>
                     </div>
                 )}
@@ -89,24 +113,26 @@ const AllAdmins = () => {
                 {activeTab === 'regularAdmin' && (
                     <div>
                         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
-                            {
-                                [...Array(4)].map((_, index) => (
-                                    <div className='text-center relative p-4 rounded-lg shadow-md bg-[#dceff9]' key={index}>
-                                        <div className='absolute top-3 right-0 w-12 h-12 bg-red-500 text-white rounded-full items-center cursor-pointer mb-2 mx-auto'>
-                                            <RiDeleteBin6Line className='text-[#ce251f]' />
-                                        </div>
-                                        <img className='w-24 h-24 mx-auto rounded-full border-4 border-primaryBg' src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="" />
-                                        <h2 className='mt-5 text-[28px] font-semibold'>Md. Nurunnabi</h2>
-                                        <p className='text-gray-500'>nurunnabi404@gmail.com</p>
-                                    </div>
-                                ))
-                            }
-                            <div onClick={() => showModal('regularAdmin')} className='text-center cursor-pointer p-4 rounded-lg shadow-md bg-[#dceff9]'>
+
+                            <div onClick={() => showModal('regularAdmin')} className='border-2 border-primary   text-center cursor-pointer p-4 rounded-lg shadow-md bg-[#dceff9]'>
                                 <button className='bg-green-500 text-white py-2 px-4 rounded-lg' >
                                     <img className='w-24 h-24 mx-auto border-primaryBg' src="/image/add-admin.png" alt="" />
                                     <h2 className='mt-5 text-[20px] font-semibold'> Add Regular Admin</h2>
                                 </button>
                             </div>
+
+                            {
+                                allAdmins?.map((item, index) => (
+                                    <div className='text-center p-4 relative rounded-lg shadow-md bg-[#dceff9]' key={index}>
+                                        <div className='absolute top-3 right-0 w-12 h-12 bg-red-500 text-white rounded-full items-center cursor-pointer mb-2 mx-auto'>
+                                            <RiDeleteBin6Line className='text-[#ce251f]' />
+                                        </div>
+                                        <img className='w-24 h-24 mx-auto rounded-full border-4 border-primaryBg' src={url + item?.image} alt="" />
+                                        <h2 className='mt-5 text-[25px] font-semibold'>{item?.fullName}</h2>
+                                        <p className='text-gray-500'>{item?.email}</p>
+                                    </div>
+                                ))
+                            }
                         </div>
                     </div>
                 )}
@@ -122,17 +148,7 @@ const AllAdmins = () => {
             >
                 <form className='space-y-4'>
                     {/* updolad field image ant desing  */}
-                    <Input
-                        type='file'
-                        accept='image/*'
-                        className='mb-4'
-                        onChange={(e) => console.log(e.target.files[0])} // Handle file upload
-                    />
-                    <Input
-                        placeholder='Enter Admin Name'
-                        value={adminName}
-                        onChange={(e) => setAdminName(e.target.value)}
-                    />
+
                     <Input
                         placeholder='Enter Admin Email'
                         value={adminEmail}
