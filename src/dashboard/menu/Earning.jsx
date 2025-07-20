@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Input, Modal, DatePicker, Space, Table, Spin } from "antd";
+import { Input, Modal, DatePicker, Space, Table } from "antd";
 import { BsInfoCircle } from "react-icons/bs";
 import { CloseOutlined } from "@ant-design/icons";
 import { useGetAllRecentTrangitionQuery } from "../../redux/features/auth/heashboard/recentTransaction";
@@ -17,7 +17,6 @@ const Earning = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    // Initialize filtered data with all transactions
     if (transaction?.data) {
       setFilteredData(transaction.data);
     }
@@ -30,7 +29,7 @@ const Earning = () => {
 
   const handleSearch = (value) => {
     if (!value) {
-      setFilteredData(transaction?.data || []); // Reset to original data if search input is cleared
+      setFilteredData(transaction?.data || []);
       return;
     }
 
@@ -45,7 +44,7 @@ const Earning = () => {
 
   const handleDateSearch = (date) => {
     if (!date) {
-      setFilteredData(transaction?.data || []); // Reset to original data if no date is selected
+      setFilteredData(transaction?.data || []);
       return;
     }
 
@@ -75,7 +74,41 @@ const Earning = () => {
     setCurrentPage(page);
   };
 
-  // Columns for the table
+  const handleDownloadDetails = () => {
+    if (!selectedTransaction) return;
+
+    const {
+      userDetails = {},
+      transactionId,
+      amount,
+      timestamp,
+    } = selectedTransaction;
+
+    const data = `
+Transaction Details
+-------------------
+Full Name: ${userDetails.fullName || "N/A"}
+Email: ${userDetails.email || "N/A"}
+Transaction ID: ${transactionId || "N/A"}
+Amount: $${amount || "0.00"}
+Date: ${new Date(timestamp).toLocaleDateString("en-US", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    })}
+`;
+
+    const blob = new Blob([data], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `transaction_${transactionId}.txt`;
+    a.click();
+
+    URL.revokeObjectURL(url);
+  };
+
   const columns = [
     {
       title: "#SI",
@@ -248,11 +281,18 @@ const Earning = () => {
                   year: "numeric",
                 })}</p>
               </div>
+              <div className="flex justify-end mt-4">
+                <button
+                  onClick={handleDownloadDetails}
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
+                >
+                  Download Details
+                </button>
+              </div>
             </div>
           </div>
         </Modal>
       )}
-
     </div>
   );
 };
