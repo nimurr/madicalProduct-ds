@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Button, Input, message } from 'antd'; // Import Ant Design components
 import { RiDeleteBin6Line } from 'react-icons/ri';
-import { useAddAdminMutation, useGetAdminsQuery } from '../../redux/features/auth/Admins/admins';
+import { useAddAdminMutation, useDeleteAdminMutation, useGetAdminsQuery } from '../../redux/features/auth/Admins/admins';
 import url from '../../redux/api/baseUrl';
 
 
@@ -62,6 +62,23 @@ const AllAdmins = () => {
     console.log(allAdmins);
 
 
+    const [deleteAdmin] = useDeleteAdminMutation();
+
+    const handleDelete = async (item) => {
+
+        try {
+            const response = await deleteAdmin(item?.id).unwrap();
+            message.success(`${response?.message}`);
+            // Optionally, you can refetch the admins or update the state to reflect the deletion
+
+        } catch (error) {
+            console.error('Error deleting admin:', error);
+            message.error(error?.data?.message || 'Failed to delete admin');
+        }
+
+    }
+
+
     return (
         <div className='px-5 py-14'>
             {/* Tabs - Super Admin and Regular Admin */}
@@ -96,7 +113,7 @@ const AllAdmins = () => {
                             {
                                 allAdmins?.map((item, index) => (
                                     <div className='text-center p-4 relative rounded-lg shadow-md bg-[#dceff9]' key={index}>
-                                        <div className='absolute top-3 right-0 w-12 h-12 bg-red-500 text-white rounded-full items-center cursor-pointer mb-2 mx-auto'>
+                                        <div onClick={() => handleDelete(item)} className='absolute top-3 right-0 w-12 h-12 bg-red-500 text-white rounded-full items-center cursor-pointer mb-2 mx-auto'>
                                             <RiDeleteBin6Line className='text-[#ce251f]' />
                                         </div>
                                         <img className='w-24 h-24 mx-auto rounded-full border-4 border-primaryBg' src={url + item?.image} alt="" />
@@ -124,7 +141,7 @@ const AllAdmins = () => {
                             {
                                 allAdmins?.map((item, index) => (
                                     <div className='text-center p-4 relative rounded-lg shadow-md bg-[#dceff9]' key={index}>
-                                        <div className='absolute top-3 right-0 w-12 h-12 bg-red-500 text-white rounded-full items-center cursor-pointer mb-2 mx-auto'>
+                                        <div onClick={() => handleDelete(item)} className='absolute top-3 right-0 w-12 h-12 bg-red-500 text-white rounded-full items-center cursor-pointer mb-2 mx-auto'>
                                             <RiDeleteBin6Line className='text-[#ce251f]' />
                                         </div>
                                         <img className='w-24 h-24 mx-auto rounded-full border-4 border-primaryBg' src={url + item?.image} alt="" />
@@ -151,11 +168,12 @@ const AllAdmins = () => {
 
                     <Input
                         placeholder='Enter Admin Email'
+                        className='py-2'
                         value={adminEmail}
                         onChange={(e) => setAdminEmail(e.target.value)}
                     />
                     <div className='flex justify-end'>
-                        <Button type="primary" onClick={handleSubmit}>
+                        <Button className='!py-2 h-10 bg-primaryBg text-[#fff] ' onClick={handleSubmit}>
                             Add {adminType === 'superAdmin' ? 'Super Admin' : 'Regular Admin'}
                         </Button>
                     </div>

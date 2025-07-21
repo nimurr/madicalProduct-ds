@@ -124,17 +124,21 @@ const Sidebar = () => {
               <span className="hidden ml-2 sm:block">Users</span>
             </NavLink>
 
-            <NavLink
-              to="agents"
-              className={({ isActive }) =>
-                isActive
-                  ? "flex cursor-pointer items-center text-[18px] font-medium p-[10px] bg-[#FFFFFF] text-[#193664] m-[6px] rounded-lg"
-                  : "flex text-[white] cursor-pointer items-center text-[18px] font-medium p-[10px]   m-[6px] rounded-lg"
-              }
-            >
-              <FaUserShield className="h-7 w-7 lg:h-5 lg:w-5" />
-              <span className="hidden ml-2 sm:block">Agents</span>
-            </NavLink>
+            {
+              userRole === "masterAdmin" && (
+                <NavLink
+                  to="agents"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "flex cursor-pointer items-center text-[18px] font-medium p-[10px] bg-[#FFFFFF] text-[#193664] m-[6px] rounded-lg"
+                      : "flex text-[white] cursor-pointer items-center text-[18px] font-medium p-[10px]   m-[6px] rounded-lg"
+                  }
+                >
+                  <FaUserShield className="h-7 w-7 lg:h-5 lg:w-5" />
+                  <span className="hidden ml-2 sm:block">Agents</span>
+                </NavLink>
+              )
+            }
 
             <NavLink
               to="provider"
@@ -163,7 +167,7 @@ const Sidebar = () => {
             </NavLink>
 
             {
-              userRole === "masterAdmin" | "superAdmin" && (
+              userRole === "masterAdmin" || "superAdmin" && (
                 <NavLink
                   to="category"
                   className={({ isActive }) =>
@@ -190,41 +194,51 @@ const Sidebar = () => {
               <span className="hidden ml-2 sm:block"> Application Fee's</span>
             </NavLink>
 
-            <NavLink
-              to="/dashboard/withdrawrequest"
-              className={({ isActive }) =>
-                isActive
-                  ? "flex p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium bg-[#FFFFFF] text-[#193664] rounded-lg"
-                  : "flex text-[white] p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium   rounded-lg"
-              }
-            >
-              <RiMoneyDollarCircleLine className="h-7 w-7 lg:h-5 lg:w-5" />
-              <span className="hidden ml-2 sm:block">Withdrawal Request</span>
-            </NavLink>
+            {
+              userRole === "masterAdmin" && (
+                <NavLink
+                  to="/dashboard/withdrawrequest"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "flex p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium bg-[#FFFFFF] text-[#193664] rounded-lg"
+                      : "flex text-[white] p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium   rounded-lg"
+                  }
+                >
+                  <RiMoneyDollarCircleLine className="h-7 w-7 lg:h-5 lg:w-5" />
+                  <span className="hidden ml-2 sm:block">Withdrawal Request</span>
+                </NavLink>
+              )
+            }
 
-            <NavLink
-              to="/dashboard/bannerads/banneradsAll"
-              className={({ isActive }) =>
-                isActive
-                  ? "flex p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium bg-[#FFFFFF] text-[#193664] rounded-lg"
-                  : "flex text-[white] p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium   rounded-lg"
-              }
-            >
-              <FaAd className="h-7 w-7 lg:h-5 lg:w-5" />
-              <span className="hidden ml-2 sm:block">Banner Ads</span>
-            </NavLink>
-            <NavLink
-              to="/dashboard/reports"
-              className={({ isActive }) =>
-                isActive
-                  ? "flex p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium bg-[#FFFFFF] text-[#193664] rounded-lg"
-                  : "flex text-[white] p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium   rounded-lg"
-              }
-            >
-              <TbReportSearch className="h-7 w-7 lg:h-5 lg:w-5" />
-              <span className="hidden ml-2 sm:block">Reports</span>
-            </NavLink>
+            {
+              userRole === "masterAdmin" && (
+                <div>
+                  <NavLink
+                    to="/dashboard/bannerads/banneradsAll"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "flex p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium bg-[#FFFFFF] text-[#193664] rounded-lg"
+                        : "flex text-[white] p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium   rounded-lg"
+                    }
+                  >
+                    <FaAd className="h-7 w-7 lg:h-5 lg:w-5" />
+                    <span className="hidden ml-2 sm:block">Banner Ads</span>
+                  </NavLink>
+                  <NavLink
+                    to="/dashboard/reports"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "flex p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium bg-[#FFFFFF] text-[#193664] rounded-lg"
+                        : "flex text-[white] p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium   rounded-lg"
+                    }
+                  >
+                    <TbReportSearch className="h-7 w-7 lg:h-5 lg:w-5" />
+                    <span className="hidden ml-2 sm:block">Reports</span>
+                  </NavLink>
 
+                </div>
+              )
+            }
             <NavLink
               to="settings"
               className={({ isActive }) =>

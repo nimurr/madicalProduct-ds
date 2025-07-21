@@ -19,10 +19,18 @@ const adminsApi = apiSlice.injectEndpoints({
             providesTags: "Admins",
 
         }),
+        deleteAdmin: builder.mutation({
+            query: (id) => ({
+                url: `/admin/delete-admin/${id}`,
+                method: "DELETE"
+            }),
+            invalidatesTags: ["Admins"]
+        }),
 
     })
 });
 export const {
     useAddAdminMutation,
-    useGetAdminsQuery
+    useGetAdminsQuery,
+    useDeleteAdminMutation
 } = adminsApi;
