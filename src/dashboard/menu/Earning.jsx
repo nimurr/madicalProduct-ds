@@ -85,18 +85,18 @@ const Earning = () => {
     } = selectedTransaction;
 
     const data = `
-Transaction Details
--------------------
-Full Name: ${userDetails.fullName || "N/A"}
-Email: ${userDetails.email || "N/A"}
-Transaction ID: ${transactionId || "N/A"}
-Amount: $${amount || "0.00"}
-Date: ${new Date(timestamp).toLocaleDateString("en-US", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    })}
-`;
+                Transaction Details
+                -------------------
+                Full Name: ${userDetails.fullName || "N/A"}
+                Email: ${userDetails.email || "N/A"}
+                Transaction ID: ${transactionId || "N/A"}
+                Amount: $${amount || "0.00"}
+                Date: ${new Date(timestamp).toLocaleDateString("en-US", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              })}
+          `;
 
     const blob = new Blob([data], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);

@@ -3,7 +3,7 @@ import logo from "/image/logo.png";
 
 import { BiCategory, BiSolidDashboard } from "react-icons/bi";
 
-import { CiSettings } from "react-icons/ci";
+import { CiCreditCard1, CiSettings } from "react-icons/ci";
 import Swal from "sweetalert2";
 import { FaAd, FaUserFriends, FaUsers } from "react-icons/fa";
 
@@ -191,7 +191,7 @@ const Sidebar = () => {
               }
             >
               <HiCash className="h-7 w-7 lg:h-5 lg:w-5" />
-              <span className="hidden ml-2 sm:block"> Application Fee's</span>
+              <span className="hidden ml-2 sm:block"> Application Fees</span>
             </NavLink>
 
             {
@@ -239,6 +239,26 @@ const Sidebar = () => {
                 </div>
               )
             }
+
+            {
+              userRole === "masterAdmin" && (
+                <NavLink
+                  to="/dashboard/gatewa-credential"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "flex p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium bg-[#FFFFFF] text-[#193664] rounded-lg"
+                      : "flex text-[white] p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium   rounded-lg"
+                  }
+                >
+                  <CiCreditCard1 className="h-7 w-7 lg:h-5 lg:w-5" />
+                  <span className="hidden ml-2 sm:block">Gateway Credential</span>
+                </NavLink>
+              )
+            }
+
+
+
+
             <NavLink
               to="settings"
               className={({ isActive }) =>

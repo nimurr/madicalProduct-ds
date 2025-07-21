@@ -39,6 +39,7 @@ import BannerAdDetails from "../dashboard/menu/BannerAd/BannerAdDetails";
 import AddBannerAds from "../dashboard/menu/BannerAd/AddBannerAds";
 import Reports from "../dashboard/menu/Reports/Reports";
 import AllAdmins from "../dashboard/menu/AllAdmins";
+import GatewaCredential from "../dashboard/menu/GatewaCredential/GatewaCredential";
 
 export const router = createBrowserRouter([
   {
@@ -151,6 +152,10 @@ export const router = createBrowserRouter([
       {
         path: "marketing",
         element: <MarketingFees />
+      },
+      {
+        path: "gatewa-credential",
+        element: <GatewaCredential />
       },
       {
         path: "settings",
