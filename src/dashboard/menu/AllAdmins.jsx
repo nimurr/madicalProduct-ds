@@ -57,7 +57,7 @@ const AllAdmins = () => {
         setIsModalVisible(false);
     };
 
-    const { data: getAllAdmins, isLoading } = useGetAdminsQuery(activeTab === 'superAdmin' ? 'superAdmin' : 'basicAdmin');
+    const { data: getAllAdmins, isLoading, refetch } = useGetAdminsQuery(activeTab === 'superAdmin' ? 'superAdmin' : 'basicAdmin');
     const allAdmins = getAllAdmins?.data?.attributes?.results;
     console.log(allAdmins);
 
@@ -68,6 +68,7 @@ const AllAdmins = () => {
 
         try {
             const response = await deleteAdmin(item?.id).unwrap();
+            refetch();
             message.success(`${response?.message}`);
             // Optionally, you can refetch the admins or update the state to reflect the deletion
 
