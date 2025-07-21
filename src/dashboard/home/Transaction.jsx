@@ -15,7 +15,7 @@ const Transaction = () => {
   // Initialize filtered data
   useEffect(() => {
     if (transaction?.data) {
-      setFilteredData(transaction.data);
+      setFilteredData(transaction.data); 
     }
   }, [transaction]);
 
