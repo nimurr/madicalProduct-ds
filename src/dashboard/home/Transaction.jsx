@@ -12,7 +12,7 @@ const Transaction = () => {
 
   const { data: transaction } = useGetAllRecentTrangitionQuery();
 
-  // Initialize filtered data
+  // Initialize filtered data  
   useEffect(() => {
     if (transaction?.data) {
       setFilteredData(transaction.data); 
