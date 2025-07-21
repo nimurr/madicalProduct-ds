@@ -18,11 +18,14 @@ const credentialApi = apiSlice.injectEndpoints({
             providesTags: ["Credential"],
         }),
         updateCredential: builder.mutation({
-            query: ({ id, data }) => ({
-                url: `/credential/${id}`,
-                method: "PUT",
-                body: data,
-            }),
+            query: (body) => {
+                // console.log("Updating Credential ID:", body);
+                return {
+                    url: `/credential/${body.id}`,
+                    method: "PATCH",
+                    body: body.formData,
+                }
+            },
             invalidatesTags: ["Credential"],
         }),
         deleteCredential: builder.mutation({

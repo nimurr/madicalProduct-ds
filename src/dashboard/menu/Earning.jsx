@@ -284,7 +284,7 @@ const Earning = () => {
               <div className="flex justify-end mt-4">
                 <button
                   onClick={handleDownloadDetails}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
+                  className="bg-[#1968cf] hover:bg-[#255594] text-[#fff] font-semibold py-2 px-4 rounded"
                 >
                   Download Details
                 </button>

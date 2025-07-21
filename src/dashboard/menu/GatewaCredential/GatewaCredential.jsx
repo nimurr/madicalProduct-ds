@@ -68,17 +68,29 @@ const GatewayCredential = () => {
 
         try {
             if (editingData && editingData.id) {
+
+                // console.log("Updating ID:", formData);
                 const { id } = editingData;
-                const response = await updateCredential({ id, body: formData }).unwrap();
-                console.log("Update response:", response);
-                message.success(response.message || "Credential updated successfully");
+                const response = await updateCredential({ id, formData: formData }).unwrap();
+                if (response?.code === 200) {
+                    console.log("Update response:", response);
+                    message.success(response.message || "Credential updated successfully");
+                    form.resetFields();
+                    setEditingData(null);
+                    setIsModalOpen(false);
+                }
             } else {
                 const response = await addCredential(formData).unwrap();
-                message.success(response.message || "Credential added successfully");
+                console.log("Add response:", response);
+                if (response?.code === 201) {
+                    message.success(response.message || "Credential added successfully");
+                    console.log("Add response:", response);
+                    form.resetFields();
+                    setEditingData(null);
+                    setIsModalOpen(false);
+                }
             }
-            form.resetFields();
-            setEditingData(null);
-            setIsModalOpen(false);
+
         } catch (err) {
             console.error("Credential error:", err);
             message.error(err.data?.message || "Failed to save credential");
@@ -197,7 +209,7 @@ const GatewayCredential = () => {
                     <Form.Item
                         label="Provider"
                         name="providerName"
-                        rules={[{ required: true }]}
+
                     >
                         <Select placeholder="Select provider">
                             {providerOptions.map((p) => (
@@ -211,7 +223,7 @@ const GatewayCredential = () => {
                     <Form.Item
                         label="Publishable Key"
                         name="publishableKey"
-                        rules={[{ required: true }]}
+
                     >
                         <Input />
                     </Form.Item>
@@ -219,7 +231,7 @@ const GatewayCredential = () => {
                     <Form.Item
                         label="Secret Key"
                         name="secretKey"
-                        rules={[{ required: true }]}
+
                     >
                         <Input.Password />
                     </Form.Item>
@@ -227,7 +239,7 @@ const GatewayCredential = () => {
                     <Form.Item
                         label="Webhook Signing Secret"
                         name="webhookSigningSecret"
-                        rules={[{ required: true }]}
+
                     >
                         <Input />
                     </Form.Item>
@@ -236,14 +248,14 @@ const GatewayCredential = () => {
                         <Input />
                     </Form.Item>
 
-                    <Form.Item label="Mode" name="mode" rules={[{ required: true }]}>
+                    <Form.Item label="Mode" name="mode"  >
                         <Select>
                             <Option value="test">Test</Option>
                             <Option value="live">Live</Option>
                         </Select>
                     </Form.Item>
 
-                    <Form.Item label="Status" name="status" rules={[{ required: true }]}>
+                    <Form.Item label="Status" name="status"  >
                         <Select>
                             <Option value="active">Active</Option>
                             <Option value="expire">Expire</Option>

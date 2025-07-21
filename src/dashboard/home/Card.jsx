@@ -26,34 +26,46 @@ const Card = () => {
     );
   }
 
+  const users = JSON.parse(localStorage.getItem("user"));
+  console.log("users", users?.user);
+  const userRole = users?.user?.role;
+
   return (
     <div className=" md:mt-14 md:mb-10 my-10 ">
       {/* <h1 className="font-medium text-xl">Overview</h1> */}
       <div className="grid md:grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-2 grid-cols-1 lg:gap-2 xl:gap-3 w-full">
-        <div className=" rounded h-[180px] flex justify-between items-center card bg-[#e8ebf0]">
-          <div className="mx-6 h-16 w-16 rounded  flex justify-center items-center">
-            {/* <HiOutlineCurrencyDollar className=" text-whiteText w-12 h-12" />*/}
-            <img src="/image/marketingFeesImage.png" alt="" />
+        {userRole === "masterAdmin" && (
+
+          <div className=" rounded h-[180px] flex justify-between items-center card bg-[#e8ebf0]">
+            <div className="mx-6 h-16 w-16 rounded  flex justify-center items-center">
+              {/* <HiOutlineCurrencyDollar className=" text-whiteText w-12 h-12" />*/}
+              <img src="/image/marketingFeesImage.png" alt="" />
+            </div>
+            <div className="mx-6 text-right">
+              <p className="text-[18px] font-semibold text-[#193664] my-4">
+                Total Earnings
+              </p>
+              <h1 className="text-[34px] font-medium">${dashboardStatus?.data?.attributes?.totalEarnings}</h1>
+            </div>
           </div>
-          <div className="mx-6 text-right">
-            <p className="text-[18px] font-semibold text-[#193664] my-4">
-              Total Earnings
-            </p>
-            <h1 className="text-[34px] font-medium">${dashboardStatus?.data?.attributes?.totalEarnings}</h1>
+
+        )}
+        {userRole === "masterAdmin" && (
+
+          <div className=" rounded h-[180px] flex justify-between items-center card bg-[#e8ebf0]">
+            <div className="mx-6 h-16 w-16 rounded  flex justify-center items-center">
+              {/* <HiOutlineCurrencyDollar className=" text-whiteText w-12 h-12" />*/}
+              <img src="/image/marketingFeesImage.png" alt="" />
+            </div>
+            <div className="mx-6 text-right">
+              <p className="text-[18px] font-semibold text-[#193664] my-4">
+                Total Withdrawls
+              </p>
+              <h1 className="text-[34px] font-medium">${dashboardStatus?.data?.attributes?.totalWithdraw}</h1>
+            </div>
           </div>
-        </div>
-        <div className=" rounded h-[180px] flex justify-between items-center card bg-[#e8ebf0]">
-          <div className="mx-6 h-16 w-16 rounded  flex justify-center items-center">
-            {/* <HiOutlineCurrencyDollar className=" text-whiteText w-12 h-12" />*/}
-            <img src="/image/marketingFeesImage.png" alt="" />
-          </div>
-          <div className="mx-6 text-right">
-            <p className="text-[18px] font-semibold text-[#193664] my-4">
-              Total Withdrawls
-            </p>
-            <h1 className="text-[34px] font-medium">${dashboardStatus?.data?.attributes?.totalWithdraw}</h1>
-          </div>
-        </div>
+
+        )}
         <div className=" rounded h-[180px] flex justify-between items-center card bg-[#e8ebf0]">
           <div className="mx-6 h-16 w-16 rounded  flex justify-center items-center">
             {/* <HiOutlineCurrencyDollar className=" text-whiteText w-12 h-12" />*/}
