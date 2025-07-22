@@ -62,8 +62,6 @@ const AllAdmins = () => {
     };
 
 
-
-
     const [deleteAdmin] = useDeleteAdminMutation();
 
     const handleDelete = async (item) => {
