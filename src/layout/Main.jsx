@@ -7,6 +7,8 @@ import { useGetProfileQuery } from "../redux/features/auth/profile/getProfile";
 const Main = () => {
 
   const { data, isLoading } = useGetProfileQuery();
+  const userInfo = localStorage.getItem("userInfo")
+  console.log(userInfo);
 
   console.log(data?.data?.attributes?.isAdmin);
   const navitage = useNavigate()
@@ -21,11 +23,11 @@ const Main = () => {
       </div>
     )
   }
- 
+
   if (!data?.data?.attributes?.isAdmin) {
     return navitage('/');
   }
- 
+
 
   return (
     <div>

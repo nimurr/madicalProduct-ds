@@ -8,6 +8,12 @@ import { useCreateIsBlockedMutation } from "../../redux/features/auth/heashboard
 import swal from "sweetalert";
 
 const Provider = () => {
+
+  const usersInfo = JSON.parse(localStorage.getItem("user"));
+  const userRole = usersInfo?.user?.role;
+
+
+
   const columns = [
     {
       title: "#SL",
@@ -28,7 +34,7 @@ const Provider = () => {
           <div>
             <span className="font-semibold text-[18px] capitalize">{text}</span>
             <br />
-            <span>{record.email}</span>
+            <span>{userRole == "masterAdmin" && record.email}</span>
           </div>
         </div>
       ),

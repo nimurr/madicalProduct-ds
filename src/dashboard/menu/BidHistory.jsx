@@ -22,6 +22,11 @@ const BidHistory = () => {
     setFilteredData(bids); // Initialize filtered data
   }, [bids]);
 
+
+  const usersInfo = JSON.parse(localStorage.getItem("user"));
+  const userRole = usersInfo?.user?.role;
+
+
   // Table columns
   const columns = [
     {
@@ -49,7 +54,7 @@ const BidHistory = () => {
           />
           <div>
             <p className="font-medium">{record?.user?.fullName || "N/A"}</p>
-            <p className="text-xs">{record?.user?.email || "N/A"}</p>
+            <p className="text-xs">{userRole == "masterAdmin" && record?.user?.email || "--"}</p>
           </div>
         </div>
       ),
@@ -224,7 +229,7 @@ const BidHistory = () => {
             </div>
             <div className="flex justify-between border-b border-[#ccc] py-[16px]">
               <p>Email:</p>
-              <p>{selectedRecord?.user?.email || "N/A"}</p>
+              <p>{userRole == "masterAdmin" && selectedRecord?.user?.email || "--"}</p>
             </div>
             <div className="flex justify-between border-b border-[#ccc] py-[16px]">
               <p>Bio:</p>

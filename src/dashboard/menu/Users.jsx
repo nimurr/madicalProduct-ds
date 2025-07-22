@@ -75,6 +75,10 @@ const Users = () => {
     setIsModalOpen(true); // Open modal
   };
 
+  const usersInfo = JSON.parse(localStorage.getItem("user"));
+  const userRole = usersInfo?.user?.role;
+
+
   // Columns for the table
   const columns = [
     {
@@ -107,20 +111,24 @@ const Users = () => {
       title: "Email",
       dataIndex: "email",
       key: "email",
-      render: (_, record) => <p>{record?.email || "N/A"}</p>,
+      render: (_, record) => <p>{userRole == "masterAdmin" && record?.email || "--"}</p>,
     },
     {
       title: "Action",
       key: "action",
       render: (_, record) => (
         <div className="flex items-center gap-4">
-          <Link
-            target="_blank"
-            to={`https://mail.google.com/mail/u/0/?fs=1&to=${record?.email}&tf=cm`}
-            style={{ fontSize: "1.5rem" }}
-          >
-            <MdOutlineEmail className="text-2xl" />
-          </Link>
+          {
+            userRole == "masterAdmin" &&
+            <Link
+              target="_blank"
+              to={`https://mail.google.com/mail/u/0/?fs=1&to=${record?.email}&tf=cm`}
+              style={{ fontSize: "1.5rem" }}
+            >
+              <MdOutlineEmail className="text-2xl" />
+            </Link>
+          }
+
           <BsInfoCircle
             onClick={() => handleView(record)}
             size={18}
@@ -130,6 +138,8 @@ const Users = () => {
       ),
     },
   ];
+
+
 
   return (
     <div>
@@ -158,14 +168,17 @@ const Users = () => {
             rowKey={(record) => record.email}
           />
         </div>
-        <Button
-          onClick={handleSendEmails}
-          disabled={selectedEmails.length === 0}
-          className="mt-4"
-          type="primary"
-        >
-          Send Email to Selected Users
-        </Button>
+        {
+          userRole == "masterAdmin" &&
+          <Button
+            onClick={handleSendEmails}
+            disabled={selectedEmails.length === 0}
+            className="mt-4"
+            type="primary"
+          >
+            Send Email to Selected Users
+          </Button>
+        }
       </div>
       {/* User Details Modal */}
       <Modal
@@ -195,7 +208,7 @@ const Users = () => {
             </div>
             <div className="flex justify-between border-b border-[#ccc] py-[16px]">
               <p>Email:</p>
-              <p>{selectedUser?.email || "N/A"}</p>
+              <p>{userRole == "masterAdmin" && selectedUser?.email || "--"}</p>
             </div>
             <div className="flex justify-between border-b border-[#ccc] py-[16px]">
               <p>Phone:</p>
