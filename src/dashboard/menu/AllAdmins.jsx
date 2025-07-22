@@ -30,6 +30,9 @@ const AllAdmins = () => {
     const handleCancel = () => {
         setIsModalVisible(false);
     };
+    const { data: getAllAdmins, isLoading, refetch } = useGetAdminsQuery(activeTab === 'superAdmin' ? 'superAdmin' : 'basicAdmin');
+    const allAdmins = getAllAdmins?.data?.attributes?.results;
+    console.log(allAdmins);
 
 
     const [addAdmins] = useAddAdminMutation();
@@ -44,6 +47,7 @@ const AllAdmins = () => {
         try {
 
             const response = await addAdmins(formData).unwrap();
+            refetch()
             message.success(`${response?.message}`);
 
         } catch (error) {
@@ -57,9 +61,7 @@ const AllAdmins = () => {
         setIsModalVisible(false);
     };
 
-    const { data: getAllAdmins, isLoading, refetch } = useGetAdminsQuery(activeTab === 'superAdmin' ? 'superAdmin' : 'basicAdmin');
-    const allAdmins = getAllAdmins?.data?.attributes?.results;
-    console.log(allAdmins);
+
 
 
     const [deleteAdmin] = useDeleteAdminMutation();
