@@ -118,6 +118,12 @@ const Agents = () => {
       render: (_, record) => <p>{record?.email || "N/A"}</p>,
     },
     {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+      render: (_, record) => <p>{record?.location?.locationName || "N/A"}</p>,
+    },
+    {
       title: "Phone",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
@@ -128,8 +134,8 @@ const Agents = () => {
       key: "dataOfBirth",
       render: (_, record) => (
         <p>
-          {record?.dataOfBirth
-            ? new Date(record.dataOfBirth).toLocaleDateString("en-GB", {
+          {record?.createdAt
+            ? new Date(record.createdAt).toLocaleDateString("en-GB", {
               day: "2-digit",
               month: "long",
               year: "numeric",
@@ -243,10 +249,14 @@ const Agents = () => {
               <p>{selectedAgent?.phoneNumber || "N/A"}</p>
             </div>
             <div className="flex justify-between border-b border-[#ccc] py-[16px]">
-              <p>Date of Birth:</p>
+              <p>Phone:</p>
+              <p>{selectedAgent?.location?.locationName || "N/A"}</p>
+            </div>
+            <div className="flex justify-between border-b border-[#ccc] py-[16px]">
+              <p>Joining Date :</p>
               <p>
-                {selectedAgent?.dataOfBirth
-                  ? new Date(selectedAgent.dataOfBirth).toLocaleDateString(
+                {selectedAgent?.createdAt
+                  ? new Date(selectedAgent.createdAt).toLocaleDateString(
                     "en-GB",
                     {
                       day: "2-digit",

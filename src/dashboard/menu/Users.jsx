@@ -45,6 +45,7 @@ const Users = () => {
     setFilteredUsers(filtered);
   };
 
+
   // Handle checkbox change
   const handleCheckboxChange = (email, checked) => {
     if (checked) {
@@ -112,6 +113,18 @@ const Users = () => {
       dataIndex: "email",
       key: "email",
       render: (_, record) => <p>{userRole == "masterAdmin" && record?.email || "--"}</p>,
+    },
+    {
+      title: "phoneNumber",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
+      render: (_, record) => <p>{userRole == "masterAdmin" && record?.phoneNumber || "--"}</p>,
+    },
+    {
+      title: "location",
+      dataIndex: "location",
+      key: "location",
+      render: (_, record) => <p>{userRole == "masterAdmin" && record?.location?.locationName || "--"}</p>,
     },
     {
       title: "Action",
@@ -213,6 +226,10 @@ const Users = () => {
             <div className="flex justify-between border-b border-[#ccc] py-[16px]">
               <p>Phone:</p>
               <p>{selectedUser?.phoneNumber || "N/A"}</p>
+            </div>
+            <div className="flex justify-between border-b border-[#ccc] py-[16px]">
+              <p>Phone:</p>
+              <p>{selectedUser?.location?.locationName || "N/A"}</p>
             </div>
             <div className="flex justify-between border-b border-[#ccc] py-[16px]">
               <p>Date of Birth:</p>
