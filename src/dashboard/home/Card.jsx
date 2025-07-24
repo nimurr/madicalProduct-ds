@@ -73,7 +73,7 @@ const Card = () => {
           </div>
           <div className="mx-6 text-right">
             <p className="text-[18px] font-semibold text-primaryBg my-4">
-              Total Users
+              Total Members 
             </p>
             <h1 className="text-[34px] font-medium">{dashboardStatus?.data?.attributes?.totalUser}</h1>
           </div>

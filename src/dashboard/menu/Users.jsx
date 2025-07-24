@@ -158,7 +158,7 @@ const Users = () => {
     <div>
       <div className="rounded-t-lg mt-5">
         <div className="md:flex py-[22px] justify-between items-center flex-wrap">
-          <p className="text-header font-semibold">Users</p>
+          <p className="text-header font-semibold">Members</p>
           <div className="flex items-center gap-2">
             {/* <Space direction="vertical">
               <DatePicker format="DD MMMM YYYY" onChange={handleSearch} placeholder="Select Date" />
