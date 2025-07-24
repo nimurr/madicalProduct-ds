@@ -52,7 +52,7 @@ const Profile = () => {
 
           <div className="flex flex-col justify-center items-center text-center">
             {/* <p className="text-lg md:text-xl">{profile?.data?.attributes?.role}</p> */}
-            <p className="text-lg md:text-xl">{"admin"}</p>
+            <p className="text-lg md:text-xl">{responseData?.data?.attributes?.role}</p>
             <h1 className="text-2xl md:text-3xl font-medium">
               {responseData?.data?.attributes?.fullName}
             </h1>
