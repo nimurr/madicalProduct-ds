@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Button, Form, Input, Modal, Upload } from "antd";
+import { useState, useEffect } from "react";
+import { Button, Form, Input, Modal, Upload, Pagination } from "antd"; // Added Pagination
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { TbCameraPlus } from "react-icons/tb";
 import { useGetCategoriesQuery } from "../../../redux/features/auth/profile/getCategories";
@@ -20,6 +20,8 @@ const Category = () => {
   const [postCategory, { isLoading: isPostLoading }] = useCreatePostMutation();
 
   const categories = data?.data?.attributes?.results;
+  // Get total pages directly from API response
+  const totalPages = data?.data?.attributes?.totalPages || 1;
 
   // Modal open handler
   const openModal = () => {
@@ -149,10 +151,10 @@ const Category = () => {
               />
             </Link>
             <div>
-              <p className={`text-xl font-semibold text-center my-3 ${category.type == "product" ? "text-[#afaf1b]" : "text-[#f55]"}`}>{category.type}</p>
+              <p className={`text-xl font-semibold text-center !capitalize my-3 ${category.type == "product" ? "text-[#e4b312]" : "text-[#f55] "}`}>{category.type}</p>
             </div>
             <div className="p-4 text-center">
-              <p className="text-lg font-semibold">{category.categoryName}</p>
+              <p className="text-lg font-semibold capitalize">{category.categoryName}</p>
               <div className="flex justify-center mt-4 space-x-2">
                 <Link to={`/dashboard/category/update/${category.id}`}>
                   <Button
@@ -180,15 +182,36 @@ const Category = () => {
       </div>
 
       {/* Pagination */}
-      <div className="mt-4 flex justify-center">
+      <div className="mt-8 flex justify-center items-center gap-2">
+        {/* Previous Button */}
         <Button
           onClick={() => handlePageChange(pageNumber - 1)}
           disabled={pageNumber === 1}
-          className="mr-4"
+          className="flex items-center"
         >
           Previous
         </Button>
-        <Button onClick={() => handlePageChange(pageNumber + 1)}>Next</Button>
+
+        {/* Page Numbers */}
+        <div className="flex gap-1">
+          {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+            <Button
+              key={page}
+              onClick={() => handlePageChange(page)}
+              className={pageNumber === page ? "!bg-primaryBg !text-[#fff]" : ""}
+            >
+              {page}
+            </Button>
+          ))}
+        </div>
+
+        {/* Next Button */}
+        <Button
+          onClick={() => handlePageChange(pageNumber + 1)}
+          disabled={pageNumber === totalPages}
+        >
+          Next
+        </Button>
       </div>
 
       {/* Add Category Modal */}
@@ -253,9 +276,7 @@ const Category = () => {
             </Upload>
           </Form.Item>
 
-          {/* types :- product / service 
-            select optoion for product and service */}
-
+          {/* Type Selection */}
           <Form.Item name="type" label="Type">
             <select
               className="w-full p-2 border border-[#999] rounded"
@@ -263,11 +284,8 @@ const Category = () => {
             >
               <option value="product">Product</option>
               <option value="service">Service</option>
-
             </select>
           </Form.Item>
-
-
 
           {/* Category Name Input */}
           <Form.Item name="categoryName" label="Category Name">
