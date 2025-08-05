@@ -213,8 +213,8 @@ const Category = () => {
           Next
         </Button>
       </div>
- 
- 
+
+
       {/* Add Category Modal */}
       <Modal
         title="Add Category"
