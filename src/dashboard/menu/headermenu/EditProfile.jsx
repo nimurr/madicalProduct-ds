@@ -135,7 +135,7 @@ const EditProfile = () => {
                     placeholder="Email"
                     value={data?.data?.attributes?.email}
                     readOnly
-                    className="p-4 rounded-lg border-gray-300 bg-gray-100"
+                    className="p-4 cursor-no-drop rounded-lg border-gray-300 !bg-[#fff0f0]"
                   />
                 </Form.Item>
 
@@ -145,7 +145,7 @@ const EditProfile = () => {
                     placeholder="Enter phone number"
                     international
                     defaultCountry="BD"
-                    value={'+'+phoneNumber.toString()}
+                    value={'+' + phoneNumber.toString()}
                     onChange={setPhoneNumber}
                     className="p-2 rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                     style={{ height: "50px" }}
