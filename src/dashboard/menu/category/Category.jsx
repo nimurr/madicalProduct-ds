@@ -1,43 +1,35 @@
-import { useState, useEffect } from "react";
-import { Button, Form, Input, Modal, Upload, Pagination } from "antd"; // Added Pagination
+import { useState } from "react";
+import { Button, Form, Input, Modal, Upload, message } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { TbCameraPlus } from "react-icons/tb";
 import { useGetCategoriesQuery } from "../../../redux/features/auth/profile/getCategories";
 import { useDeleteCategoriesMutation } from "../../../redux/features/auth/heashboard/deleteCategory";
 import { useCreatePostMutation } from "../../../redux/features/auth/heashboard/postCategory";
-import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 import url from "../../../redux/api/baseUrl";
 
 const Category = () => {
   const [imageUrl, setImageUrl] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [pageNumber, setPageNumber] = useState(1); // Pagination state
-  const { data, isLoading } = useGetCategoriesQuery(pageNumber); // Fetch categories with page number
-
+  const [pageNumber, setPageNumber] = useState(1);
+  const { data, isLoading } = useGetCategoriesQuery(pageNumber);
   const [deleteCategory, { isLoading: isDeleting }] = useDeleteCategoriesMutation();
   const [postCategory, { isLoading: isPostLoading }] = useCreatePostMutation();
+  const [form] = Form.useForm();  // Create a form instance for handling reset
 
   const categories = data?.data?.attributes?.results;
-  // Get total pages directly from API response
   const totalPages = data?.data?.attributes?.totalPages || 1;
 
-  // Modal open handler
   const openModal = () => {
     setIsModalOpen(true);
   };
 
-  // Form submit handler for adding a category
   const onFinish = async (value) => {
-    console.log("Category Name:", value.categoryName); // Category name from form
-    console.log("Image URL:", imageUrl); // Image preview URL
-    console.log("File:", imageFile); // Image file object
-
-    // Prepare the form data
     const formData = new FormData();
     formData.append("categoryName", value.categoryName);
-    formData.append("type", value.type); // Add type to form data
+    formData.append("type", value.type);
     if (imageFile) {
       formData.append("image", imageFile);
     }
@@ -45,13 +37,16 @@ const Category = () => {
     try {
       const response = await postCategory(formData).unwrap();
       console.log("Category created successfully:", response);
+      form.resetFields(); // Reset the form fields after successful post
       setIsModalOpen(false); // Close modal after successful post
+      setImageUrl(null);
+      setImageFile(null);
     } catch (err) {
       console.error("Failed to create category:", err);
+      message.error(err.data?.message);
     }
   };
 
-  // File change handler (for image upload)
   const normFile = (e) => {
     if (Array.isArray(e)) {
       return e;
@@ -61,10 +56,7 @@ const Category = () => {
 
   const handleChange = (info) => {
     let fileList = [...info.fileList];
-
-    // We only keep the latest file in the list to replace the previous image
     fileList = fileList.slice(-1);
-
     if (fileList[0] && fileList[0].originFileObj) {
       const imagePreviewUrl = URL.createObjectURL(fileList[0].originFileObj);
       setImageUrl(imagePreviewUrl);
@@ -75,7 +67,6 @@ const Category = () => {
     }
   };
 
-  // Delete category handler
   const handleDelete = async (categoryId) => {
     Swal.fire({
       title: "Are you sure?",
@@ -88,13 +79,12 @@ const Category = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await deleteCategory(categoryId).unwrap(); // Trigger the delete mutation
+          await deleteCategory(categoryId).unwrap();
           Swal.fire({
             title: "Deleted!",
             text: "The category has been deleted.",
             icon: "success",
           });
-          // Optionally, handle UI updates or fetch updated data here
         } catch (err) {
           console.error("Failed to delete category:", err);
           Swal.fire({
@@ -107,9 +97,8 @@ const Category = () => {
     });
   };
 
-  // Handle page change (pagination)
   const handlePageChange = (page) => {
-    setPageNumber(page); // Update the current page number
+    setPageNumber(page);
   };
 
   if (isLoading) {
@@ -121,6 +110,8 @@ const Category = () => {
       </div>
     );
   }
+
+  console.log(categories);
 
   return (
     <div className="mt-10 pb-6">
@@ -145,13 +136,15 @@ const Category = () => {
           >
             <Link to={`/dashboard/category/sub-category/${category.id}`}>
               <img
-                src={`${url}${category?.image}`}
+                src={url + category?.image}
                 alt={category.name}
                 className="w-full h-48 object-cover"
               />
             </Link>
             <div>
-              <p className={`text-xl font-semibold text-center !capitalize my-3 ${category.type == "product" ? "text-[#e4b312]" : "text-[#f55] "}`}>{category.type}</p>
+              <p className={`text-xl font-semibold text-center !capitalize my-3 ${category.type == "product" ? "text-[#e4b312]" : "text-[#f55] "}`}>
+                {category.type}
+              </p>
             </div>
             <div className="p-4 text-center">
               <p className="text-lg font-semibold capitalize">{category.categoryName}</p>
@@ -170,8 +163,8 @@ const Category = () => {
                   icon={<DeleteOutlined />}
                   danger
                   className="!bg-[#E8EBF0] text-white"
-                  onClick={() => handleDelete(category.id)} // Attach the delete handler
-                  loading={isDeleting} // Show loading state when deleting
+                  onClick={() => handleDelete(category.id)}
+                  loading={isDeleting}
                 >
                   {isDeleting ? "Deleting..." : "Delete"}
                 </Button>
@@ -182,38 +175,46 @@ const Category = () => {
       </div>
 
       {/* Pagination */}
-      <div className="mt-8 flex justify-center items-center gap-2">
-        {/* Previous Button */}
-        <Button
-          onClick={() => handlePageChange(pageNumber - 1)}
-          disabled={pageNumber === 1}
-          className="flex items-center"
-        >
-          Previous
-        </Button>
-
-        {/* Page Numbers */}
-        <div className="flex gap-1">
-          {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+      {
+        categories?.length > 0 && (
+          <div className="mt-8 flex justify-center items-center gap-2">
             <Button
-              key={page}
-              onClick={() => handlePageChange(page)}
-              className={pageNumber === page ? "!bg-primaryBg !text-[#fff]" : ""}
+              onClick={() => handlePageChange(pageNumber - 1)}
+              disabled={pageNumber === 1}
+              className="flex items-center"
             >
-              {page}
+              Previous
             </Button>
-          ))}
-        </div>
 
-        {/* Next Button */}
-        <Button
-          onClick={() => handlePageChange(pageNumber + 1)}
-          disabled={pageNumber === totalPages}
-        >
-          Next
-        </Button>
-      </div>
+            <div className="flex gap-1">
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                <Button
+                  key={page}
+                  onClick={() => handlePageChange(page)}
+                  className={pageNumber === page ? "!bg-primaryBg !text-[#fff]" : ""}
+                >
+                  {page}
+                </Button>
+              ))}
+            </div>
 
+            <Button
+              onClick={() => handlePageChange(pageNumber + 1)}
+              disabled={pageNumber === totalPages}
+            >
+              Next
+            </Button>
+          </div>
+        )
+      }
+
+      {
+        categories?.length == 0 && (
+          <div className="mt-8 flex justify-center items-center gap-2">
+            <h2 className="text-2xl font-semibold text-header text-[#ff4d4d] my-10">No categories found</h2>
+          </div>
+        )
+      }
 
       {/* Add Category Modal */}
       <Modal
@@ -223,6 +224,7 @@ const Category = () => {
         footer={null}
       >
         <Form
+          form={form} // Assign form instance to reset
           className="ant-upload"
           name="form_item_path"
           layout="vertical"
@@ -282,7 +284,9 @@ const Category = () => {
             <select
               className="w-full p-2 border border-[#999] rounded"
               style={{ maxWidth: "1000px" }}
+              defaultValue={"select"}
             >
+              <option value="select">Select Type</option>
               <option value="product">Product</option>
               <option value="service">Service</option>
             </select>

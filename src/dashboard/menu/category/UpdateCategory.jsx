@@ -1,10 +1,11 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import url from "../../../redux/api/baseUrl";
-import { useCreateUpdateCategoryMutation } from "../../../redux/features/auth/heashboard/updateCategory";
+import { Button, Input, Modal, message } from "antd";
 import { FaArrowLeft } from "react-icons/fa6";
-import { useGetSingleCategoriesQuery } from "../../../redux/features/auth/profile/getCategories";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import { useGetSingleCategoriesQuery } from "../../../redux/features/auth/profile/getCategories";
+import { useCreateUpdateCategoryMutation } from "../../../redux/features/auth/heashboard/updateCategory";
+import url from "../../../redux/api/baseUrl";
 
 export default function UpdateCategory() {
   const navigate = useNavigate();
@@ -13,12 +14,12 @@ export default function UpdateCategory() {
   const [categoryData, setCategoryData] = useState({
     categoryName: "",
     image: null,
-    imagePreview: null, // To preview the uploaded image
-    type: "product", // Default type, can be changed to 'service'
+    imagePreview: null, // For previewing the uploaded image
+    type: "product", // Default type
   });
 
   const [updateCategory, { isError, isLoading }] = useCreateUpdateCategoryMutation();
-  const { data: categoryItem } = useGetSingleCategoriesQuery(id);
+  const { data: categoryItem } = useGetSingleCategoriesQuery(id); // Fetch category data
 
   // Update state with fetched category data
   useEffect(() => {
@@ -34,12 +35,12 @@ export default function UpdateCategory() {
   // Handle form submission
   const handleUpdate = async (e) => {
     e.preventDefault();
-
     console.log("Updating category with data:", categoryData);
-
     const formData = new FormData();
     formData.append("categoryName", categoryData.categoryName);
-    formData.append("type", categoryData.type); // Use existing type or default to 'product'
+    formData.append("type", categoryData.type);
+    // Use existing type or default to 'product'
+
     if (categoryData.image) {
       formData.append("image", categoryData.image);
     }
@@ -56,18 +57,24 @@ export default function UpdateCategory() {
       if (result.isConfirmed) {
         try {
           await updateCategory({ id, newPost: formData }).unwrap();
-
           Swal.fire({
             title: "Category Updated!",
             text: "The category has been successfully updated.",
             icon: "success",
           });
 
+          // Reset form data after successful update
           setCategoryData({
             categoryName: "",
             image: null,
+            imagePreview: null,
+            type: "product", // Reset type to default
           });
-          navigate(-1);
+
+          // Optionally, reset modal visibility here (if using modal)
+          // closeModal(); // Uncomment if using modal's state to handle visibility
+
+          navigate(-1); // Go back to the previous page
         } catch (error) {
           console.error("Error updating category:", error);
           Swal.fire({
@@ -78,8 +85,6 @@ export default function UpdateCategory() {
         }
       }
     });
-
-
   };
 
   // Handle file input changes
@@ -130,25 +135,19 @@ export default function UpdateCategory() {
           />
         </div>
 
-        {/* <select
-          className="w-full p-2 border my-5 border-[#999] rounded"
-          style={{ maxWidth: "1000px" }} 
-          
-        >
-          <option value="product">Product</option>
-          <option value="service">Service</option>
-        </select> */}
+        {/* Type Selection */}
         <div className="mb-6">
           <select
             className="w-full p-2 border my-5 border-[#999] rounded"
             style={{ maxWidth: "1000px" }}
-            value={categoryData?.type ? categoryData?.type : categoryItem?.data?.attributes.type} // Default to 'product' if not set
+            value={categoryData.type}
             onChange={(e) =>
               setCategoryData((prevData) => ({
                 ...prevData,
                 type: e.target.value,
               }))
             }
+            defaultValue={"selectCategory"}
           >
             <option value="product">Product</option>
             <option value="service">Service</option>

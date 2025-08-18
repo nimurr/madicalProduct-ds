@@ -1,11 +1,6 @@
 import { useState, useEffect } from "react";
-import { Button, Form, Input, Modal, Upload } from "antd";
-import {
-  PlusOutlined,
-  CloseOutlined,
-  EditOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
+import { Button, Form, Input, Modal, Upload, message } from "antd";
+import { PlusOutlined, CloseOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { TbCameraPlus } from "react-icons/tb";
 import { Link, useParams } from "react-router-dom";
 import { useCreatePostSubcategoryMutation } from "../../../redux/features/auth/heashboard/subCategory";
@@ -21,6 +16,7 @@ const SubCategory = () => {
   const [imageUrl, setImageUrl] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [form] = Form.useForm(); // Form instance to reset
 
   // State for pagination
   const [pageNumber, setPageNumber] = useState(1); // Initial page number
@@ -58,7 +54,6 @@ const SubCategory = () => {
             text: "The category has been deleted successfully.",
             icon: "success",
           });
-          // Optionally handle UI updates or fetch updated data here
         } catch (err) {
           console.error("Failed to delete category:", err);
           Swal.fire({
@@ -72,7 +67,7 @@ const SubCategory = () => {
   };
 
   useEffect(() => {
-    // You can dynamically set the categoryName based on your logic
+    // Dynamically set the categoryName based on your logic
     if (data && data.category) {
       setCategoryName(data.category.name); // Assuming categoryName is available in the response
     }
@@ -83,11 +78,6 @@ const SubCategory = () => {
   };
 
   const onFinish = async (value) => {
-    console.log("Subcategory Name:", value.name); // Subcategory name from form
-    console.log("Image URL:", imageUrl); // Image preview URL
-    console.log("File:", imageFile); // Image file object
-
-    // Prepare the form data
     const formData = new FormData();
     formData.append("categoryName", value.name);
     formData.append("type", value.type); // Add type to form data
@@ -95,16 +85,24 @@ const SubCategory = () => {
       formData.append("image", imageFile);
     }
 
-    // Call the mutation with category id and form data
     try {
       const response = await createSubcategory({
         id,
         newPost: formData,
       }).unwrap();
       console.log("Subcategory created successfully:", response);
+
+      // Reset the form after submission
+      form.resetFields(); // Reset all form fields
+
+      // Reset the modal state and image
+      setImageUrl(null);
+      setImageFile(null);
       setIsModalOpen(false); // Close modal after successful post
+      message.success("Subcategory added successfully!"); // Success message
     } catch (err) {
       console.error("Failed to create subcategory:", err);
+      message.error(err.data?.message || "Something went wrong.");
     }
   };
 
@@ -117,10 +115,7 @@ const SubCategory = () => {
 
   const handleChange = (info) => {
     let fileList = [...info.fileList];
-
-    // We only keep the latest file in the list to replace the previous image
-    fileList = fileList.slice(-1);
-
+    fileList = fileList.slice(-1); // Keep only the latest file
     if (fileList[0] && fileList[0].originFileObj) {
       const imagePreviewUrl = URL.createObjectURL(fileList[0].originFileObj);
       setImageUrl(imagePreviewUrl);
@@ -183,7 +178,7 @@ const SubCategory = () => {
 
             <div className="p-4 text-center">
               <div>
-                <p className={`text-xl font-semibold text-center my-3 ${category.type == "product" ? "text-[#afaf1b]" : "text-[#f55]"}`}>{category.type}</p>
+                <p className={`text-xl font-semibold text-center my-3 ${category.type == "product" ? "text-[#afaf1b]" : category.type == "service" ? "text-[#f55]" : "text-[#1a73e8]"}`}>{category.type}</p>
               </div>
               <p className="text-lg font-semibold">{category.categoryName}</p>
               <div className="flex justify-center mt-4 space-x-2">
@@ -213,16 +208,28 @@ const SubCategory = () => {
       </div>
 
       {/* Pagination */}
-      <div className="mt-4 flex justify-center">
-        <Button
-          onClick={() => handlePageChange(pageNumber - 1)}
-          disabled={pageNumber === 1}
-          className="mr-4"
-        >
-          Previous
-        </Button>
-        <Button onClick={() => handlePageChange(pageNumber + 1)}>Next</Button>
-      </div>
+      {
+        subCategoryAll?.length > 0 && (
+          <div className="mt-4 flex justify-center">
+            <Button
+              onClick={() => handlePageChange(pageNumber - 1)}
+              disabled={pageNumber === 1}
+              className="mr-4"
+            >
+              Previous
+            </Button>
+            <Button onClick={() => handlePageChange(pageNumber + 1)}>Next</Button>
+          </div>
+        )
+      }
+
+      {
+        subCategoryAll?.length == 0 && (
+          <div className="mt-8 flex justify-center items-center gap-2">
+            <h2 className="text-2xl font-semibold text-header text-[#ff4d4d] my-10">No categories found</h2>
+          </div>
+        )
+      }
 
       {/* Modal to Add Subcategory */}
       <Modal
@@ -246,6 +253,7 @@ const SubCategory = () => {
             Add New Subcategory
           </h1>
           <Form
+            form={form} // Assign form instance to reset
             name="form_item_path"
             layout="vertical"
             onFinish={onFinish}
@@ -299,14 +307,15 @@ const SubCategory = () => {
               </Upload>
             </Form.Item>
 
+            {/* Type Select Dropdown */}
             <Form.Item name="type" label="Type">
               <select
                 className="w-full p-2 border border-[#999] rounded"
                 style={{ maxWidth: "1000px" }}
               >
+                <option value="selectYourType">Select Type</option>
                 <option value="product">Product</option>
                 <option value="service">Service</option>
-
               </select>
             </Form.Item>
 
