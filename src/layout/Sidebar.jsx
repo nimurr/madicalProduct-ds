@@ -149,7 +149,7 @@ const Sidebar = () => {
               }
             >
               <FaUserFriends className="h-7 w-7 lg:h-5 lg:w-5" />
-              <span className="hidden ml-2 sm:block">Provider</span>
+              <span className="hidden ml-2 sm:block">Providers</span>
             </NavLink>
 
 
@@ -220,7 +220,7 @@ const Sidebar = () => {
                   }
                 >
                   <RiMoneyDollarCircleLine className="h-7 w-7 lg:h-5 lg:w-5" />
-                  <span className="hidden ml-2 sm:block">Withdrawal Request</span>
+                  <span className="hidden ml-2 sm:block">Withdrawals Request</span>
                 </NavLink>
               )
             }

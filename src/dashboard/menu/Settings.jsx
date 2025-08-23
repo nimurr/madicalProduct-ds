@@ -29,7 +29,7 @@ const Settings = () => {
         {
           userRole === "masterAdmin" && (
             <div onClick={() => navigate("/dashboard/settings/admins")} className="mt-10 cursor-pointer flex justify-between bg-[#F7F7F7] rounded items-center w-full h-[75px]">
-              <p className="text-[18px] ml-8 font-medium">Admins</p>
+              <p className="text-[18px] ml-8 font-medium">Admin</p>
               <Link to="/dashboard/settings/admins" className="mr-8 text-[#193664] px-2 py-1 rounded cursor-pointer">
                 <IoIosArrowForward />
               </Link>
@@ -46,7 +46,7 @@ const Settings = () => {
           </Link>
         </div>
         <div onClick={() => navigate("/dashboard/settings/termcondition")} className="mt-8 flex justify-between cursor-pointer bg-[#F7F7F7] rounded items-center w-full h-[75px]">
-          <p className="text-[18px] ml-8 font-medium">Terms and Condition</p>
+          <p className="text-[18px] ml-8 font-medium">Terms and Disclaimers</p>
           <Link to="/dashboard/settings/termcondition" className="mr-8 text-[#193664] px-2 py-1 rounded cursor-pointer">
             <IoIosArrowForward />
           </Link>
