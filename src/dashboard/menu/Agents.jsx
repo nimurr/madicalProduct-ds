@@ -21,6 +21,8 @@ const Agents = () => {
   // Extract agent data
   const agents = data?.data?.attributes?.results || [];
 
+  console.log(agents);
+
   // Initialize filtered agents with all agents
   useEffect(() => {
     setFilteredAgents(agents);
@@ -118,9 +120,9 @@ const Agents = () => {
       render: (_, record) => <p>{record?.email || "N/A"}</p>,
     },
     {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
+      title: "Location",
+      dataIndex: "",
+      key: "location",
       render: (_, record) => <p>{record?.location?.locationName || "N/A"}</p>,
     },
     {
