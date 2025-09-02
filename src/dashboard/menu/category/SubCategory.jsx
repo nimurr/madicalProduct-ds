@@ -178,7 +178,7 @@ const SubCategory = () => {
 
             <div className="p-4 text-center">
               <div>
-                <p className={`text-xl font-semibold text-center my-3 ${category.type == "product" ? "text-[#afaf1b]" : category.type == "service" ? "text-[#f55]" : "text-[#1a73e8]"}`}>{category.type}</p>
+                <p className={`text-xl font-semibold text-center capitalize my-3 ${category.type == "product" ? "text-[#afaf1b]" : category.type == "service" ? "text-[#f55]" : "text-[#1a73e8]"}`}>{category.type}</p>
               </div>
               <p className="text-lg font-semibold">{category.categoryName}</p>
               <div className="flex justify-center mt-4 space-x-2">
