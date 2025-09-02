@@ -17,61 +17,27 @@ const SubCategory = () => {
   const [imageFile, setImageFile] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm(); // Form instance to reset
+  const [pageNumber, setPageNumber] = useState(1); // State for pagination
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
 
-  // State for pagination
-  const [pageNumber, setPageNumber] = useState(1); // Initial page number
-
-  // Get the mutation hook to create subcategory
-  const [createSubcategory, { isLoading: isCreating }] =
-    useCreatePostSubcategoryMutation();
-
-  // Fetch subcategories based on dynamic id and categoryName
   const { data, error, isLoading } = useGetSubCategoriesQuery({
     id,
     categoryName,
     pageNumber,
   });
-  // Subcategories fetched from the API
   const subCategoryAll = data?.data?.attributes?.results;
-
   const [deleteCategory, { isLoading: isDeleting }] = useDeleteCategoriesMutation();
+  const [createSubcategory, { isLoading: isCreating }] = useCreatePostSubcategoryMutation();
 
-  const handleDelete = async (categoryId) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await deleteCategory(categoryId).unwrap(); // Trigger the delete mutation
-          Swal.fire({
-            title: "Deleted!",
-            text: "The category has been deleted successfully.",
-            icon: "success",
-          });
-        } catch (err) {
-          console.error("Failed to delete category:", err);
-          Swal.fire({
-            title: "Error!",
-            text: "Failed to delete the category. Please try again.",
-            icon: "error",
-          });
-        }
-      }
-    });
+  // Filter subcategories based on search query
+  const filteredSubCategories = subCategoryAll?.filter((subcategory) =>
+    subcategory.categoryName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
   };
-
-  useEffect(() => {
-    // Dynamically set the categoryName based on your logic
-    if (data && data.category) {
-      setCategoryName(data.category.name); // Assuming categoryName is available in the response
-    }
-  }, [data]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -131,6 +97,36 @@ const SubCategory = () => {
     setPageNumber(page); // Update the current page number
   };
 
+  const handleDelete = async (categoryId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteCategory(categoryId).unwrap(); // Trigger the delete mutation
+          Swal.fire({
+            title: "Deleted!",
+            text: "The category has been deleted successfully.",
+            icon: "success",
+          });
+        } catch (err) {
+          console.error("Failed to delete category:", err);
+          Swal.fire({
+            title: "Error!",
+            text: "Failed to delete the category. Please try again.",
+            icon: "error",
+          });
+        }
+      }
+    });
+  };
+
   return (
     <div className="mt-12 p-6">
       {/* Header */}
@@ -142,16 +138,30 @@ const SubCategory = () => {
           <FaArrowLeft />
           Sub Categories
         </Link>
-        <Button
-          onClick={openModal}
-          icon={<PlusOutlined />}
-          className="flex items-center p-5 !bg-primaryBg !text-whiteText"
-        >
-          Add SubCategory
-        </Button>
+
+        <div className="flex items-center gap-3">
+          <label htmlFor="">
+            <input
+              type="text"
+              name="search"
+              placeholder="Search by Name"
+              className="p-2 !rounded-lg border-2 border-[#eee]"
+              id=""
+              value={searchQuery} // Bind search input to state
+              onChange={handleSearchChange} // Update search query on input change
+            />
+          </label>
+          <Button
+            onClick={openModal}
+            icon={<PlusOutlined />}
+            className="flex items-center p-5 !bg-primaryBg !text-whiteText"
+          >
+            Add SubCategory
+          </Button>
+        </div>
       </div>
 
-      {/* Category Grid */}
+      {/* SubCategory Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
         {/* Show loading state */}
         {isLoading && (
@@ -164,25 +174,31 @@ const SubCategory = () => {
         {/* Show error state */}
         {error && <p>Error fetching subcategories.</p>}
 
-        {/* Display fetched subcategories */}
-        {subCategoryAll?.map((category) => (
+        {/* Display filtered subcategories */}
+        {filteredSubCategories?.map((subcategory) => (
           <div
-            key={category.id}
+            key={subcategory.id}
             className="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:scale-105"
           >
             <img
-              src={`${url}${category?.image}`}
-              alt={category.name}
+              src={`${url}${subcategory?.image}`}
+              alt={subcategory.name}
               className="w-full h-48 object-cover"
             />
 
             <div className="p-4 text-center">
               <div>
-                <p className={`text-xl font-semibold text-center capitalize my-3 ${category.type == "product" ? "text-[#afaf1b]" : category.type == "service" ? "text-[#f55]" : "text-[#1a73e8]"}`}>{category.type}</p>
+                <p
+                  className={`text-xl font-semibold text-center capitalize my-3 ${
+                    subcategory.type === "product" ? "text-[#afaf1b]" : "text-[#f55]"
+                  }`}
+                >
+                  {subcategory.type}
+                </p>
               </div>
-              <p className="text-lg font-semibold">{category.categoryName}</p>
+              <p className="text-lg font-semibold">{subcategory.categoryName}</p>
               <div className="flex justify-center mt-4 space-x-2">
-                <Link to={`/dashboard/category/update/${category.id}`}>
+                <Link to={`/dashboard/category/update/${subcategory.id}`}>
                   <Button
                     type="default"
                     icon={<EditOutlined />}
@@ -196,7 +212,7 @@ const SubCategory = () => {
                   icon={<DeleteOutlined />}
                   danger
                   className="!bg-[#E8EBF0] text-white"
-                  onClick={() => handleDelete(category.id)} // Attach the delete handler
+                  onClick={() => handleDelete(subcategory.id)} // Attach the delete handler
                   loading={isDeleting} // Show loading state when deleting
                 >
                   Delete
@@ -208,30 +224,28 @@ const SubCategory = () => {
       </div>
 
       {/* Pagination */}
-      {
-        subCategoryAll?.length > 0 && (
-          <div className="mt-4 flex justify-center">
-            <Button
-              onClick={() => handlePageChange(pageNumber - 1)}
-              disabled={pageNumber === 1}
-              className="mr-4"
-            >
-              Previous
-            </Button>
-            <Button onClick={() => handlePageChange(pageNumber + 1)}>Next</Button>
-          </div>
-        )
-      }
+      {filteredSubCategories?.length > 0 && (
+        <div className="mt-4 flex justify-center">
+          <Button
+            onClick={() => handlePageChange(pageNumber - 1)}
+            disabled={pageNumber === 1}
+            className="mr-4"
+          >
+            Previous
+          </Button>
+          <Button onClick={() => handlePageChange(pageNumber + 1)}>Next</Button>
+        </div>
+      )}
 
-      {
-        subCategoryAll?.length == 0 && (
-          <div className="mt-8 flex justify-center items-center gap-2">
-            <h2 className="text-2xl font-semibold text-header text-[#ff4d4d] my-10">No categories found</h2>
-          </div>
-        )
-      }
+      {filteredSubCategories?.length === 0 && (
+        <div className="mt-8 flex justify-center items-center gap-2">
+          <h2 className="text-2xl font-semibold text-header text-[#ff4d4d] my-10">
+            No subcategories found
+          </h2>
+        </div>
+      )}
 
-      {/* Modal to Add Subcategory */}
+      {/* Add SubCategory Modal */}
       <Modal
         open={isModalOpen}
         onOk={() => setIsModalOpen(false)}

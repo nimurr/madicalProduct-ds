@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Form, Input, Modal, Upload, message } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { TbCameraPlus } from "react-icons/tb";
@@ -14,10 +14,12 @@ const Category = () => {
   const [imageFile, setImageFile] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
+
   const { data, isLoading } = useGetCategoriesQuery(pageNumber);
   const [deleteCategory, { isLoading: isDeleting }] = useDeleteCategoriesMutation();
   const [postCategory, { isLoading: isPostLoading }] = useCreatePostMutation();
-  const [form] = Form.useForm();  // Create a form instance for handling reset
+  const [form] = Form.useForm();
 
   const categories = data?.data?.attributes?.results;
   const totalPages = data?.data?.attributes?.totalPages || 1;
@@ -101,6 +103,11 @@ const Category = () => {
     setPageNumber(page);
   };
 
+  // Filter categories based on search query
+  const filteredCategories = categories?.filter((category) =>
+    category.categoryName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   if (isLoading) {
     return (
       <div className="h-[80vh] w-full flex items-center justify-center">
@@ -111,25 +118,36 @@ const Category = () => {
     );
   }
 
-  console.log(categories);
-
   return (
     <div className="mt-10 pb-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold text-header">Categories</h2>
-        <Button
-          onClick={openModal}
-          icon={<PlusOutlined />}
-          className="flex items-center p-5 !bg-primaryBg !text-whiteText"
-        >
-          Add Categories
-        </Button>
+        <div className="flex items-center flex-wrap gap-3">
+          <label htmlFor="">
+            <input
+              type="text"
+              name="search"
+              placeholder="Search by Name"
+              className="p-2 !rounded-lg border-2 border-[#eee]"
+              id=""
+              value={searchQuery} // Bind search input to state
+              onChange={(e) => setSearchQuery(e.target.value)} // Update search query on input change
+            />
+          </label>
+          <Button
+            onClick={openModal}
+            icon={<PlusOutlined />}
+            className="flex items-center p-5 !bg-primaryBg !text-whiteText"
+          >
+            Add Categories
+          </Button>
+        </div>
       </div>
 
       {/* Category Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
-        {categories?.map((category) => (
+        {filteredCategories?.map((category) => (
           <div
             key={category.id}
             className="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:scale-105"
@@ -142,7 +160,11 @@ const Category = () => {
               />
             </Link>
             <div>
-              <p className={`text-xl font-semibold text-center !capitalize my-3 ${category.type == "product" ? "text-[#e4b312]" : "text-[#f55] "}`}>
+              <p
+                className={`text-xl font-semibold text-center !capitalize my-3 ${
+                  category.type === "product" ? "text-[#e4b312]" : "text-[#f55]"
+                }`}
+              >
                 {category.type}
               </p>
             </div>
@@ -175,46 +197,44 @@ const Category = () => {
       </div>
 
       {/* Pagination */}
-      {
-        categories?.length > 0 && (
-          <div className="mt-8 flex justify-center items-center gap-2">
-            <Button
-              onClick={() => handlePageChange(pageNumber - 1)}
-              disabled={pageNumber === 1}
-              className="flex items-center"
-            >
-              Previous
-            </Button>
+      {filteredCategories?.length > 0 && (
+        <div className="mt-8 flex justify-center items-center gap-2">
+          <Button
+            onClick={() => handlePageChange(pageNumber - 1)}
+            disabled={pageNumber === 1}
+            className="flex items-center"
+          >
+            Previous
+          </Button>
 
-            <div className="flex gap-1">
-              {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
-                <Button
-                  key={page}
-                  onClick={() => handlePageChange(page)}
-                  className={pageNumber === page ? "!bg-primaryBg !text-[#fff]" : ""}
-                >
-                  {page}
-                </Button>
-              ))}
-            </div>
-
-            <Button
-              onClick={() => handlePageChange(pageNumber + 1)}
-              disabled={pageNumber === totalPages}
-            >
-              Next
-            </Button>
+          <div className="flex gap-1">
+            {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+              <Button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                className={pageNumber === page ? "!bg-primaryBg !text-[#fff]" : ""}
+              >
+                {page}
+              </Button>
+            ))}
           </div>
-        )
-      }
 
-      {
-        categories?.length == 0 && (
-          <div className="mt-8 flex justify-center items-center gap-2">
-            <h2 className="text-2xl font-semibold text-header text-[#ff4d4d] my-10">No categories found</h2>
-          </div>
-        )
-      }
+          <Button
+            onClick={() => handlePageChange(pageNumber + 1)}
+            disabled={pageNumber === totalPages}
+          >
+            Next
+          </Button>
+        </div>
+      )}
+
+      {filteredCategories?.length === 0 && (
+        <div className="mt-8 flex justify-center items-center gap-2">
+          <h2 className="text-2xl font-semibold text-header text-[#ff4d4d] my-10">
+            No categories found
+          </h2>
+        </div>
+      )}
 
       {/* Add Category Modal */}
       <Modal
@@ -224,7 +244,7 @@ const Category = () => {
         footer={null}
       >
         <Form
-          form={form} // Assign form instance to reset
+          form={form}
           className="ant-upload"
           name="form_item_path"
           layout="vertical"
@@ -256,7 +276,7 @@ const Category = () => {
                       height: "100%",
                       objectFit: "cover",
                       borderRadius: "4px",
-                      overflow: "hidden"
+                      overflow: "hidden",
                     }}
                   />
                   <TbCameraPlus className="text-[44px] absolute top-[40%] left-[40%] opacity-60 text-white" />
@@ -270,7 +290,7 @@ const Category = () => {
                     alignItems: "center",
                     justifyContent: "center",
                     backgroundColor: "#f0f0f0",
-                    borderRadius: "4px"
+                    borderRadius: "4px",
                   }}
                 >
                   <TbCameraPlus className="text-6xl text-[#193664]" />
@@ -306,11 +326,11 @@ const Category = () => {
               style={{
                 backgroundColor: "#193664",
                 color: "#fff",
-                height: "56px"
+                height: "56px",
               }}
               htmlType="submit"
               className="h-12 !bg-primaryBg !text-whiteText"
-              loading={isPostLoading} // Add loading state for post request
+              loading={isPostLoading}
             >
               {isPostLoading ? "Saving..." : "Save Category"}
             </Button>
