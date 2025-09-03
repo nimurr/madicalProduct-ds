@@ -174,7 +174,6 @@ const SubCategory = () => {
         {/* Show error state */}
         {error && <p>Error fetching subcategories.</p>}
 
-        {/* Display filtered subcategories */}
         {filteredSubCategories?.map((subcategory) => (
           <div
             key={subcategory.id}
