@@ -177,7 +177,7 @@ const GatewayCredential = () => {
             <div className="mb-4 flex justify-between items-center">
                 <h2 className="text-[30px] font-semibold">Gateway Credentials</h2>
                 <button className="py-3 px-10 bg-primaryBg text-[#fff] rounded-lg" onClick={openAddModal}>
-                    Add Credential
+                    Add Credentials
                 </button>
             </div>
 

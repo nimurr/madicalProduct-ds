@@ -266,7 +266,7 @@ const Sidebar = () => {
                   }
                 >
                   <CiCreditCard1 className="h-7 w-7 lg:h-5 lg:w-5" />
-                  <span className="hidden ml-2 sm:block">Gateway Credential</span>
+                  <span className="hidden ml-2 sm:block">Gateway Credentials</span>
                 </NavLink>
               )
             }
