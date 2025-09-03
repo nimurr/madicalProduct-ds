@@ -92,7 +92,7 @@ const WithdrawRequest = () => {
   return (
     <div className="shadow-md rounded-lg my-14 bg-[#f7f7f7]">
       <div className="flex flex-col items-start gap-4 px-5 py-3">
-        <p className="text-header font-semibold">Withdrawals Requests</p>
+        <p className="text-header font-semibold">Withdrawal Requests</p>
       </div>
 
       <div className="flex items-center justify-between xl:gap-10 gap-5 flex-wrap px-5">

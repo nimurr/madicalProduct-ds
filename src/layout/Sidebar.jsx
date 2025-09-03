@@ -220,7 +220,7 @@ const Sidebar = () => {
                   }
                 >
                   <RiMoneyDollarCircleLine className="h-7 w-7 lg:h-5 lg:w-5" />
-                  <span className="hidden ml-2 sm:block">Withdrawals Request</span>
+                  <span className="hidden ml-2 sm:block">Withdrawal Request</span>
                 </NavLink>
               )
             }
@@ -283,7 +283,7 @@ const Sidebar = () => {
               }
             >
               <CiSettings className="h-8 w-8 lg:h-5 lg:w-5" />
-              <span className="hidden ml-2 sm:block">Settings</span>
+              <span className="hidden ml-2 sm:block">Terms and Disclaimers</span>
             </NavLink>
           </ul>
         </div>
