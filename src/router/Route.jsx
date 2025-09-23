@@ -40,6 +40,7 @@ import AddBannerAds from "../dashboard/menu/BannerAd/AddBannerAds";
 import Reports from "../dashboard/menu/Reports/Reports";
 import AllAdmins from "../dashboard/menu/AllAdmins";
 import GatewaCredential from "../dashboard/menu/GatewaCredential/GatewaCredential";
+import PrivetRoute from "../dashboard/PrivetRoute/PrivetRoute";
 
 export const router = createBrowserRouter([
   {
