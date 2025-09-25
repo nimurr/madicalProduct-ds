@@ -210,7 +210,7 @@ const Sidebar = () => {
             </NavLink>
 
             {
-              userRole === "masterAdmin" && (
+              userRole === "masterAdmin" || "superAdmin" && (
                 <NavLink
                   to="/dashboard/withdrawrequest"
                   className={({ isActive }) =>
