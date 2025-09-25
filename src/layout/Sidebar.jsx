@@ -152,8 +152,6 @@ const Sidebar = () => {
               <span className="hidden ml-2 sm:block">Providers</span>
             </NavLink>
 
-
-
             <NavLink
               to="bidhistory"
               className={({ isActive }) =>
