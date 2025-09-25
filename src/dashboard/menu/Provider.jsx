@@ -163,8 +163,8 @@ const Provider = () => {
           placeholder="Search by Name or Email"
           onChange={(e) => setSearchQuery(e.target.value)}
           value={searchQuery}
-          className="w-1/3 py-2 px-4 border border-gray-300 rounded-lg"
-          prefix={<SearchOutlined className="text-gray-500" />}
+          className="max-w-[350px] py-2 px-4 border border-gray-300 rounded-lg"
+          prefix={<SearchOutlined className="text-gray-500 mr-2" />}
         />
       </div>
       <div className="overflow-x-auto bg-[#e8ebf0]">
