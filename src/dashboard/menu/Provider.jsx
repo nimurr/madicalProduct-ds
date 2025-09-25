@@ -56,9 +56,9 @@ const Provider = () => {
       render: (_, record) => (
         <button type="primary" className="text-[#2168d3] font-semibold">
           {record.isBlock ? (
-            <h2 className="bg-[#e23832] text-[#fff] px-1">Blocked</h2>
+            <h2 className="bg-[#e23832] text-[#fff] px-1 rounded">Blocked</h2>
           ) : (
-            <h2 className="bg-[#21b340] text-[#fff] px-1">Active User</h2>
+            <h2 className="bg-[#21b340] text-[#fff] px-1 rounded">Active User</h2>
           )}
         </button>
       ),
