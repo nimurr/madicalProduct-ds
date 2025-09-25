@@ -6,7 +6,7 @@ import url from "../../redux/api/baseUrl";
 
 export default function ProviderCategory() {
   const { id } = useParams(); // Get provider ID from URL
-  
+
 
   const { data: subCategory, isLoading, error } = useGetProviderAllSubcatogoryQuery(id);
 
@@ -42,23 +42,23 @@ export default function ProviderCategory() {
         </div>
       </div> */}
 
-      {/* Divider */} 
+      {/* Divider */}
 
       {/* Subcategories */}
-      <h2 className="mb-5 text-[20px] font-semibold text-[#1397d5]">Categories</h2>
-      <div className="grid xl:grid-cols-5 md:grid-cols-3 grid-cols-2  gap-5 my-10">
+      <h2 className="p-5 text-[20px] font-semibold text-[#1397d5]">Categories</h2>
+      <div className="grid xl:grid-cols-5 md:grid-cols-3 grid-cols-2 p-5  gap-5  ">
         {subCategory?.data?.attributes?.results?.map((item, idx) => (
           <Link
             to={`/dashboard/provider/sub-category/${item.id}?categoryId=${id}`}
             key={idx}
-            className="min-w-[200px] bg-white "
+            className="min-w-[200px] bg-white  border rounded-md bg-white border-[#d8d8d8] overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out"
           >
             <img
               className="w-full min-h-[200px] object-cover "
               src={url + item.image || "/image/default-category.png"}
               alt={item.categoryName || "Subcategory"}
             />
-            <h3 className="text-2xl mx-2 font-semibold mt-2">
+            <h3 className="text-2xl  font-semibold p-3">
               {item.categoryName || "Subcategory Name"}
             </h3>
             {/* <span className="flex items-center gap-2 mt-1">

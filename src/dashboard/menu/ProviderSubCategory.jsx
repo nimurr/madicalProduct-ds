@@ -33,9 +33,9 @@ export default function ProviderSubCategory() {
         <h2 className="mb-5 p-5 text-[20px] font-semibold text-[#1397d5]">
           Sub-Category Products
         </h2>
-        <div className="grid xl:grid-cols-5 md:grid-cols-3 grid-cols-2 gap-5 my-10">
+        <div className="grid xl:grid-cols-5 md:grid-cols-3 grid-cols-2 gap-5 my-10 p-5">
           {products.map((product, idx) => (
-            <div key={idx} className="min-w-[200px]">
+            <div key={idx} className="min-w-[200px]  border rounded-md bg-white border-[#d8d8d8] overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
               <img
                 className="w-full h-[200px] object-cover rounded-md"
                 src={url + '' + product.images[0]} // Fallback image if none provided

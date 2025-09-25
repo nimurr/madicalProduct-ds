@@ -54,10 +54,10 @@ export default function AllProviderCategory() {
         </div>
       </div>
       <hr className="border-none bg-[#d8d8d8] h-[2px] w-full block my-5" />
-      <div className="grid xl:grid-cols-5 lg:grid-cols-3 grid-cols-2 gap-5 my-10">
+      <div className="grid xl:grid-cols-5 lg:grid-cols-3 grid-cols-2 gap-5 my-10 px-5">
         {SingleProvider?.data?.providerCategory.map((item, idx) => {
           return (
-            <Link to={`/dashboard/provider/category/${item.id}`} key={idx} className="block">
+            <Link to={`/dashboard/provider/category/${item.id}`} key={idx} className="block border rounded-md bg-white border-[#d8d8d8] overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
               <img
                 className="w-full h-[220px] "
                 src={url + '' + item.image}
@@ -73,12 +73,12 @@ export default function AllProviderCategory() {
         })}
       </div>
       <div>
-        <h2 className="text-[20px] font-bold text-[#1397d5] mb-5 ">Rating</h2>
+        <h2 className="text-[20px] font-bold text-[#1397d5] mb-5 px-5">Rating</h2>
         {SingleProvider?.data?.providerReview.map((item, idx) => {
           return (
-            <div key={idx}>
+            <div key={idx} className="m-5 border border-[#fff] p-3 bg-[#fff] rounded-md shadow-md">
               <Link className="flex gap-3 items-center">
-                <img className="w-12" src={brandLogoImage} alt="" />
+                <img className="w-12 h-12 rounded-full" src={brandLogoImage} alt="" />
                 <div className="flex justify-between w-full">
                   <div>
                     <h3>{item?.reviewer?.fullName}</h3>
