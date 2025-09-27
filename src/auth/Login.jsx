@@ -102,8 +102,8 @@ const Login = () => {
               />
             </Form.Item>
 
-            <div className="flex justify-between items-center">
-              <Form.Item>
+            <div className="flex justify-end mb-2 items-center">
+              {/* <Form.Item>
                 <Checkbox
                   className="text-black"
                   checked={isChecked}
@@ -111,7 +111,7 @@ const Login = () => {
                 >
                   Remember me
                 </Checkbox>
-              </Form.Item>
+              </Form.Item> */}
               <Link to="/forgotpassword">
                 <p className="cursor-pointer text-[14px] font-medium text-[#00BF63]">
                   Forgot password?
