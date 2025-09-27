@@ -25,10 +25,10 @@ const Login = () => {
   };
 
   const onFinish = async (values) => {
-    if (!isChecked) {
-      toast.error("Please agree to Remember Me before proceeding.");
-      return;
-    }
+    // if (!isChecked) {
+    //   toast.error("Please agree to Remember Me before proceeding.");
+    //   return;
+    // }
 
     try {
       const res = await adminLogin(values).unwrap();
