@@ -224,7 +224,7 @@ const Users = () => {
             </div>
             <div className="flex justify-between border-b border-[#ccc] py-[16px]">
               <p>Phone:</p>
-              <p>{selectedUser?.phoneNumber || "N/A"}</p>
+              <p>{userRole == "masterAdmin" && selectedUser?.phoneNumber || "--"}</p>
             </div>
             <div className="flex justify-between border-b border-[#ccc] py-[16px]">
               <p>Phone:</p>
