@@ -5,6 +5,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import { MdOutlineEmail } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useGetAllUserQuery } from "../../redux/features/auth/heashboard/allUserGet";
+import url from "../../redux/api/baseUrl";
 
 const { Search } = Input;
 
@@ -106,7 +107,10 @@ const Users = () => {
       title: "User Name",
       dataIndex: "fullName",
       key: "fullName",
-      render: (_, record) => <p className="font-medium">{record?.fullName}</p>,
+      render: (_, record) => <div className="flex items-center gap-2">
+        <img className="w-[34px] h-[34px] rounded-full" src={url + record?.image} alt="" />
+        <p className="font-medium">{record?.fullName}</p>
+      </div>,
     },
     {
       title: "Email",
