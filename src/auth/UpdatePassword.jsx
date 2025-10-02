@@ -7,7 +7,7 @@ import updateImage from "/image/updatepass.png";
 import { MdOutlineArrowBackIos } from "react-icons/md";
 
 import toast, { Toaster } from "react-hot-toast";
-import { useChangePasswordMutation } from "../redux/features/auth/changePassword";
+import { useChangePasswordMutation, useUpdatePaddwordMutation } from "../redux/features/auth/changePassword";
 
 const UpdatePassword = () => {
   const [form] = Form.useForm();
@@ -15,11 +15,11 @@ const UpdatePassword = () => {
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const navigate = useNavigate();
 
-  const [reset] = useChangePasswordMutation();
+  const [reset] = useUpdatePaddwordMutation();
 
   //   const location = useLocation();
-   const queryParams = new URLSearchParams(location.search)
-   const email = queryParams.get('email')
+  const queryParams = new URLSearchParams(location.search)
+  const email = queryParams.get('email')
 
   const handlePasswordVisibility = () => setPasswordVisible(!passwordVisible);
   const handleConfirmPasswordVisibility = () =>
@@ -44,6 +44,7 @@ const UpdatePassword = () => {
 
     try {
       const res = await reset(resetData).unwrap();
+      console.log(res);
       if (res?.code == 200) {
         toast.success(res?.message);
         setTimeout(() => {
@@ -52,17 +53,18 @@ const UpdatePassword = () => {
       }
     } catch (error) {
       console.log(error);
+      toast.error(error?.data?.message);
     }
   };
 
   return (
-    <div className="mt-20 h-[680px] shadow-xl w-[1096px] mx-auto bg-[#FFFFFF] rounded-[8px]">
+    <div className="mt-20 h-[680px] shadow-xl md:w-[1096px] w-full mx-auto bg-[#FFFFFF] rounded-[8px]">
       <Toaster />
-      <div className="flex justify-around gap-4 px-10 mt-12 py-4">
-        <div className="h-[488px] mt-[100px]">
+      <div className="md:flex w-full justify-around gap-4 lg:px-10 px-5 mt-12 py-4">
+        <div className="h-[488px] lg:block hidden mt-[100px]">
           <img src={updateImage} alt="Update Password" />
         </div>
-        <div className="mt-[150px]">
+        <div className="md:mt-[150px] mt-[50px]">
           <div className="flex items-center gap-2">
             <MdOutlineArrowBackIos className="text-2xl" />
 
@@ -73,7 +75,7 @@ const UpdatePassword = () => {
           <Form
             form={form}
             layout="vertical"
-            className="mt-5"
+            className="mt-5 w-full"
             onFinish={resetPassword}
           >
             <Form.Item
@@ -84,7 +86,7 @@ const UpdatePassword = () => {
               ]}
             >
               <Input.Password
-                className="w-[494px] mb-4  bg-[#E6F9EF] h-12 rounded-[6px]"
+                className="lg:w-[494px] w-full mb-4  bg-[#E6F9EF] h-12 rounded-[6px]"
                 placeholder="New password"
                 iconRender={(visible) =>
                   visible ? (
@@ -107,7 +109,7 @@ const UpdatePassword = () => {
               ]}
             >
               <Input.Password
-                className="w-[494px] mb-4 bg-[#E6F9EF] h-12 rounded-[6px]"
+                className="lg:w-[494px] w-full mb-4 bg-[#E6F9EF] h-12 rounded-[6px]"
                 placeholder="Confirm Password"
                 iconRender={(visible) =>
                   visible ? (
