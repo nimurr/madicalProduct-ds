@@ -10,7 +10,7 @@ import OTPInput from "react-otp-input";
 
 import { Button } from "antd";
 import { MdOutlineArrowBackIos } from "react-icons/md";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { useVerifyEmailMutation } from "../redux/features/auth/verifyEmail";
 
 const VerifyOtp = () => {
@@ -41,8 +41,8 @@ const VerifyOtp = () => {
         }, 1000);
       }
     } catch (error) {
-      console.log(error);
-      setError(error?.data?.message);
+      console.log(error?.data?.message); 
+      toast.error(error?.data?.message || "An unexpected error occurred");
     }
 
     // 872998
@@ -57,7 +57,7 @@ const VerifyOtp = () => {
 
   return (
     <div className="w-full max-w-[1296px] shadow-xl mt-12 sm:mt-24 mx-auto rounded-[8px] p-4 sm:p-10">
-      {/* <Toaster position='top-center' reverseOrder = {false} /> */}
+      <Toaster position='top-center' reverseOrder = {false} />
 
       <div className="flex flex-col sm:flex-row md:justify-around justify-between items-center gap-4 sm:gap-10">
         <div className="w-full sm:w-[480px] flex justify-center sm:justify-start">
