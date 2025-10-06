@@ -5,6 +5,7 @@ import {
   useUpdateWidthrawRequestMutation,
 } from "../../../redux/features/auth/heashboard/widthdrawRequest";
 import { Pagination, Input } from "antd";
+import { FiSearch } from "react-icons/fi";
 
 const WithdrawRequest = () => {
   const { data: WidthdrawRequest, isLoading, error } = useGetAllWidthdrawRequestQuery();
@@ -153,7 +154,7 @@ const WithdrawRequest = () => {
               allowClear
               className="w-[300px]"
             />
-            <button className="bg-primaryBg text-white px-4 py-2 rounded text-[#fff]">Search</button>
+            <button className="bg-primaryBg text-white px-4 py-2 rounded text-[#fff] flex items-center gap-2"><FiSearch />              Search</button>
           </div>
         </div>
 
