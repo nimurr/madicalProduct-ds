@@ -192,7 +192,7 @@ const WithdrawRequest = () => {
             ))}
           </tbody>
         </table>
-      </div>
+      </div> 
 
       {/* Pagination */}
       <div className="p-5 flex justify-end">
