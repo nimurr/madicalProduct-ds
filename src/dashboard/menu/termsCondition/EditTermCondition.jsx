@@ -30,7 +30,7 @@ const EditTermCondition = () => {
       const res = await updateTC({ content }).unwrap();
       navigate("/dashboard/settings/termcondition");
 
-      
+
       if (res?.code === 200) {
         toast.success(res?.message);
         setTimeout(() => {
@@ -61,9 +61,9 @@ const EditTermCondition = () => {
           <JoditEditor
             value={content}
             onChange={(newContent) => setContent(newContent)} // Update content state on change
-            // config={{
-            //   readonly: isLoading, // Disable editor while loading data
-            // }}
+          // config={{
+          //   readonly: isLoading, // Disable editor while loading data
+          // }}
           />
         </div>
 
@@ -74,7 +74,7 @@ const EditTermCondition = () => {
               className="h-[44px] w-[260px] !text-white !bg-primaryBg text-[#fff] rounded-[8px]"
               loading={isUpdating} // Show loading spinner when updating
             >
-              Update Term Condition
+              Update Terms & Disclaimers
             </Button>
           </Form.Item>
         </div>
