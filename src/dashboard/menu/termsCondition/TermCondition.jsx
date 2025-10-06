@@ -11,7 +11,7 @@ const TermCondition = () => {
     <div className="mt-8 md:mx-6">
       <Link to="/dashboard/settings" className="flex items-center gap-2">
         <FaCircleArrowLeft className="text-primaryBg w-8 h-8" />
-        <p className="font-semibold text-[30px]">Terms & Condition</p>
+        <p className="font-semibold text-[30px]">Terms and Disclaimers</p>
       </Link>
       <div className="mt-4">
         {/* Use dangerouslySetInnerHTML to render HTML content */}
