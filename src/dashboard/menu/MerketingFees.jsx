@@ -71,7 +71,7 @@ const MarketingFees = () => {
           <img src={marketingImage} alt="Product Marketing" />
           <div>
             <h3 className="text-[20px]">Current Marketing Fee</h3>
-            <h2 className="font-semibold text-[25px]">${productMarketingFees} K</h2>
+            <h2 className="font-semibold text-[25px]">${productMarketingFees} </h2>
           </div>
         </div>
         <form
@@ -116,7 +116,7 @@ const MarketingFees = () => {
           <img src={marketingImage} alt="Messaging Fees" />
           <div>
             <h3 className="text-[20px]">Current Messaging Fee</h3>
-            <h2 className="font-semibold text-[25px]">${messagingFees} K</h2>
+            <h2 className="font-semibold text-[25px]">${messagingFees} </h2>
           </div>
         </div>
         <form
@@ -161,7 +161,7 @@ const MarketingFees = () => {
           <img src={marketingImage} alt="Bid Fees" />
           <div>
             <h3 className="text-[20px]">Current Bid Fee</h3>
-            <h2 className="font-semibold text-[25px]">${bidFees} K</h2>
+            <h2 className="font-semibold text-[25px]">${bidFees} </h2>
           </div>
         </div>
         <form
