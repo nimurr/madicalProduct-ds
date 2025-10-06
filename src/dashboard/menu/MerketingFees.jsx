@@ -85,7 +85,7 @@ const MarketingFees = () => {
           }
         >
           <input
-            type="number"
+            type="string"
             placeholder="Price..."
             className="w-full p-2 border rounded"
             defaultValue={productMarketingFees}
@@ -130,7 +130,7 @@ const MarketingFees = () => {
           }
         >
           <input
-            type="number"
+            type="string"
             placeholder="Price..."
             className="w-full p-2 border rounded"
             defaultValue={messagingFees}
@@ -175,7 +175,7 @@ const MarketingFees = () => {
           }
         >
           <input
-            type="number"
+            type="string"
             placeholder="Price..."
             className="w-full p-2 border rounded"
             defaultValue={bidFees}
@@ -220,7 +220,7 @@ const MarketingFees = () => {
           }
         >
           <input
-            type="number"
+            type="string"
             placeholder="Percentage..."
             className="w-full p-2 border rounded"
             defaultValue={referralFee}
@@ -264,7 +264,7 @@ const MarketingFees = () => {
           }
         >
           <input
-            type="number"
+            type="string"
             placeholder="Enter new Ads Fee..."
             className="w-full p-2 border rounded"
             defaultValue={adsFees}

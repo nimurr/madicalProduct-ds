@@ -5,7 +5,7 @@ import { BiCategory, BiSolidDashboard } from "react-icons/bi";
 
 import { CiCreditCard1, CiSettings } from "react-icons/ci";
 import Swal from "sweetalert2";
-import { FaAd, FaUserFriends, FaUsers } from "react-icons/fa";
+import { FaAd, FaUserFriends, FaUserLock, FaUsers } from "react-icons/fa";
 
 import { HiLogout } from "react-icons/hi";
 import { HiCash } from "react-icons/hi";
@@ -292,6 +292,7 @@ const Sidebar = () => {
 
 
 
+
             <NavLink
               to="settings"
               className={({ isActive }) =>
@@ -303,6 +304,22 @@ const Sidebar = () => {
               <CiSettings className="h-8 w-8 lg:h-5 lg:w-5" />
               <span className="hidden ml-2 sm:block">Terms and Disclaimers</span>
             </NavLink>
+
+            {
+              userRole === "masterAdmin" && (
+                <NavLink
+                  to="/dashboard/admins"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "flex p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium bg-[#FFFFFF] text-[#193664] rounded-lg"
+                      : "flex text-[white] p-[10px] m-[6px] cursor-pointer items-center text-[18px] font-medium   rounded-lg"
+                  }
+                >
+                  <FaUserLock className="h-7 w-7 lg:h-5 lg:w-5" />
+                  <span className="hidden ml-2 sm:block">Login Credentials</span>
+                </NavLink>
+              )
+            }
           </ul>
         </div>
       </div>

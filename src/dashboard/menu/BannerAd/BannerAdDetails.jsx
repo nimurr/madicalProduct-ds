@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Tabs, Modal, message } from "antd";
+import { Tabs, Modal, message, Input } from "antd";
 import { useGetAllAdsBannerQuery, useUpdateDeclimeMutation } from "../../../redux/features/auth/heashboard/adsBanner";
 import url from "../../../redux/api/baseUrl";
 import { Link } from "react-router-dom";
 
 const { TabPane } = Tabs;
+const { Search } = Input;
 
 const BannerAdDetails = () => {
     const [status, setStus] = useState("on-hold");
@@ -18,13 +19,9 @@ const BannerAdDetails = () => {
 
     const { data: adsState, isLoading } = useGetAllAdsBannerQuery({ status }); // Fetch all ads data
 
-    // console.log(adsState);
-
     const [newAds, setNewAds] = useState([]);
     const [publishedAds, setPublishedAds] = useState([]);
     const [declinedAds, setDeclinedAds] = useState([]);
-
-    console.log(newAds, publishedAds, declinedAds);
 
     useEffect(() => {
         const newAds = adsState?.data?.attributes?.filter((ad) => ad.status === "on-hold") || [];
@@ -66,7 +63,6 @@ const BannerAdDetails = () => {
 
         try {
             await updateDeclime({ id: selectedAd.id, status, declaimedMessage: feedback }).unwrap();
-            // refetch();
             message.success("Ad Declined Successfully");
             setIsDeclineModalVisible(false);
         } catch (error) {
@@ -74,8 +70,44 @@ const BannerAdDetails = () => {
         }
     };
 
+    // Search function
+    const handleSearch = (value) => {
+        const lowercasedValue = value.toLowerCase();
+        const filteredNewAds = newAds.filter(
+            (ad) =>
+                ad.title.toLowerCase().includes(lowercasedValue) ||
+                ad.description.toLowerCase().includes(lowercasedValue)
+        );
+        const filteredPublishedAds = publishedAds.filter(
+            (ad) =>
+                ad.title.toLowerCase().includes(lowercasedValue) ||
+                ad.description.toLowerCase().includes(lowercasedValue)
+        );
+        const filteredDeclinedAds = declinedAds.filter(
+            (ad) =>
+                ad.title.toLowerCase().includes(lowercasedValue) ||
+                ad.description.toLowerCase().includes(lowercasedValue)
+        );
+
+        setNewAds(filteredNewAds);
+        setPublishedAds(filteredPublishedAds);
+        setDeclinedAds(filteredDeclinedAds);
+    };
+
     return (
         <div className="mt-14 bg-gray-100 overflow-hidden">
+            {/* Search Input */}
+            <div className="px-4 mb-4 flex items-center justify-between gap-5">
+                <h2 className="text-[30px] font-medium mb-4">All Ads</h2>
+                <Search
+                    placeholder="Search Ads"
+                    onChange={(e) => handleSearch(e.target.value)} // onChange event for search
+                    enterButton
+                    className="w-[400px] py-[10px] rounded-lg"
+                    allowClear
+                />
+            </div>
+
             <Tabs
                 defaultActiveKey="on-hold"
                 tabBarStyle={{ fontWeight: "600", fontSize: "30px" }}

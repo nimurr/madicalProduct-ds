@@ -163,7 +163,7 @@ export const router = createBrowserRouter([
         element: <Settings />
       },
       {
-        path: "settings/admins",
+        path: "admins",
         element: <AllAdmins />
       },
       {

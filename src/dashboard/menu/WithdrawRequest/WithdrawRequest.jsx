@@ -4,7 +4,7 @@ import {
   useGetAllWidthdrawRequestQuery,
   useUpdateWidthrawRequestMutation,
 } from "../../../redux/features/auth/heashboard/widthdrawRequest";
-import { Pagination } from "antd";
+import { Pagination, Input } from "antd";
 
 const WithdrawRequest = () => {
   const { data: WidthdrawRequest, isLoading, error } = useGetAllWidthdrawRequestQuery();
@@ -14,6 +14,7 @@ const WithdrawRequest = () => {
   const [filterStatus, setFilterStatus] = useState(""); // State to track the selected filter
   const [currentPage, setCurrentPage] = useState(1); // Current page number
   const [pageSize] = useState(10); // Items per page
+  const [searchQuery, setSearchQuery] = useState(""); // State to track search query
 
   const handleStatusChange = (e, transactionId) => {
     setStatusData((prev) => ({ ...prev, [transactionId]: e.target.value }));
@@ -79,10 +80,15 @@ const WithdrawRequest = () => {
       ?.filter((req) => req.status === status)
       .reduce((sum, req) => sum + req.amount, 0) || 0;
 
-  const filteredRequests =
-    filterStatus === ""
-      ? WidthdrawRequest?.data
-      : WidthdrawRequest?.data.filter((req) => req.status === filterStatus);
+  // Filtered requests based on status and search query
+  const filteredRequests = WidthdrawRequest?.data?.filter((req) => {
+    const isStatusMatch = filterStatus === "" || req.status === filterStatus;
+    const isSearchMatch =
+      req.transactionId.toString().includes(searchQuery) ||
+      req.userDetails?.fullName.toLowerCase().includes(searchQuery.toLowerCase());
+
+    return isStatusMatch && isSearchMatch;
+  });
 
   // Pagination logic: Calculate start and end indices for current page
   const startIndex = (currentPage - 1) * pageSize;
@@ -98,21 +104,18 @@ const WithdrawRequest = () => {
       <div className="flex items-center justify-between xl:gap-10 gap-5 flex-wrap px-5">
         <div className="flex flex-wrap gap-5">
           <span className="py-1 px-3 bg-[#f988251f] text-[#f98925] rounded-md font-semibold">
-            Pending: ${totalMoney("pending").toFixed(2)}
+            Pending: ${totalMoney("pending").toFixed(2)} ({WidthdrawRequest?.data.filter((req) => req.status === "pending").length})
           </span>
           <span className="py-1 px-3 bg-[#ac060621] text-[#ac0606] rounded-md font-semibold">
-            Failed: ${totalMoney("failed").toFixed(2)}
+            Failed: ${totalMoney("failed").toFixed(2)} ({WidthdrawRequest?.data.filter((req) => req.status === "failed").length})
           </span>
           <span className="py-1 px-3 bg-[#04b41b2d] text-[#04b41c] rounded-md font-semibold">
-            Completed: ${totalMoney("completed").toFixed(2)}
+            Completed: ${totalMoney("completed").toFixed(2)} ({WidthdrawRequest?.data.filter((req) => req.status === "completed").length})
           </span>
-          {/* <span className="py-1 px-3 bg-[#dd11dd31] text-[#dd11dd] rounded-md font-semibold">
-            Total: ${WidthdrawRequest?.data.reduce((sum, req) => sum + req.amount, 0).toFixed(2)}
-          </span> */}
         </div>
 
         <div className="flex items-center gap-5 flex-wrap justify-between py-5 px-2">
-          <div className="flex items-center flex-wrap gap-2">
+          {/* <div className="flex items-center flex-wrap gap-2">
             <span
               className="py-1 cursor-pointer px-3 bg-[#f988251f] text-[#f98925] rounded-md font-semibold"
               onClick={() => setFilterStatus("pending")}
@@ -136,14 +139,26 @@ const WithdrawRequest = () => {
             </span>
             <span
               className="py-1 cursor-pointer px-3 bg-[#dd11dd31] text-[#dd11dd] rounded-md font-semibold"
-              onClick={() => setFilterStatus("")} // Clear filter
+              onClick={() => setFilterStatus("")} 
             >
               All ({WidthdrawRequest?.data.length})
             </span>
+          </div> */}
+
+          <div className="flex gap-4">
+            <Input
+              placeholder="Search by Transaction ID or User Name"
+              onChange={(e) => setSearchQuery(e.target.value)}
+              value={searchQuery}
+              allowClear
+              className="w-[300px]"
+            />
+            <button className="bg-primaryBg text-white px-4 py-2 rounded text-[#fff]">Search</button>
           </div>
         </div>
 
       </div>
+
       <div className="overflow-x-auto">
         <table className="min-w-full table-auto border-collapse">
           <thead>
@@ -191,7 +206,6 @@ const WithdrawRequest = () => {
                     <option value="failed">Failed</option>
                     <option value="completed">Completed</option>
                   </select>
-
                 </td>
                 <td className="px-4 py-5">
                   <button
