@@ -86,7 +86,8 @@ const WithdrawRequest = () => {
     const isStatusMatch = filterStatus === "" || req.status === filterStatus;
     const isSearchMatch =
       req.transactionId.toString().includes(searchQuery) ||
-      req.userDetails?.fullName.toLowerCase().includes(searchQuery.toLowerCase());
+      req.userDetails?.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      req.amount.toString().includes(searchQuery); // Search by amount as well
 
     return isStatusMatch && isSearchMatch;
   });
@@ -116,45 +117,15 @@ const WithdrawRequest = () => {
         </div>
 
         <div className="flex items-center gap-5 flex-wrap justify-between py-5 px-2">
-          {/* <div className="flex items-center flex-wrap gap-2">
-            <span
-              className="py-1 cursor-pointer px-3 bg-[#f988251f] text-[#f98925] rounded-md font-semibold"
-              onClick={() => setFilterStatus("pending")}
-            >
-              Pending (
-              {WidthdrawRequest?.data.filter((req) => req.status === "pending").length})
-            </span>
-            <span
-              className="py-1 cursor-pointer px-3 bg-[#ac060621] text-[#ac0606] rounded-md font-semibold"
-              onClick={() => setFilterStatus("failed")}
-            >
-              Failed (
-              {WidthdrawRequest?.data.filter((req) => req.status === "failed").length})
-            </span>
-            <span
-              className="py-1 cursor-pointer px-3 bg-[#04b41b2d] text-[#04b41c] rounded-md font-semibold"
-              onClick={() => setFilterStatus("completed")}
-            >
-              Completed (
-              {WidthdrawRequest?.data.filter((req) => req.status === "completed").length})
-            </span>
-            <span
-              className="py-1 cursor-pointer px-3 bg-[#dd11dd31] text-[#dd11dd] rounded-md font-semibold"
-              onClick={() => setFilterStatus("")} 
-            >
-              All ({WidthdrawRequest?.data.length})
-            </span>
-          </div> */}
-
           <div className="flex gap-4">
             <Input
-              placeholder="Search by Transaction ID or User Name"
+              placeholder="Search by Transaction ID, User Name, or Amount"
               onChange={(e) => setSearchQuery(e.target.value)}
               value={searchQuery}
               allowClear
               className="w-[300px]"
             />
-            <button className="bg-primaryBg text-white px-4 py-2 rounded text-[#fff] flex items-center gap-2"><FiSearch />              Search</button>
+            <button className="bg-primaryBg text-white px-4 py-2 rounded text-[#fff] flex items-center gap-2"><FiSearch /> Search</button>
           </div>
         </div>
 
